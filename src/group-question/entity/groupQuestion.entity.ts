@@ -12,6 +12,7 @@ import { Question } from '../../question/entity/question.entity';
 import { Part } from '../../part/entity/part.entity';
 import { Test } from '../../test/entity/test.entity';
 
+@Entity()
 export class GroupQuestion {
   constructor(partial?: Partial<GroupQuestion>) {
     Object.assign(this, partial);
@@ -23,8 +24,12 @@ export class GroupQuestion {
 
   // maybe this field to convert image to text question
   @Expose()
-  @Column({ unique: true })
+  @Column()
   detail: string;
+
+  @Expose()
+  @Column({nullable: true})
+  describeAnswer: string;
 
   @Expose()
   @CreateDateColumn()

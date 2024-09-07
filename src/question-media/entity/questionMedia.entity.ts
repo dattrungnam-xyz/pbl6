@@ -10,6 +10,7 @@ import {
 import { MediaType } from '../../type/media.type';
 import { Question } from '../../question/entity/question.entity';
 
+@Entity()
 export class QuestionMedia {
   constructor(partial?: Partial<QuestionMedia>) {
     Object.assign(this, partial);

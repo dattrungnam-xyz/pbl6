@@ -13,6 +13,7 @@ import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity'
 import { UserAnswer } from '../../user-answer/entity/userAnswer.entity';
 import { QuestionMedia } from '../../question-media/entity/questionMedia.entity';
 
+@Entity()
 export class Question {
   constructor(partial?: Partial<Question>) {
     Object.assign(this, partial);

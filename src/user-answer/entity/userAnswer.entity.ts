@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Question } from '../../question/entity/question.entity';
 
+@Entity()
 export class UserAnswer {
   constructor(partial?: Partial<UserAnswer>) {
     Object.assign(this, partial);

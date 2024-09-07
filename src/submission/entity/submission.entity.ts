@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+@Entity()
 export class Submission {
   constructor(partial?: Partial<Submission>) {
     Object.assign(this, partial);
@@ -25,4 +26,7 @@ export class Submission {
   deletedAt: Date;
   // contain list part and test
   // create new table contain list select of user
+  // contain test
+  // contain list part
+  // contain list user answer
 }
