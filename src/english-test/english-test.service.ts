@@ -33,4 +33,7 @@ export class EnglishTestService {
       new EngLishTest({ ...englishTest, ...updateEnglishTestDTO }),
     );
   }
+  async deleteEnglishTest(id: string) {
+    return await this.englishRepository.softDelete(id);
+  }
 }

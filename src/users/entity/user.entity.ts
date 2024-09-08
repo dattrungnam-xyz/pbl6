@@ -6,6 +6,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Role } from '../../type/role.type';
 
 @Entity()
 export class User {
@@ -49,6 +50,9 @@ export class User {
 
   @Column({ nullable: true })
   passwordResetExpires: Date;
+
+  @Column('simple-array')
+  roles: Role[];
 
   @Expose()
   @CreateDateColumn()

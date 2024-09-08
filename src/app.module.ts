@@ -15,7 +15,8 @@ import { QuestionMediaModule } from './question-media/question-media.module';
 import { SubmissionModule } from './submission/submission.module';
 import { UserAnswerModule } from './user-answer/user-answer.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
-
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/roles.guard';
 
 @Module({
   imports: [
@@ -36,6 +37,12 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     CloudinaryModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}
