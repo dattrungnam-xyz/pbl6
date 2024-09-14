@@ -11,14 +11,17 @@ export class CloudinaryService {
   constructor() {}
   async uploadImage(file: Express.Multer.File): Promise<CloudinaryOutput> {
     const b64 = Buffer.from(file.buffer).toString('base64');
-    let url: string = 'data:' + file.mimetype + ';base64,' + b64;
-    let res: CloudinaryResponse = await cloudinary.uploader.upload(url, {
+    let data: string = 'data:' + file.mimetype + ';base64,' + b64;
+    return await this.uploadImageBase64(data);
+  }
+  async uploadImageBase64(data: string): Promise<CloudinaryOutput> {
+    let res: CloudinaryResponse = await cloudinary.uploader.upload(data, {
       resource_type: 'auto',
     });
     this.logger.log({ url: res.url, type: 'photo' });
     return { url: res.url, type: 'photo' } as CloudinaryOutput;
   }
-  async uploadVideoStream(
+  async uploadAudioStream(
     file: Express.Multer.File,
   ): Promise<CloudinaryOutput> {
     let res: CloudinaryResponse = await new Promise((resolve) => {
@@ -31,7 +34,7 @@ export class CloudinaryService {
         )
         .end(file.buffer);
     });
-    this.logger.log({ url: res.url, type: 'video' });
-    return { url: res.url, type: 'video' } as CloudinaryOutput;
+    this.logger.log({ url: res.url, type: 'audio' });
+    return { url: res.url, type: 'audio' } as CloudinaryOutput;
   }
 }
