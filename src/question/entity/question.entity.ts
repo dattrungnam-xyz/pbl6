@@ -12,6 +12,7 @@ import {
 import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity';
 import { UserAnswer } from '../../user-answer/entity/userAnswer.entity';
 import { QuestionMedia } from '../../question-media/entity/questionMedia.entity';
+import { AnswerType } from '../../type/answer.type';
 
 @Entity()
 export class Question {
@@ -22,6 +23,12 @@ export class Question {
   @Expose()
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Expose()
+  @Column({
+    nullable: false,
+  })
+  questionNumber: number;
 
   @Expose()
   @Column({
@@ -46,8 +53,16 @@ export class Question {
   optionD: string;
 
   @Expose()
-  @Column({ nullable: false })
-  answer: string;
+  @Column({
+    type: 'enum',
+    enum: AnswerType,
+    default: AnswerType.A,
+  })
+  answer: AnswerType;
+
+  @Expose()
+  @Column({ nullable: true })
+  explain: string;
 
   @Expose()
   @CreateDateColumn()
@@ -65,7 +80,4 @@ export class Question {
   @OneToOne(() => UserAnswer, (userAnswer) => userAnswer.question)
   userAnswer: Promise<UserAnswer>;
 
-  @Expose()
-  @OneToMany(() => QuestionMedia, (media) => media.question)
-  media: Promise<QuestionMedia[]>;
 }

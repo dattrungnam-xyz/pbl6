@@ -11,6 +11,7 @@ import {
 import { Question } from '../../question/entity/question.entity';
 import { Part } from '../../part/entity/part.entity';
 import { Test } from '../../test/entity/test.entity';
+import { QuestionMedia } from '../../question-media/entity/questionMedia.entity';
 
 @Entity()
 export class GroupQuestion {
@@ -24,11 +25,11 @@ export class GroupQuestion {
 
   // maybe this field to convert image to text question
   @Expose()
-  @Column()
+  @Column({ nullable: true })
   detail: string;
 
   @Expose()
-  @Column({nullable: true})
+  @Column({ nullable: true })
   describeAnswer: string;
 
   @Expose()
@@ -50,4 +51,8 @@ export class GroupQuestion {
   @Expose()
   @ManyToOne(() => Test, (test) => test.groupQuestion)
   test: Promise<Test>;
+
+  @Expose()
+  @OneToMany(() => QuestionMedia, (grpQ) => grpQ.groupQuestion)
+  questionMedia: Promise<QuestionMedia[]>;
 }

@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { MediaType } from '../../type/media.type';
 import { Question } from '../../question/entity/question.entity';
+import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity';
 
 @Entity()
 export class QuestionMedia {
@@ -41,6 +42,6 @@ export class QuestionMedia {
   deletedAt: Date;
 
   @Expose()
-  @ManyToOne(() => Question, (question) => question.media)
-  question: Promise<Question>;
+  @ManyToOne(() => GroupQuestion, (grp) => grp.questionMedia)
+  groupQuestion: Promise<GroupQuestion[]>;
 }
