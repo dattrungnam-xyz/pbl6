@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -38,16 +38,19 @@ export class User {
   @Column({ nullable: true, length: 11 })
   phone: string;
 
+  @Exclude({ toPlainOnly: true })
   @Column()
   password: string;
 
-  @Expose()
+  @Exclude({ toPlainOnly: true })
   @Column({ nullable: true })
   passwordChangedAt: Date;
 
+  @Exclude({ toPlainOnly: true })
   @Column({ nullable: true })
   passwordResetToken: String;
 
+  @Exclude({ toPlainOnly: true })
   @Column({ nullable: true })
   passwordResetExpires: Date;
 

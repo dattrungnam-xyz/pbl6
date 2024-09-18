@@ -70,7 +70,7 @@ export class AuthService {
       throw new NotFoundException('There is no user with email address.');
     }
     const token = crypto.randomBytes(32).toString('hex');
-    console.log(token);
+    // console.log(token);
     await this.userRepository.save(
       new User({
         ...user,

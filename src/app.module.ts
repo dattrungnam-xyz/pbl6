@@ -17,6 +17,7 @@ import { UserAnswerModule } from './user-answer/user-answer.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/roles.guard';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { RolesGuard } from './auth/roles.guard';
     SubmissionModule,
     UserAnswerModule,
     CloudinaryModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [
