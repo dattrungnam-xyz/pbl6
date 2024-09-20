@@ -11,8 +11,6 @@ export class UsersService {
   ) {}
 
   async updateProfile(user: User, updateProfileDTO: UpdateProfileDTO) {
-    // console.log(user)
-    // console.log(updateProfileDTO)
     for (let key of Object.keys(updateProfileDTO)) {
       user[key] = updateProfileDTO[key];
     }

@@ -54,12 +54,8 @@ export class User {
   @Column({ nullable: true })
   passwordResetExpires: Date;
 
-  @Column({
-    type: 'enum',
-    enum: Role,
-    default: Role.USER,
-  })
-  role: Role;
+  @Column('simple-array')
+  roles: Role[];
 
   @Expose()
   @CreateDateColumn()
