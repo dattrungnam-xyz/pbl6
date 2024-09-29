@@ -5,10 +5,13 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Question } from '../../question/entity/question.entity';
+import { Submission } from '../../submission/entity/submission.entity';
 
 @Entity()
 export class UserAnswer {
@@ -36,4 +39,7 @@ export class UserAnswer {
   @Expose()
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
+
+  @ManyToOne(() => Submission, (sub) => sub.userAnswer)
+  submission: Promise<Submission>;
 }

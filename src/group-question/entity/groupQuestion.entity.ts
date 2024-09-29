@@ -53,6 +53,6 @@ export class GroupQuestion {
   test: Promise<Test>;
 
   @Expose()
-  @OneToMany(() => QuestionMedia, (grpQ) => grpQ.groupQuestion)
+  @OneToMany(() => QuestionMedia, (questionMedia) => questionMedia.groupQuestion)
   questionMedia: Promise<QuestionMedia[]>;
 }

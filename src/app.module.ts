@@ -18,6 +18,10 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/roles.guard';
 import { UsersModule } from './users/users.module';
+import { UserNewWordModule } from './user-new-word/user-new-word.module';
+import { TopicModule } from './topic/topic.module';
+import { UserTopicModule } from './user-topic/user-topic.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -37,6 +41,10 @@ import { UsersModule } from './users/users.module';
     UserAnswerModule,
     CloudinaryModule,
     UsersModule,
+    UserNewWordModule,
+    TopicModule,
+    UserTopicModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [

@@ -13,6 +13,8 @@ import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity'
 import { UserAnswer } from '../../user-answer/entity/userAnswer.entity';
 import { QuestionMedia } from '../../question-media/entity/questionMedia.entity';
 import { AnswerType } from '../../type/answer.type';
+import { Topic } from '../../topic/entities/topic.entity';
+import { Comment } from '../../comment/entities/comment.entity';
 
 @Entity()
 export class Question {
@@ -80,4 +82,9 @@ export class Question {
   @OneToOne(() => UserAnswer, (userAnswer) => userAnswer.question)
   userAnswer: Promise<UserAnswer>;
 
+  @ManyToOne(()=> Topic, (topic)=> topic.questions)
+  topic: Promise<Topic>;
+
+  @OneToMany(()=>Comment, com => com.question )
+  comments: Promise<Comment[]>
 }

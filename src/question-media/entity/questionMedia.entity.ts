@@ -43,5 +43,5 @@ export class QuestionMedia {
 
   @Expose()
   @ManyToOne(() => GroupQuestion, (grp) => grp.questionMedia)
-  groupQuestion: Promise<GroupQuestion[]>;
+  groupQuestion: Promise<GroupQuestion>;
 }

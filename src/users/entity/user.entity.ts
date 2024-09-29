@@ -4,9 +4,14 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from '../../type/role.type';
+import { UserNewWord } from '../../user-new-word/entity/userNewWord.entity';
+import { UserTopic } from '../../user-topic/entities/user-topic.entity';
+import { Comment } from '../../comment/entities/comment.entity';
 
 @Entity()
 export class User {
@@ -64,4 +69,13 @@ export class User {
   @Expose()
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
+
+  @OneToMany(()=>UserNewWord, (nw)=> nw.user)
+  newWords: Promise<UserNewWord[]>
+
+  @OneToOne(()=> UserTopic,userTopic => userTopic.user)
+  userTopic: Promise<UserTopic>
+
+  @OneToMany(()=>Comment, (com)=> com.user)
+  comments: Promise<Comment[]>
 }

@@ -4,8 +4,10 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { UserAnswer } from '../../user-answer/entity/userAnswer.entity';
 
 @Entity()
 export class Submission {
@@ -29,4 +31,7 @@ export class Submission {
   // contain test
   // contain list part
   // contain list user answer
+
+  @OneToMany(()=>UserAnswer, (userAnswer) => userAnswer.submission)
+  userAnswer: Promise<UserAnswer[]>
 }
