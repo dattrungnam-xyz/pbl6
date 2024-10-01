@@ -54,11 +54,9 @@ export class Question {
 
   @Expose()
   @Column({
-    type: 'enum',
-    enum: AnswerType,
-    default: AnswerType.A,
+    nullable: false,
   })
-  answer: AnswerType;
+  answer: string;
 
   @Expose()
   @Column({ nullable: true })
@@ -73,11 +71,10 @@ export class Question {
   deletedAt: Date;
 
   @Expose()
-  @ManyToOne(() => GroupQuestion, (grp) => grp.listQuestion)
+  @ManyToOne(() => GroupQuestion, (grp) => grp.questions)
   group: Promise<GroupQuestion>;
 
   @Expose()
   @OneToOne(() => UserAnswer, (userAnswer) => userAnswer.question)
   userAnswer: Promise<UserAnswer>;
-
 }
