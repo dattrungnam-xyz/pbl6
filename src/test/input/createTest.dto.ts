@@ -59,6 +59,14 @@ class GroupQuestionDataDTO {
   @ArrayNotEmpty()
   @Type(() => QuestionData)
   questionData: QuestionData[];
+
+  @IsOptional()
+  @IsString()
+  describeAnswer: string;
+
+  @IsOptional()
+  @IsString()
+  detail: string;
 }
 
 class QuestionData {
@@ -66,7 +74,7 @@ class QuestionData {
   @IsNumber()
   questionNumber: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   question: string;
 
@@ -88,6 +96,10 @@ class QuestionData {
   @IsNotEmpty()
   @IsValidAnswer({ message: 'Answer must be one of the options A, B, C, or D' })
   answer: string;
+
+  @IsOptional()
+  @IsString()
+  explain: string;
 }
 
 
