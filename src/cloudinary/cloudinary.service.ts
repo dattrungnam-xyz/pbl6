@@ -12,14 +12,17 @@ export class CloudinaryService {
   async uploadImage(file: Express.Multer.File): Promise<CloudinaryOutput> {
     const b64 = Buffer.from(file.buffer).toString('base64');
     let data: string = 'data:' + file.mimetype + ';base64,' + b64;
-    return await this.uploadImageBase64(data);
+    return await this.uploadImageBase64(data, file.originalname);
   }
-  async uploadImageBase64(data: string): Promise<CloudinaryOutput> {
+  async uploadImageBase64(
+    data: string,
+    name: string = '',
+  ): Promise<CloudinaryOutput> {
     let res: CloudinaryResponse = await cloudinary.uploader.upload(data, {
       resource_type: 'auto',
     });
-    this.logger.log({ url: res.url, type: 'photo' });
-    return { url: res.url, type: 'photo' } as CloudinaryOutput;
+    this.logger.log({ name: name, url: res.url, type: 'photo' });
+    return { name: name, url: res.url, type: 'photo' } as CloudinaryOutput;
   }
   async uploadAudioStream(
     file: Express.Multer.File,
@@ -34,7 +37,23 @@ export class CloudinaryService {
         )
         .end(file.buffer);
     });
-    this.logger.log({ url: res.url, type: 'audio' });
-    return { url: res.url, type: 'audio' } as CloudinaryOutput;
+    this.logger.log({ name: file.originalname, url: res.url, type: 'audio' });
+    return {
+      name: file.originalname,
+      url: res.url,
+      type: 'audio',
+    } as CloudinaryOutput;
+  }
+  async uploadListImage(files: Express.Multer.File[]) {
+    const imagePromise = files.map((file) => {
+      return this.uploadImage(file);
+    });
+    return await Promise.all(imagePromise);
+  }
+  async uploadListAudio(files: Express.Multer.File[]) {
+    const audioPromise = files.map((file) => {
+      return this.uploadAudioStream(file);
+    });
+    return await Promise.all(audioPromise);
   }
 }
