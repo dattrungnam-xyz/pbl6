@@ -21,7 +21,7 @@ export class AppController {
   ) {}
 
   @Get()
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
   getHello(): string {
     return this.appService.getHello();
   }

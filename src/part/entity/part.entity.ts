@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity';
 import { Test } from '../../test/entity/test.entity';
-import { EngLishTest } from '../../english-test/entity/englishTest.entity';
 
 @Entity()
 export class Part {
@@ -42,7 +41,4 @@ export class Part {
   @OneToMany(() => GroupQuestion, (grp) => grp.part)
   listGroupQuestion: Promise<GroupQuestion[]>;
 
-  @Expose()
-  @ManyToOne(() => EngLishTest, (test) => test.part, { cascade: true })
-  test: Promise<EngLishTest>;
 }

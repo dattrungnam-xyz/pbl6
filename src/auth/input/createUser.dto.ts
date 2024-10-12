@@ -1,10 +1,17 @@
-import { ArrayNotEmpty, IsArray, IsEmail, IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  Length,
+} from 'class-validator';
 import { UserDoesNotExist } from '../../validation/UserDoesNotExist.constraint';
 import { IsRepeated } from '../../validation/IsRepeated.constraint';
 import { Role } from '../../type/role.type';
 
 export class CreateUserDTO {
-
   @IsNotEmpty()
   @Length(6)
   @IsString()
@@ -32,7 +39,6 @@ export class CreateUserDTO {
   passwordConfirm: string;
 
   @IsNotEmpty()
-  @IsEnum(Role, { message: "Invalid role." })
-  role: Role;
-  
+  @IsEnum(Role, { each: true, message: 'Invalid role.' })
+  roles: Role[];
 }

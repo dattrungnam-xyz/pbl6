@@ -16,7 +16,4 @@ export class CreatePartDTO {
   @IsNumber()
   totalQuestion: number;
 
-  @IsOptional()
-  @IsUUID()
-  idTest?: string;
 }

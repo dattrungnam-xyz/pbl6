@@ -1,11 +1,33 @@
-import { IsOptional, IsString } from 'class-validator';
+import { Type } from "class-transformer";
+import { ArrayNotEmpty, IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
+import { QuestionData } from "../../question/input/questionData.dto";
 
-export class CreateGroupQuestionDTO {
+export class GroupQuestionDataDTO {
+  //audio: []
+  @IsOptional()
+  audio: string;
+
+  @IsOptional()
+  image: ImageInput[];
+
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @ArrayNotEmpty()
+  @Type(() => QuestionData)
+  questionData: QuestionData[];
+
   @IsOptional()
   @IsString()
-  detail?: string;
-  
+  describeAnswer: string;
+
   @IsOptional()
   @IsString()
-  describeQuestion?: string;
+  detail: string;
+}
+
+class ImageInput
+{
+
+  filename: string;
+  index: number
 }

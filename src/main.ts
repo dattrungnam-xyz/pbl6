@@ -10,7 +10,12 @@ async function bootstrap() {
   app.enableCors();
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,
+    transformOptions: {
+      enableImplicitConversion: true, // <- This line here
+    },
+  }));
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.setGlobalPrefix('api/v1');

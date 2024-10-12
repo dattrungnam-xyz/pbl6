@@ -41,18 +41,27 @@ export class GroupQuestion {
   deletedAt: Date;
 
   @Expose()
-  @OneToMany(() => Question, (question) => question.group)
-  listQuestion: Promise<Question[]>;
+  @OneToMany(() => Question, (question) => question.group, {
+    nullable: false,
+    cascade: true,
+  })
+  questions: Promise<Question[]>;
 
   @Expose()
-  @ManyToOne(() => Part, (part) => part.listGroupQuestion)
+  @ManyToOne(() => Part, (part) => part.listGroupQuestion, { nullable: false })
   part: Promise<Part>;
 
   @Expose()
-  @ManyToOne(() => Test, (test) => test.groupQuestion)
+  @ManyToOne(() => Test, (test) => test.groupQuestions, {
+    nullable: false,
+   
+  })
   test: Promise<Test>;
 
   @Expose()
-  @OneToMany(() => QuestionMedia, (grpQ) => grpQ.groupQuestion)
+  @OneToMany(() => QuestionMedia, (grpQ) => grpQ.groupQuestion, {
+    nullable: true,
+    cascade: true
+  })
   questionMedia: Promise<QuestionMedia[]>;
 }

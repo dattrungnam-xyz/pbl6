@@ -8,8 +8,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { EngLishTest } from '../../english-test/entity/englishTest.entity';
 import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity';
+import { Tag } from '../../tag/entity/tag.entity';
 
 @Entity()
 export class Test {
@@ -37,11 +37,16 @@ export class Test {
   deletedAt: Date;
 
   @Expose()
-  @ManyToOne(() => EngLishTest, (englishTest) => englishTest.listTest)
-  typeTest: Promise<EngLishTest>;
+  @OneToMany(() => GroupQuestion, (group) => group.test, {
+    cascade: true,
+    nullable: false,
+  })
+  groupQuestions: Promise<GroupQuestion[]>;
 
   @Expose()
-  @OneToMany(()=> GroupQuestion, (group)=>group.test)
-  groupQuestion: Promise<GroupQuestion[]>;
-
+  @OneToMany(() => Tag, (tag) => tag.test, {
+    cascade: true,
+    nullable: true,
+  })
+  tags: Promise<Tag[]>
 }

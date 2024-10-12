@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from './config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
-import { EnglishTestModule } from './english-test/english-test.module';
 import { TestModule } from './test/test.module';
 import { QuestionModule } from './question/question.module';
 import { GroupQuestionModule } from './group-question/group-question.module';
@@ -18,6 +17,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/roles.guard';
 import { UsersModule } from './users/users.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -27,7 +27,6 @@ import { UsersModule } from './users/users.module';
     TypeOrmModule.forRoot(dataSourceOptions),
     AuthModule,
     MailModule,
-    EnglishTestModule,
     TestModule,
     QuestionModule,
     GroupQuestionModule,
@@ -37,6 +36,7 @@ import { UsersModule } from './users/users.module';
     UserAnswerModule,
     CloudinaryModule,
     UsersModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [
