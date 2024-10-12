@@ -21,8 +21,7 @@ export class CloudinaryService {
     let res: CloudinaryResponse = await cloudinary.uploader.upload(data, {
       resource_type: 'auto',
     });
-    this.logger.log({ name: name, url: res.url, type: 'photo' });
-    return { name: name, url: res.url, type: 'photo' } as CloudinaryOutput;
+    return { name: name, url: res.url, type: 'image' } as CloudinaryOutput;
   }
   async uploadAudioStream(
     file: Express.Multer.File,
@@ -37,7 +36,6 @@ export class CloudinaryService {
         )
         .end(file.buffer);
     });
-    this.logger.log({ name: file.originalname, url: res.url, type: 'audio' });
     return {
       name: file.originalname,
       url: res.url,

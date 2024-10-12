@@ -27,24 +27,27 @@ export class TestController {
     ]),
   )
   async createTest(
-    // @Body() createTestDTO: CreateTestDTO,
-    @UploadedFiles(ParseFile)
+    @Body() createTestDTO: CreateTestDTO,
+    @UploadedFiles()
     files: {
       audio: Express.Multer.File[];
       image: Express.Multer.File[];
     },
   ) {
-    // console.log(files);
-    //handle upload list audio files and image files
-    const [listAudio, listImage] = await Promise.allSettled([
-      this.cloudinaryService.uploadListAudio(files.audio),
-      this.cloudinaryService.uploadListImage(files.image),
-    ]);
-
-    // console.log(files.image)
-
-    // return await this.testService.createEntireTest(createTestDTO);
-    return '';
+    let filePromise = [];
+    let listFile = [];
+    if (files) {
+      if (files.audio && files.audio.length) {
+        filePromise.push(this.cloudinaryService.uploadListAudio(files.audio));
+      }
+      if (files.image && files.image.length) {
+        filePromise.push(this.cloudinaryService.uploadListImage(files.image));
+      }
+      listFile = await Promise.all(filePromise);
+      listFile = listFile.flat(1);
+    }
+    return await this.testService.createEntireTest(createTestDTO, listFile);
+    // return '';
   }
   @Get()
   async findAll() {

@@ -4,88 +4,59 @@ import { Test } from './entity/test.entity';
 import { Repository } from 'typeorm';
 import { CreateTestDTO } from './input/createTest.dto';
 import { UpdateTestDTO } from './input/updateTest.dto';
-import { Tag } from '../tag/entity/tag.entity';
-import { Part } from '../part/entity/part.entity';
 import { GroupQuestion } from '../group-question/entity/groupQuestion.entity';
 import { Question } from '../question/entity/question.entity';
-import { runInThisContext } from 'vm';
+import { TagService } from '../tag/tag.service';
+import { PartService } from '../part/part.service';
+import { GroupQuestionService } from '../group-question/group-question.service';
+import { CloudinaryResponse } from '../cloudinary/cloudinary-response';
+import { QuestionMediaService } from '../question-media/question-media.service';
 
 @Injectable()
 export class TestService {
   constructor(
     @InjectRepository(Test) private readonly testRepository: Repository<Test>,
-    @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
-    @InjectRepository(Part) private readonly partRepository: Repository<Part>,
     @InjectRepository(GroupQuestion)
     private readonly groupQuestionRepository: Repository<GroupQuestion>,
+    private readonly tagService: TagService,
+    private readonly partService: PartService,
+    private readonly groupQuestionService: GroupQuestionService,
+    private readonly questionMediaService: QuestionMediaService,
   ) {}
 
   // async createTest(createTestDTO: CreateTestDTO): Promise<Test> {
   //   return await this.testRepository.save(new Test({ ...createTestDTO }));
   // }
 
-  async createEntireTest(createTestDTO: CreateTestDTO): Promise<Test> {
+  async createEntireTest(
+    createTestDTO: CreateTestDTO,
+    listFile: CloudinaryResponse[],
+  ): Promise<Test> {
     // create test
     let test = new Test({
       name: createTestDTO.name,
       time: createTestDTO.time || 120,
     });
     test = await this.testRepository.save(test);
+
     // handle mapping tag or create tag
-    let tagPromise = createTestDTO.tags.map(async (tag) => {
-      if (tag.id) {
-        return this.tagRepository.findOneBy({ id: tag.id });
-      }
-      const tagSearch = await this.tagRepository.findOneBy({
-        name: tag.name,
-      });
-      if (tagSearch) {
-        return tagSearch;
-      }
-      return this.tagRepository.save(new Tag({ name: tag.name }));
-    });
-    const tags = await Promise.all(tagPromise);
+    const tags = await this.tagService.findOrCreateTags(createTestDTO.tags);
     test.tags = Promise.resolve(tags);
-    let groupQuestions = [];
+
     // handle create group question
+    let groupQuestions = [];
     createTestDTO.partData.forEach(async (data) => {
-      const part = await this.partRepository.findOneBy({ name: data.part });
+      let part = await this.partService.findPartBy({ name: data.part });
       if (!part) {
         throw new NotFoundException('Part not found!');
       }
-      let listGroupQuestion = data.groupQuestionData.map(
-        async (groupQuestion) => {
-          const newGroupQuestion = new GroupQuestion({
-            part: Promise.resolve(part),
-          });
-          if (groupQuestion.describeAnswer) {
-            newGroupQuestion.describeAnswer = groupQuestion.describeAnswer;
-          }
-          if (groupQuestion.detail) {
-            newGroupQuestion.detail = groupQuestion.detail;
-          }
-
-          const listQuestion = groupQuestion.questionData.map((question) => {
-            const newQuestion = new Question({
-              answer: question.answer,
-              explain: question.explain,
-              question: question.question,
-              optionA: question.optionA,
-              optionB: question.optionB,
-              optionC: question.optionC,
-              questionNumber: question.questionNumber,
-            });
-            if (question.optionD) {
-              newQuestion.optionD = question.optionD;
-            }
-            return newQuestion;
-          });
-
-          newGroupQuestion.questions = Promise.resolve(listQuestion);
-          newGroupQuestion.test = Promise.resolve(test);
-          return await this.groupQuestionRepository.save(newGroupQuestion);
-        },
-      );
+      const listGroupQuestion =
+        await this.groupQuestionService.createListGroupQuestion(
+          data.groupQuestionData,
+          part,
+          test,
+          listFile,
+        );
       groupQuestions = [...groupQuestions, ...listGroupQuestion];
     });
     test.groupQuestions = Promise.resolve(groupQuestions);
@@ -106,7 +77,8 @@ export class TestService {
   }
   async findAll() {
     return await this.testRepository.find({
-      relations: ['tags', 'groupQuestions', 'groupQuestions.questions'],
+      relations: ['tags', 'groupQuestions', 'groupQuestions.questions', 'groupQuestions.questionMedia'],
+      order: { createdAt: 'DESC' },
     });
   }
 }

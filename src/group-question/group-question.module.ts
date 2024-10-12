@@ -3,9 +3,10 @@ import { GroupQuestionService } from './group-question.service';
 import { GroupQuestionController } from './group-question.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GroupQuestion } from './entity/groupQuestion.entity';
+import { QuestionMediaModule } from '../question-media/question-media.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([GroupQuestion])],
+  imports: [TypeOrmModule.forFeature([GroupQuestion]), QuestionMediaModule],
   controllers: [GroupQuestionController],
   providers: [GroupQuestionService],
   exports: [GroupQuestionService],

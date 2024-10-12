@@ -11,6 +11,7 @@ import {
 import { CreateTagDto } from '../../tag/dto/createTag.dto';
 import { Type } from 'class-transformer';
 import { IsValidAnswer } from '../../validation/IsValidAnswer.constraint';
+import { PartDataDTO } from '../../part/input/partData.dto';
 
 export class CreateTestDTO {
   @IsNotEmpty()
@@ -34,73 +35,8 @@ export class CreateTestDTO {
   partData: PartDataDTO[];
 }
 
-class PartDataDTO {
-  @IsNotEmpty()
-  @IsString()
-  part: string;
 
-  @IsNotEmpty()
-  @ArrayNotEmpty()
-  @ValidateNested({ each: true })
-  @Type(() => GroupQuestionDataDTO)
-  groupQuestionData: GroupQuestionDataDTO[];
-}
 
-class GroupQuestionDataDTO {
-  //audio: []
-  @IsOptional()
-  audioName: string;
-
-  @IsOptional()
-  imageName: string[];
-
-  @IsNotEmpty()
-  @ValidateNested({ each: true })
-  @ArrayNotEmpty()
-  @Type(() => QuestionData)
-  questionData: QuestionData[];
-
-  @IsOptional()
-  @IsString()
-  describeAnswer: string;
-
-  @IsOptional()
-  @IsString()
-  detail: string;
-}
-
-class QuestionData {
-  @IsNotEmpty()
-  @IsNumber()
-  questionNumber: number;
-
-  @IsOptional()
-  @IsString()
-  question: string;
-
-  @IsNotEmpty()
-  @IsString()
-  optionA: string;
-  @IsNotEmpty()
-  @IsString()
-  optionB: string;
-
-  @IsNotEmpty()
-  @IsString()
-  optionC: string;
-
-  @IsOptional()
-  @IsString()
-  optionD: string;
-
-  @IsNotEmpty()
-  @IsValidAnswer({ message: 'Answer must be one of the options A, B, C, or D' })
-  answer: string;
-
-  @IsOptional()
-  @IsString()
-  explain: string;
-}
 
 
 // example data
