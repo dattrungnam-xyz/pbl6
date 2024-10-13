@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Get,
   Param,
   Patch,
   Post,
@@ -39,12 +40,13 @@ export class AuthController {
     };
   }
 
-  // @Get()
-  // @UseGuards(JwtAuthGuard)
-  // async getMe(@Req() req: any): Promise<User> {
-  //   // this.mailService.sendMailResetPassword(req.user, 'testurl');
-  //   return req.user;
-  // }
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getMe(@Req() req: any): Promise<User> {
+    // this.mailService.sendMailResetPassword(req.user, 'testurl');
+    return req.user;
+  }
 
   @Post('signup')
   @UseInterceptors(ClassSerializerInterceptor)
