@@ -15,6 +15,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ResetPassworDTO } from './input/resetPassword.dto';
 import { UpdatePasswordDTO } from './input/updatePassword.dto';
 import { MailService } from '../mail/mail.service';
+import { LoginException } from '../exception/login.exception';
 
 @Injectable()
 export class AuthService {
@@ -41,11 +42,11 @@ export class AuthService {
     });
     if (!user) {
       this.logger.debug(`User ${username} not found!`);
-      throw new UnauthorizedException();
+      throw new LoginException();
     }
     if (!(await this.comparePassword(password, user.password))) {
       this.logger.debug(`Password incorrect!`);
-      throw new UnauthorizedException();
+      throw new LoginException();
     }
 
     return user;
