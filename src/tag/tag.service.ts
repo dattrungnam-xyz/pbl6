@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTagDto } from './dto/createTag.dto';
-import { UpdateTagDto } from './dto/update-tag.dto';
+import { CreateTagDTO } from './input/createTag.dto';
+import { UpdateTagDTO } from './input/updateTag.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from './entity/tag.entity';
 import { Repository } from 'typeorm';
@@ -11,7 +11,7 @@ export class TagService {
     @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
   ) {}
 
-  async findOrCreateTags(listCreateTagDTO: CreateTagDto[]): Promise<Tag[]> {
+  async findOrCreateTags(listCreateTagDTO: CreateTagDTO[]): Promise<Tag[]> {
     let tagPromise = listCreateTagDTO.map(async (tag) => {
       if (tag.id) {
         return this.tagRepository.findOneBy({ id: tag.id });
@@ -28,7 +28,7 @@ export class TagService {
     return tags;
   }
 
-  create(createTagDto: CreateTagDto) {
+  create(createTagDto: CreateTagDTO) {
     return 'This action adds a new tag';
   }
 
@@ -40,7 +40,7 @@ export class TagService {
     return `This action returns a #${id} tag`;
   }
 
-  update(id: number, updateTagDto: UpdateTagDto) {
+  update(id: number, updateTagDto: UpdateTagDTO) {
     return `This action updates a #${id} tag`;
   }
 

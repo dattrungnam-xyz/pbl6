@@ -1,6 +1,6 @@
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
-export class CreateTagDto {
+export class CreateTagDTO {
     @IsOptional()
     @IsUUID()
     id: string;

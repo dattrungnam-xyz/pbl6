@@ -1,12 +1,18 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { MediaType } from '../../type/media.type';
 
 export class CreateQuestionMediaDTO {
-  @IsNotEmpty()
-  @IsString()
-  url: string;
 
-  @IsNotEmpty()
-  @IsEnum(MediaType)
-  type: MediaType;
+  @IsOptional()
+  @IsUUID()
+  idGroupQuestion: string;
+
+  @IsOptional()
+  index: number;
 }

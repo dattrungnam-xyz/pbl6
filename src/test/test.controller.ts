@@ -1,7 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  Param,
+  Patch,
   Post,
   UploadedFiles,
   UseInterceptors,
@@ -11,6 +15,8 @@ import { CreateTestDTO } from './input/createTest.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ParseFile } from '../validation/ParseFile.pipe';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { UpdateTestDTO } from './input/updateTest.dto';
+import { UpdateTagsTestDTO } from './input/updateTagTest.dto';
 
 @Controller('test')
 export class TestController {
@@ -34,6 +40,8 @@ export class TestController {
       image: Express.Multer.File[];
     },
   ) {
+    console.log(createTestDTO.partData[0].groupQuestionData[0])
+    return;
     let filePromise = [];
     let listFile = [];
     if (files) {
@@ -52,5 +60,30 @@ export class TestController {
   @Get()
   async findAll() {
     return await this.testService.findAll();
+  }
+
+  @Patch(':id')
+  async updateTest(
+    @Param('id') id: string,
+    @Body() updateTestDTO: UpdateTestDTO,
+  ) {
+    return await this.testService.updateTest(id, updateTestDTO);
+  }
+
+  @Delete(':id')
+  @HttpCode(200)
+  async deleteTest(@Param('id') id: string) {
+    await this.testService.deleteTest(id);
+    return {
+      message: 'Test deleted successfully.',
+    };
+  }
+
+  @Patch('tags/:id')
+  async updateTagsOfTest(
+    @Param('id') id: string,
+    @Body() updateTagsTestDTO: UpdateTagsTestDTO,
+  ) {
+    return await this.testService.updateTagsOfTest(id, updateTagsTestDTO);
   }
 }

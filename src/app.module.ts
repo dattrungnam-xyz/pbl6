@@ -18,6 +18,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/roles.guard';
 import { UsersModule } from './users/users.module';
 import { TagModule } from './tag/tag.module';
+import { TopicModule } from './topic/topic.module';
+import { TopicQuestionModule } from './topic-question/topic-question.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { TagModule } from './tag/tag.module';
     CloudinaryModule,
     UsersModule,
     TagModule,
+    TopicModule,
+    TopicQuestionModule,
   ],
   controllers: [AppController],
   providers: [

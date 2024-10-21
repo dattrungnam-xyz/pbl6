@@ -9,8 +9,9 @@ import { Question } from '../question/entity/question.entity';
 import { TagService } from '../tag/tag.service';
 import { PartService } from '../part/part.service';
 import { GroupQuestionService } from '../group-question/group-question.service';
-import { CloudinaryResponse } from '../cloudinary/cloudinary-response';
 import { QuestionMediaService } from '../question-media/question-media.service';
+import { UpdateTagsTestDTO } from './input/updateTagTest.dto';
+import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
 
 @Injectable()
 export class TestService {
@@ -30,7 +31,7 @@ export class TestService {
 
   async createEntireTest(
     createTestDTO: CreateTestDTO,
-    listFile: CloudinaryResponse[],
+    listFile: CloudinaryOutput[],
   ): Promise<Test> {
     // create test
     let test = new Test({
@@ -48,7 +49,7 @@ export class TestService {
     createTestDTO.partData.forEach(async (data) => {
       let part = await this.partService.findPartBy({ name: data.part });
       if (!part) {
-        throw new NotFoundException('Part not found!');
+        throw new NotFoundException('Part not found');
       }
       const listGroupQuestion =
         await this.groupQuestionService.createListGroupQuestion(
@@ -63,21 +64,49 @@ export class TestService {
     return await this.testRepository.save(test);
   }
 
-  // async updateTest(updateTestDTO: UpdateTestDTO): Promise<Test> {
-  //   let test = await this.testRepository.findOneBy({ id: updateTestDTO.id });
-  //   if (!test) {
-  //     throw new NotFoundException('Test not found.');
-  //   }
-  //   return await this.testRepository.save(
-  //     new Test({ ...test, ...updateTestDTO }),
-  //   );
-  // }
+  async updateTest(id: string, updateTestDTO: UpdateTestDTO): Promise<Test> {
+    let test = await this.testRepository.findOneBy({ id: id });
+    if (!test) {
+      throw new NotFoundException('Test not found');
+    }
+    return await this.testRepository.save(
+      new Test({ ...test, ...updateTestDTO }),
+    );
+  }
+
   async deleteTest(id: string) {
+    let test = await this.testRepository.findOneBy({ id });
+    if (!test) {
+      throw new NotFoundException('Test not found');
+    }
     return await this.testRepository.softDelete(id);
+  }
+  async updateTagsOfTest(id: string, updateTagsTestDTO: UpdateTagsTestDTO) {
+    let test = await this.testRepository.findOneBy({ id });
+    if (!test) {
+      throw new NotFoundException('Test not found');
+    }
+    let listTag = (await test.tags).filter(
+      (tag) => !updateTagsTestDTO.pull.includes(tag.id),
+    );
+    for (let tag of await this.tagService.findOrCreateTags(
+      updateTagsTestDTO.push,
+    )) {
+      if (listTag.findIndex((ltag) => ltag.id === tag.id) === -1) {
+        listTag.push(tag);
+      }
+    }
+    test.tags = Promise.resolve(listTag);
+    return await this.testRepository.save(test);
   }
   async findAll() {
     return await this.testRepository.find({
-      relations: ['tags', 'groupQuestions', 'groupQuestions.questions', 'groupQuestions.questionMedia'],
+      relations: [
+        'tags',
+        'groupQuestions',
+        'groupQuestions.questions',
+        'groupQuestions.questionMedia',
+      ],
       order: { createdAt: 'DESC' },
     });
   }

@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Test } from '../../test/entity/test.entity';
+import { Topic } from '../../topic/entities/topic.entity';
 
 @Entity()
 export class Tag {
@@ -36,7 +37,12 @@ export class Tag {
   @Expose()
   @ManyToOne(() => Test, (test) => test.tags, {
     nullable: true,
- 
   })
   test: Promise<Test>;
+
+  @Expose()
+  @ManyToOne(() => Topic, (Topic) => Topic.tags, {
+    nullable: true,
+  })
+  topic: Promise<Topic>;
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GroupQuestion } from './entity/groupQuestion.entity';
 import { Repository } from 'typeorm';
@@ -9,6 +9,8 @@ import { Question } from '../question/entity/question.entity';
 import { CloudinaryResponse } from '../cloudinary/cloudinary-response';
 import { QuestionMedia } from '../question-media/entity/questionMedia.entity';
 import { QuestionMediaService } from '../question-media/question-media.service';
+import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
+import { MediaType } from '../type/media.type';
 
 @Injectable()
 export class GroupQuestionService {
@@ -23,7 +25,7 @@ export class GroupQuestionService {
     listGroupQuestionDTO: GroupQuestionDataDTO[],
     part: Part,
     test: Test,
-    listFile?: CloudinaryResponse[],
+    listFile?: CloudinaryOutput[],
   ): Promise<GroupQuestion[]> {
     let listGroupQuestionPromise = listGroupQuestionDTO.map((groupQuestion) => {
       const newGroupQuestion = new GroupQuestion({
@@ -38,21 +40,22 @@ export class GroupQuestionService {
       if (listFile) {
         let listQuestionMedia = [];
         for (let file of listFile) {
-          console.log(file)
           if (file.name === groupQuestion.audio) {
             const newQuestionMedia = new QuestionMedia({
-              type: file.type,
+              type: file.type as MediaType,
               url: file.url,
             });
             listQuestionMedia.push(newQuestionMedia);
           } else if (
-            groupQuestion.image.some(
-              (img) => img.filename === file.filename,
-            )
+            groupQuestion.image.some((img) => img.filename === file.name)
           ) {
+            const img = groupQuestion.image.find(
+              (img) => img.filename === file.name,
+            );
             const newQuestionMedia = new QuestionMedia({
-              type: file.type,
+              type: file.type as MediaType,
               url: file.url,
+              index: img.index,
             });
             listQuestionMedia.push(newQuestionMedia);
           }
@@ -81,5 +84,12 @@ export class GroupQuestionService {
     });
     const listGroupQuestion = await Promise.all(listGroupQuestionPromise);
     return listGroupQuestion;
+  }
+  async deleteGroupQuestion(id: string) {
+    const groupQuestion = await this.groupQuestionRepository.findOneBy({ id });
+    if (!groupQuestion) {
+      throw new NotFoundException('Group question not found');
+    }
+    return await this.groupQuestionRepository.softDelete(id);
   }
 }

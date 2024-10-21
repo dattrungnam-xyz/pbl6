@@ -8,6 +8,7 @@ import {
   Min,
 } from 'class-validator';
 import { AnswerType } from '../../type/answer.type';
+import { IsValidAnswer } from '../../validation/IsValidAnswer.constraint';
 
 export class CreateQuestionDTO {
   @IsNotEmpty()
@@ -37,8 +38,8 @@ export class CreateQuestionDTO {
   optionD: string;
 
   @IsNotEmpty()
-  @IsEnum(AnswerType)
-  answer: AnswerType;
+  @IsValidAnswer({ message: 'Answer must be one of the options A, B, C, or D' })
+  answer: string;
 
   @IsNotEmpty()
   @IsString()

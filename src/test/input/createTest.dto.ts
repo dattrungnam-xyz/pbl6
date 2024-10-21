@@ -8,7 +8,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { CreateTagDto } from '../../tag/dto/createTag.dto';
+import { CreateTagDTO } from '../../tag/input/createTag.dto';
 import { Type } from 'class-transformer';
 import { IsValidAnswer } from '../../validation/IsValidAnswer.constraint';
 import { PartDataDTO } from '../../part/input/partData.dto';
@@ -25,8 +25,8 @@ export class CreateTestDTO {
 
   @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => CreateTagDto)
-  tags: CreateTagDto[];
+  @Type(() => CreateTagDTO)
+  tags: CreateTagDTO[];
 
   @IsNotEmpty()
   @ArrayNotEmpty()
