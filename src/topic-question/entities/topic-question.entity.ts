@@ -1,7 +1,8 @@
 import { Expose } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TopicQuestionType } from '../../type/topicQuestion.type';
 import { WordClassType } from '../../type/wordClass.type';
+import { Topic } from '../../topic/entities/topic.entity';
 
 @Entity()
 export class TopicQuestion {
@@ -9,6 +10,7 @@ export class TopicQuestion {
   id: string;
 
   @Column()
+
   audio: string;
 
   @Column()
@@ -28,19 +30,10 @@ export class TopicQuestion {
   questionContent: string;
 
   @Column({ nullable: true })
-  optionA: string;
+  answer: string[];
 
-  @Column({ nullable: true })
-  optionB: string;
-
-  @Column({ nullable: true })
-  optionC: string;
-
-  @Column({ nullable: true })
-  optionD: string;
-
-  @Column({ nullable: true })
-  answer: string;
+  @Column({ nullable: false })
+  correctAnswer: string;
 
   @Column({ nullable: true })
   translate: string;
@@ -50,4 +43,10 @@ export class TopicQuestion {
 
   @Column({ type: 'enum', enum: WordClassType, nullable: true })
   wordClass: WordClassType;
+
+  @Expose()
+  @ManyToOne(() => Topic, (Topic) => Topic.listTopicQuestion, {
+    nullable: true,
+  })
+  topic: Promise<Topic>;
 }

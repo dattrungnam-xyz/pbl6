@@ -1,4 +1,11 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { TopicQuestionType } from '../../type/topicQuestion.type';
 import { WordClassType } from '../../type/wordClass.type';
 
@@ -24,24 +31,14 @@ export class ListTopicQuestionDTO {
   questionContent: string;
 
   @IsOptional()
-  @IsString()
-  optionA: string;
-
-  @IsOptional()
-  @IsString()
-  optionB: string;
-
-  @IsOptional()
-  @IsString()
-  optionC: string;
-
-  @IsOptional()
-  @IsString()
-  optionD: string;
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  answer: string[];
 
   @IsNotEmpty()
   @IsString()
-  answer: string;
+  correctAnswer: string;
 
   @IsOptional()
   @IsString()

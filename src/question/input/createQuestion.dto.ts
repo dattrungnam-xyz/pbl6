@@ -1,4 +1,5 @@
 import {
+  ArrayNotEmpty,
   IsArray,
   IsEnum,
   IsNotEmpty,
@@ -21,25 +22,14 @@ export class CreateQuestionDTO {
   question: string;
 
   @IsNotEmpty()
-  @IsString()
-  optionA: string;
-
-  @IsNotEmpty()
-  @IsString()
-  optionB: string;
-
-  @IsNotEmpty()
-  @IsString()
-  optionC: string;
-
-  @IsOptional()
-  @IsNotEmpty()
-  @IsString()
-  optionD: string;
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  answer: string[];
 
   @IsNotEmpty()
   @IsValidAnswer({ message: 'Answer must be one of the options A, B, C, or D' })
-  answer: string;
+  correctAnswer: string;
 
   @IsNotEmpty()
   @IsString()

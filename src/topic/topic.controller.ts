@@ -67,7 +67,8 @@ export class TopicController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.topicService.remove(+id);
+  async delete(@Param('id') id: string) {
+    await this.topicService.delete(id);
+    return { message: 'Topic deleted successfully' };
   }
 }

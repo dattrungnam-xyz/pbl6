@@ -1,6 +1,7 @@
 import { Expose } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Tag } from '../../tag/entity/tag.entity';
+import { TopicQuestion } from '../../topic-question/entities/topic-question.entity';
 
 @Entity()
 export class Topic {
@@ -23,4 +24,11 @@ export class Topic {
     nullable: true,
   })
   tags: Promise<Tag[]>;
+  
+  @Expose()
+  @OneToMany(() => TopicQuestion, (topicQuestion) => topicQuestion.topic, {
+    cascade: true,
+    nullable: true,
+  })
+  listTopicQuestion: Promise<TopicQuestion[]>;
 }

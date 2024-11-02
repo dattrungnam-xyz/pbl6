@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTopicDTO } from './input/createTopic.dto';
 import { UpdateTopicDTO } from './input/updateTopic.dto';
 import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
@@ -6,11 +6,13 @@ import { Topic } from './entities/topic.entity';
 import { TagService } from '../tag/tag.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { TopicQuestionService } from '../topic-question/topic-question.service';
 
 @Injectable()
 export class TopicService {
   constructor(
     private readonly tagService: TagService,
+    private readonly topicQuestionService: TopicQuestionService,
     @InjectRepository(Topic)
     private readonly topicRepository: Repository<Topic>,
   ) {}
@@ -26,9 +28,13 @@ export class TopicService {
     });
     const tags = await this.tagService.findOrCreateTags(createTopicDTO.tags);
     newTopic.tags = Promise.resolve(tags);
-
-    // handle create list topic question
-    return 'This action adds a new topic';
+    const listTopicQuestions =
+      await this.topicQuestionService.createListTopicQuestion(
+        createTopicDTO.listTopicQuestion,
+        listFile,
+      );
+    newTopic.listTopicQuestion = Promise.resolve(listTopicQuestions);
+    return await this.topicRepository.save(newTopic);
   }
 
   findAll() {
@@ -43,7 +49,11 @@ export class TopicService {
     return `This action updates a #${id} topic`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} topic`;
+  async delete(id: string) {
+    const doc = await this.topicRepository.findOneBy({ id });
+    if (!doc) {
+      throw new NotFoundException('Topic not found');
+    }
+    return await this.topicRepository.softDelete(id);
   }
 }

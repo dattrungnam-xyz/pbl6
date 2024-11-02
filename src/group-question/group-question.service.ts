@@ -67,9 +67,7 @@ export class GroupQuestionService {
           answer: question.answer,
           explain: question.explain,
           question: question.question,
-          optionA: question.optionA,
-          optionB: question.optionB,
-          optionC: question.optionC,
+          correctAnswer: question.correctAnswer,
           questionNumber: question.questionNumber,
         });
         if (question.optionD) {

@@ -40,8 +40,6 @@ export class TestController {
       image: Express.Multer.File[];
     },
   ) {
-    console.log(createTestDTO.partData[0].groupQuestionData[0])
-    return;
     let filePromise = [];
     let listFile = [];
     if (files) {
