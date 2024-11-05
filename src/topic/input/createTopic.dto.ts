@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
   ValidateNested,
 } from 'class-validator';
 import { CreateTagDTO } from '../../tag/input/createTag.dto';
@@ -11,7 +12,10 @@ import { ListTopicQuestionDTO } from '../../topic-question/input/listTopicQuesti
 
 export class CreateTopicDTO {
   @IsOptional()
-  @IsString()
+  @Matches(/^data:image\/(png|jpg|jpeg|gif);base64,[A-Za-z0-9+/]+={0,2}$/, {
+    message:
+      'Avatar must be a valid Base64 encoded image (PNG, JPG, JPEG, GIF)',
+  })
   thumbnail: string;
 
   @IsNotEmpty()

@@ -37,7 +37,7 @@ export class Question {
   question: string;
 
   @Expose()
-  @Column({ nullable: true })
+  @Column("simple-array",{ nullable: true })
   answer: string[];
 
   @Expose()

@@ -22,33 +22,15 @@ export class TopicController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  @Post()
+  @Post(':idGroupTopic')
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'thumbnail' }, { name: 'audio' }]),
   )
   async createEntireTopic(
-    @UploadedFiles()
-    files: {
-      thumbnail: Express.Multer.File[];
-      audio: Express.Multer.File[];
-    },
     @Body() createTopicDTO: CreateTopicDTO,
+    @Param('idGroupTopic') id: string,
   ) {
-    let filePromise = [];
-    let listFile = [];
-    if (files) {
-      if (files.thumbnail && files.thumbnail.length) {
-        filePromise.push(
-          this.cloudinaryService.uploadListImage(files.thumbnail),
-        );
-      }
-      if (files.audio && files.audio.length) {
-        filePromise.push(this.cloudinaryService.uploadListAudio(files.audio));
-      }
-      listFile = await Promise.all(filePromise);
-      listFile = listFile.flat(1);
-    }
-    return await this.topicService.createEntireTopic(createTopicDTO, listFile);
+    return await this.topicService.createEntireTopic(id,createTopicDTO);
   }
 
   @Get()

@@ -10,11 +10,25 @@ export class TopicQuestion {
   id: string;
 
   @Column()
-
   audio: string;
 
   @Column()
   thumbnail: string;
+
+  @Column()
+  word: string;
+
+  @Column()
+  example: string;
+
+  @Column()
+  exampleMeaning: string;
+
+  @Column()
+  exampleAudio: string;
+
+  @Column()
+  defenition: string;
 
   @Column({
     type: 'enum',
@@ -29,7 +43,7 @@ export class TopicQuestion {
   @Column()
   questionContent: string;
 
-  @Column({ nullable: true })
+  @Column('simple-array', { nullable: true })
   answer: string[];
 
   @Column({ nullable: false })

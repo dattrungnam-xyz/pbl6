@@ -29,10 +29,7 @@ export class TestService {
   //   return await this.testRepository.save(new Test({ ...createTestDTO }));
   // }
 
-  async createEntireTest(
-    createTestDTO: CreateTestDTO,
-    listFile: CloudinaryOutput[],
-  ): Promise<Test> {
+  async createEntireTest(createTestDTO: CreateTestDTO): Promise<Test> {
     // create test
     let test = new Test({
       name: createTestDTO.name,
@@ -56,7 +53,6 @@ export class TestService {
           data.groupQuestionData,
           part,
           test,
-          listFile,
         );
       groupQuestions = [...groupQuestions, ...listGroupQuestion];
     });

@@ -7,6 +7,8 @@ import { TagService } from '../tag/tag.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TopicQuestionService } from '../topic-question/topic-question.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { GroupTopic } from '../group-topic/entity/groupTopic.entity';
 
 @Injectable()
 export class TopicService {
@@ -15,23 +17,33 @@ export class TopicService {
     private readonly topicQuestionService: TopicQuestionService,
     @InjectRepository(Topic)
     private readonly topicRepository: Repository<Topic>,
+    private readonly cloudinaryService: CloudinaryService,
+    @InjectRepository(GroupTopic)
+    private readonly groupTopicRepository: Repository<GroupTopic>,
   ) {}
-  async createEntireTopic(
-    createTopicDTO: CreateTopicDTO,
-    listFile?: CloudinaryOutput[],
-  ) {
+  async createEntireTopic(id: string, createTopicDTO: CreateTopicDTO) {
+    const groupTopic = await this.groupTopicRepository.findOneBy({ id });
+    if (!groupTopic) {
+      throw new NotFoundException('Group topic not found.');
+    }
+    let thumbnailUrl;
+    if (createTopicDTO.thumbnail) {
+      const topicThumbnail = await this.cloudinaryService.uploadImageBase64(
+        createTopicDTO.thumbnail,
+      );
+      thumbnailUrl = topicThumbnail.url;
+    }
     let newTopic = new Topic({
       name: createTopicDTO.name,
-      thumbnail:
-        listFile.find((file) => file.name === createTopicDTO.thumbnail).url ||
-        '',
+      thumbnail: thumbnailUrl,
     });
+    newTopic.groupTopic = Promise.resolve(groupTopic);
+
     const tags = await this.tagService.findOrCreateTags(createTopicDTO.tags);
     newTopic.tags = Promise.resolve(tags);
     const listTopicQuestions =
       await this.topicQuestionService.createListTopicQuestion(
         createTopicDTO.listTopicQuestion,
-        listFile,
       );
     newTopic.listTopicQuestion = Promise.resolve(listTopicQuestions);
     return await this.topicRepository.save(newTopic);

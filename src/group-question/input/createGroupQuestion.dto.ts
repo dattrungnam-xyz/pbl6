@@ -27,6 +27,6 @@ export class GroupQuestionDataDTO {
 
 class ImageInput
 {
-  filename: string;
+  file: string;
   index: number
 }

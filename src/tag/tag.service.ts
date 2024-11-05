@@ -22,7 +22,9 @@ export class TagService {
       if (tagSearch) {
         return tagSearch;
       }
-      return this.tagRepository.save(new Tag({ name: tag.name }));
+      return this.tagRepository.save(
+        new Tag({ name: tag.name, type: tag.type }),
+      );
     });
     const tags = await Promise.all(tagPromise);
     return tags;

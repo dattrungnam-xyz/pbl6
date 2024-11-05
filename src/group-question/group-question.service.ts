@@ -11,6 +11,7 @@ import { QuestionMedia } from '../question-media/entity/questionMedia.entity';
 import { QuestionMediaService } from '../question-media/question-media.service';
 import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
 import { MediaType } from '../type/media.type';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class GroupQuestionService {
@@ -18,6 +19,7 @@ export class GroupQuestionService {
     @InjectRepository(GroupQuestion)
     private readonly groupQuestionRepository: Repository<GroupQuestion>,
     private readonly questionMediaService: QuestionMediaService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   async createGroupQuestion() {}
@@ -25,61 +27,62 @@ export class GroupQuestionService {
     listGroupQuestionDTO: GroupQuestionDataDTO[],
     part: Part,
     test: Test,
-    listFile?: CloudinaryOutput[],
   ): Promise<GroupQuestion[]> {
-    let listGroupQuestionPromise = listGroupQuestionDTO.map((groupQuestion) => {
-      const newGroupQuestion = new GroupQuestion({
-        part: Promise.resolve(part),
-      });
-      if (groupQuestion.describeAnswer) {
-        newGroupQuestion.describeAnswer = groupQuestion.describeAnswer;
-      }
-      if (groupQuestion.detail) {
-        newGroupQuestion.detail = groupQuestion.detail;
-      }
-      if (listFile) {
+    let listGroupQuestionPromise = listGroupQuestionDTO.map(
+      async (groupQuestion) => {
+        const newGroupQuestion = new GroupQuestion({
+          part: Promise.resolve(part),
+        });
+        if (groupQuestion.describeAnswer) {
+          newGroupQuestion.describeAnswer = groupQuestion.describeAnswer;
+        }
+        if (groupQuestion.detail) {
+          newGroupQuestion.detail = groupQuestion.detail;
+        }
         let listQuestionMedia = [];
-        for (let file of listFile) {
-          if (file.name === groupQuestion.audio) {
-            const newQuestionMedia = new QuestionMedia({
-              type: file.type as MediaType,
-              url: file.url,
+        if (groupQuestion.audio) {
+          let audioUrl = await this.cloudinaryService.uploadBase64(
+            groupQuestion.audio,
+          );
+          const newQuestionMedia = new QuestionMedia({
+            type: MediaType.AUDIO,
+            url: audioUrl,
+          });
+          listQuestionMedia.push(newQuestionMedia);
+        }
+        if (groupQuestion.image && groupQuestion.image.length > 0) {
+          const listImagePromise = groupQuestion.image
+            .sort((a, b) => a.index - b.index)
+            .map((file) => {
+              return this.cloudinaryService.uploadBase64(file.file);
             });
-            listQuestionMedia.push(newQuestionMedia);
-          } else if (
-            groupQuestion.image.some((img) => img.filename === file.name)
-          ) {
-            const img = groupQuestion.image.find(
-              (img) => img.filename === file.name,
-            );
+          const listFileUrl = await Promise.all(listImagePromise);
+          for (let i = 0; i < listFileUrl.length; i++) {
             const newQuestionMedia = new QuestionMedia({
-              type: file.type as MediaType,
-              url: file.url,
-              index: img.index,
+              type: MediaType.IMAGE,
+              url: listFileUrl[i],
+              index: groupQuestion.image[i].index,
             });
             listQuestionMedia.push(newQuestionMedia);
           }
         }
         newGroupQuestion.questionMedia = Promise.resolve(listQuestionMedia);
-      }
-      const listQuestion = groupQuestion.questionData.map((question) => {
-        const newQuestion = new Question({
-          answer: question.answer,
-          explain: question.explain,
-          question: question.question,
-          correctAnswer: question.correctAnswer,
-          questionNumber: question.questionNumber,
+        const listQuestion = groupQuestion.questionData.map((question) => {
+          const newQuestion = new Question({
+            answer: question.answer,
+            explain: question.explain,
+            question: question.question,
+            correctAnswer: question.correctAnswer,
+            questionNumber: question.questionNumber,
+          });
+          return newQuestion;
         });
-        if (question.optionD) {
-          newQuestion.optionD = question.optionD;
-        }
-        return newQuestion;
-      });
 
-      newGroupQuestion.questions = Promise.resolve(listQuestion);
-      newGroupQuestion.test = Promise.resolve(test);
-      return this.groupQuestionRepository.save(newGroupQuestion);
-    });
+        newGroupQuestion.questions = Promise.resolve(listQuestion);
+        newGroupQuestion.test = Promise.resolve(test);
+        return this.groupQuestionRepository.save(newGroupQuestion);
+      },
+    );
     const listGroupQuestion = await Promise.all(listGroupQuestionPromise);
     return listGroupQuestion;
   }

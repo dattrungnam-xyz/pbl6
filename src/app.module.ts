@@ -20,6 +20,7 @@ import { UsersModule } from './users/users.module';
 import { TagModule } from './tag/tag.module';
 import { TopicModule } from './topic/topic.module';
 import { TopicQuestionModule } from './topic-question/topic-question.module';
+import { GroupTopicModule } from './group-topic/group-topic.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { TopicQuestionModule } from './topic-question/topic-question.module';
     TagModule,
     TopicModule,
     TopicQuestionModule,
+    GroupTopicModule,
   ],
   controllers: [AppController],
   providers: [

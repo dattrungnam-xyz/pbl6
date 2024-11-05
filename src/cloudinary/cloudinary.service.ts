@@ -54,4 +54,10 @@ export class CloudinaryService {
     });
     return await Promise.all(audioPromise);
   }
+  async uploadBase64(data: string) {
+    let res: CloudinaryResponse = await cloudinary.uploader.upload(data, {
+      resource_type: 'auto',
+    });
+    return res.url;
+  }
 }

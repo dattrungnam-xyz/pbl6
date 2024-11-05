@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 import { Test } from '../../test/entity/test.entity';
 import { Topic } from '../../topic/entities/topic.entity';
+import { GroupTopic } from '../../group-topic/entity/groupTopic.entity';
+import { TagType } from '../../type/tag.type';
 
 @Entity()
 export class Tag {
@@ -24,7 +26,6 @@ export class Tag {
   @Expose()
   @Column()
   name: string;
-
 
   @Expose()
   @CreateDateColumn()
@@ -45,4 +46,18 @@ export class Tag {
     nullable: true,
   })
   topic: Promise<Topic>;
+
+  @Expose()
+  @ManyToOne(() => GroupTopic, (GroupTopic) => GroupTopic.tags, {
+    nullable: true,
+  })
+  groupTopic: Promise<GroupTopic>;
+
+  @Expose()
+  @Column({
+    type: 'enum',
+    enum: TagType,
+    default: TagType.FREE,
+  })
+  type: TagType;
 }
