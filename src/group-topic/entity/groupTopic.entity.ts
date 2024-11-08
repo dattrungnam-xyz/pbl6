@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Tag } from '../../tag/entity/tag.entity';
-import { Topic } from '../../topic/entities/topic.entity';
+import { Topic } from '../../topic/entity/topic.entity';
 
 @Entity()
 export class GroupTopic {

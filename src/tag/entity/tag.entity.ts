@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Test } from '../../test/entity/test.entity';
-import { Topic } from '../../topic/entities/topic.entity';
+import { Topic } from '../../topic/entity/topic.entity';
 import { GroupTopic } from '../../group-topic/entity/groupTopic.entity';
 import { TagType } from '../../type/tag.type';
 

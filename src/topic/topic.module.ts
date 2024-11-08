@@ -3,13 +3,13 @@ import { TopicService } from './topic.service';
 import { TopicController } from './topic.controller';
 import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Topic } from './entities/topic.entity';
+import { Topic } from './entity/topic.entity';
 import { TagModule } from '../tag/tag.module';
-import { TopicQuestionModule } from '../topic-question/topic-question.module';
 import { GroupTopic } from '../group-topic/entity/groupTopic.entity';
+import { WordModule } from '../word/word.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Topic, GroupTopic]), CloudinaryModule, TagModule, TopicQuestionModule],
+  imports: [TypeOrmModule.forFeature([Topic, GroupTopic]), CloudinaryModule, TagModule, WordModule],
   controllers: [TopicController],
   providers: [TopicService],
 })

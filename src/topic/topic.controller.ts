@@ -30,7 +30,7 @@ export class TopicController {
     @Body() createTopicDTO: CreateTopicDTO,
     @Param('idGroupTopic') id: string,
   ) {
-    return await this.topicService.createEntireTopic(id,createTopicDTO);
+    return await this.topicService.createEntireTopic(id, createTopicDTO);
   }
 
   @Get()
@@ -45,7 +45,7 @@ export class TopicController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTopicDTO: UpdateTopicDTO) {
-    return this.topicService.update(+id, updateTopicDTO);
+    return this.topicService.updateTopic(id, updateTopicDTO);
   }
 
   @Delete(':id')

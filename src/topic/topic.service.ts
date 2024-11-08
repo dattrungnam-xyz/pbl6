@@ -2,24 +2,24 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTopicDTO } from './input/createTopic.dto';
 import { UpdateTopicDTO } from './input/updateTopic.dto';
 import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
-import { Topic } from './entities/topic.entity';
+import { Topic } from './entity/topic.entity';
 import { TagService } from '../tag/tag.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TopicQuestionService } from '../topic-question/topic-question.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { GroupTopic } from '../group-topic/entity/groupTopic.entity';
+import { WordService } from '../word/word.service';
 
 @Injectable()
 export class TopicService {
   constructor(
     private readonly tagService: TagService,
-    private readonly topicQuestionService: TopicQuestionService,
     @InjectRepository(Topic)
     private readonly topicRepository: Repository<Topic>,
     private readonly cloudinaryService: CloudinaryService,
     @InjectRepository(GroupTopic)
     private readonly groupTopicRepository: Repository<GroupTopic>,
+    private readonly wordService: WordService,
   ) {}
   async createEntireTopic(id: string, createTopicDTO: CreateTopicDTO) {
     const groupTopic = await this.groupTopicRepository.findOneBy({ id });
@@ -39,26 +39,39 @@ export class TopicService {
     });
     newTopic.groupTopic = Promise.resolve(groupTopic);
 
-    const tags = await this.tagService.findOrCreateTags(createTopicDTO.tags);
+    const tags = await this.tagService.findOrCreateTags(
+      createTopicDTO.tags || [],
+    );
     newTopic.tags = Promise.resolve(tags);
-    const listTopicQuestions =
-      await this.topicQuestionService.createListTopicQuestion(
-        createTopicDTO.listTopicQuestion,
-      );
-    newTopic.listTopicQuestion = Promise.resolve(listTopicQuestions);
+    const listWord = await this.wordService.createListWord(
+      createTopicDTO.listWord,
+    );
+    newTopic.listWord = Promise.resolve(listWord);
     return await this.topicRepository.save(newTopic);
   }
 
-  findAll() {
-    return `This action returns all topic`;
+  async updateTopic(id: string, updateTopicDTO: UpdateTopicDTO) {
+    const topic = await this.topicRepository.findOneBy({ id });
+    if (!topic) {
+      throw new NotFoundException('Topic not found');
+    }
+    updateTopicDTO.listWord = undefined;
+    if (updateTopicDTO.tags) {
+      const listTag = await this.tagService.findOrCreateTags(
+        updateTopicDTO.tags,
+      );
+      updateTopicDTO.tags = listTag;
+    }
+    Object.assign(topic, updateTopicDTO);
+    return await this.topicRepository.save(topic);
+  }
+
+  async findAll() {
+    return await this.topicRepository.find({relations: ["listWord"]});
   }
 
   findOne(id: number) {
     return `This action returns a #${id} topic`;
-  }
-
-  update(id: number, updateTopicDTO: UpdateTopicDTO) {
-    return `This action updates a #${id} topic`;
   }
 
   async delete(id: string) {

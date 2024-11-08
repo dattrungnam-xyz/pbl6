@@ -38,7 +38,7 @@ export class TestService {
     test = await this.testRepository.save(test);
 
     // handle mapping tag or create tag
-    const tags = await this.tagService.findOrCreateTags(createTestDTO.tags);
+    const tags = await this.tagService.findOrCreateTags(createTestDTO.tags || []);
     test.tags = Promise.resolve(tags);
 
     // handle create group question
@@ -86,7 +86,7 @@ export class TestService {
       (tag) => !updateTagsTestDTO.pull.includes(tag.id),
     );
     for (let tag of await this.tagService.findOrCreateTags(
-      updateTagsTestDTO.push,
+      updateTagsTestDTO.push || [],
     )) {
       if (listTag.findIndex((ltag) => ltag.id === tag.id) === -1) {
         listTag.push(tag);

@@ -7,8 +7,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Tag } from '../../tag/entity/tag.entity';
-import { TopicQuestion } from '../../topic-question/entities/topic-question.entity';
 import { GroupTopic } from '../../group-topic/entity/groupTopic.entity';
+import { Word } from '../../word/entity/word.entity';
 
 @Entity()
 export class Topic {
@@ -33,11 +33,11 @@ export class Topic {
   tags: Promise<Tag[]>;
 
   @Expose()
-  @OneToMany(() => TopicQuestion, (topicQuestion) => topicQuestion.topic, {
+  @OneToMany(() => Word, (word) => word.topic, {
     cascade: true,
     nullable: true,
   })
-  listTopicQuestion: Promise<TopicQuestion[]>;
+  listWord: Promise<Word[]>;
 
   @Expose()
   @ManyToOne(() => GroupTopic, (groupTopic) => groupTopic.topics, {

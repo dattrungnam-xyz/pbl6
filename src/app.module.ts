@@ -19,8 +19,8 @@ import { RolesGuard } from './auth/roles.guard';
 import { UsersModule } from './users/users.module';
 import { TagModule } from './tag/tag.module';
 import { TopicModule } from './topic/topic.module';
-import { TopicQuestionModule } from './topic-question/topic-question.module';
 import { GroupTopicModule } from './group-topic/group-topic.module';
+import { WordModule } from './word/word.module';
 
 @Module({
   imports: [
@@ -41,8 +41,8 @@ import { GroupTopicModule } from './group-topic/group-topic.module';
     UsersModule,
     TagModule,
     TopicModule,
-    TopicQuestionModule,
     GroupTopicModule,
+    WordModule,
   ],
   controllers: [AppController],
   providers: [

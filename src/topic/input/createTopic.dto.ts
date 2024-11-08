@@ -8,7 +8,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { CreateTagDTO } from '../../tag/input/createTag.dto';
-import { ListTopicQuestionDTO } from '../../topic-question/input/listTopicQuestion.dto';
+import { CreateWordDTO } from '../../word/input/createWord.dto';
+
 
 export class CreateTopicDTO {
   @IsOptional()
@@ -30,6 +31,6 @@ export class CreateTopicDTO {
   @IsNotEmpty()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ListTopicQuestionDTO)
-  listTopicQuestion: ListTopicQuestionDTO[];
+  @Type(() => CreateWordDTO)
+  listWord: CreateWordDTO[];
 }
