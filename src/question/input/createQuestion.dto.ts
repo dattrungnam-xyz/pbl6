@@ -1,4 +1,5 @@
 import {
+  ArrayNotEmpty,
   IsArray,
   IsEnum,
   IsNotEmpty,
@@ -8,6 +9,7 @@ import {
   Min,
 } from 'class-validator';
 import { AnswerType } from '../../type/answer.type';
+import { IsValidAnswer } from '../../validation/IsValidAnswer.constraint';
 
 export class CreateQuestionDTO {
   @IsNotEmpty()
@@ -20,25 +22,14 @@ export class CreateQuestionDTO {
   question: string;
 
   @IsNotEmpty()
-  @IsString()
-  optionA: string;
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  answer: string[];
 
   @IsNotEmpty()
-  @IsString()
-  optionB: string;
-
-  @IsNotEmpty()
-  @IsString()
-  optionC: string;
-
-  @IsOptional()
-  @IsNotEmpty()
-  @IsString()
-  optionD: string;
-
-  @IsNotEmpty()
-  @IsEnum(AnswerType)
-  answer: AnswerType;
+  @IsValidAnswer({ message: 'Answer must be one of the options A, B, C, or D' })
+  correctAnswer: string;
 
   @IsNotEmpty()
   @IsString()

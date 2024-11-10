@@ -9,6 +9,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Test } from '../../test/entity/test.entity';
+import { Topic } from '../../topic/entity/topic.entity';
+import { GroupTopic } from '../../group-topic/entity/groupTopic.entity';
+import { TagType } from '../../type/tag.type';
 
 @Entity()
 export class Tag {
@@ -24,7 +27,6 @@ export class Tag {
   @Column()
   name: string;
 
-
   @Expose()
   @CreateDateColumn()
   createdAt: Date;
@@ -36,7 +38,26 @@ export class Tag {
   @Expose()
   @ManyToOne(() => Test, (test) => test.tags, {
     nullable: true,
- 
   })
   test: Promise<Test>;
+
+  @Expose()
+  @ManyToOne(() => Topic, (Topic) => Topic.tags, {
+    nullable: true,
+  })
+  topic: Promise<Topic>;
+
+  @Expose()
+  @ManyToOne(() => GroupTopic, (GroupTopic) => GroupTopic.tags, {
+    nullable: true,
+  })
+  groupTopic: Promise<GroupTopic>;
+
+  @Expose()
+  @Column({
+    type: 'enum',
+    enum: TagType,
+    default: TagType.FREE,
+  })
+  type: TagType;
 }
