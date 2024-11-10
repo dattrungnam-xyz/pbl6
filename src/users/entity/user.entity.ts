@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from '../../type/role.type';
+import { UserTopic } from '../../user-topic/entity/userTopic.entity';
 
 @Entity()
 export class User {
@@ -64,4 +66,8 @@ export class User {
   @Expose()
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
+
+  @Expose()
+  @OneToMany(() => UserTopic, (userTopic) => userTopic.user)
+  userTopic: Promise<UserTopic>;
 }

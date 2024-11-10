@@ -26,6 +26,7 @@ export class GroupTopicService {
     );
     newGroupTopic.tags = Promise.resolve(listTag);
     newGroupTopic.name = createGroupTopicDTO.name;
+    newGroupTopic.level = createGroupTopicDTO.level;
     if (createGroupTopicDTO.thumbnail) {
       newGroupTopic.thumbnail = (
         await this.cloudinaryService.uploadImageBase64(
@@ -54,5 +55,17 @@ export class GroupTopicService {
     }
     Object.assign(groupTopic, updateGroupTopicDTO);
     return await this.groupTopicRepository.save(groupTopic);
+  }
+
+  async findGroupTopic() {
+    return this.groupTopicRepository.find();
+  }
+
+  async findGroupTopicById(id:string)
+  {
+    return this.groupTopicRepository.findOne({
+      where: { id },
+      relations: ["tags", "topics"]
+    })
   }
 }

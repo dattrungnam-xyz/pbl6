@@ -1,6 +1,8 @@
 import { Expose } from 'class-transformer';
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -8,6 +10,7 @@ import {
 } from 'typeorm';
 import { Tag } from '../../tag/entity/tag.entity';
 import { Topic } from '../../topic/entity/topic.entity';
+import { Level } from '../../type/level.type';
 
 @Entity()
 export class GroupTopic {
@@ -22,6 +25,14 @@ export class GroupTopic {
   @Expose()
   @Column()
   name: string;
+
+  @Expose()
+  @Column({
+    type: 'enum',
+    enum: Level,
+    default: Level.BEGINNER,
+  })
+  level: Level;
 
   @Expose()
   @Column()
@@ -40,4 +51,10 @@ export class GroupTopic {
     nullable: true,
   })
   topics: Promise<Topic>;
+  
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date;
 }

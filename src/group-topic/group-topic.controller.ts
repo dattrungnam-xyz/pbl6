@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { GroupTopicService } from './group-topic.service';
 import { CreateGroupTopicDTO } from './input/createGroupTopic.dto';
 import { UpdateGroupTopicDTO } from './input/updateGroupTopic.dto';
@@ -10,6 +10,14 @@ export class GroupTopicController {
   @Post()
   async createGroupTopic(@Body() createGroupTopicDTO: CreateGroupTopicDTO) {
     return await this.groupTopicService.createGroupTopic(createGroupTopicDTO);
+  }
+  @Get()
+  async findGroupTopic() {
+    return await this.groupTopicService.findGroupTopic();
+  }
+  @Get(':id')
+  async findGroupTopicById(@Param('id') id: string) {
+    return await this.groupTopicService.findGroupTopicById(id);
   }
   @Patch(':id')
   async updateGroupTopic(

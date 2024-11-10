@@ -1,6 +1,8 @@
 import { Expose } from 'class-transformer';
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -44,4 +46,10 @@ export class Topic {
     nullable: true,
   })
   groupTopic: Promise<GroupTopic>;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date;
 }

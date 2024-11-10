@@ -81,4 +81,7 @@ export class WordService {
     Object.assign(word, updateWordDTO);
     return await this.wordRepository.save(word);
   }
+  async findWordById(id: string) {
+    return await this.wordRepository.findOneBy({ id });
+  }
 }

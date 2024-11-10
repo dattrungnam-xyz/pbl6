@@ -1,12 +1,16 @@
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { WordClassType } from '../../type/wordClass.type';
 import { Topic } from '../../topic/entity/topic.entity';
+import { UserTopic } from '../../user-topic/entity/userTopic.entity';
 
 @Entity()
 export class Word {
@@ -51,4 +55,13 @@ export class Word {
     nullable: true,
   })
   topic: Promise<Topic>;
+
+  @ManyToMany(() => UserTopic, (userTopic) => userTopic.words)
+  userTopic: Promise<UserTopic[]>;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date;
 }

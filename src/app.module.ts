@@ -21,6 +21,8 @@ import { TagModule } from './tag/tag.module';
 import { TopicModule } from './topic/topic.module';
 import { GroupTopicModule } from './group-topic/group-topic.module';
 import { WordModule } from './word/word.module';
+import { UserTopicModule } from './user-topic/user-topic.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { WordModule } from './word/word.module';
     TopicModule,
     GroupTopicModule,
     WordModule,
+    UserTopicModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [
