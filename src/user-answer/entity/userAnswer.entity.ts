@@ -5,10 +5,12 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Question } from '../../question/entity/question.entity';
+import { TestPractice } from '../../test-practice/entity/testPractice.entity';
 
 @Entity()
 export class UserAnswer {
@@ -25,10 +27,13 @@ export class UserAnswer {
   userAnswer: string;
 
   @Expose()
-  @JoinColumn()
-  @OneToOne(() => Question, (question) => question.userAnswer)
+  @ManyToOne(() => Question, (question) => question.userAnswer)
   question: Promise<Question>;
 
+  @Expose()
+  @Column()
+  isCorrect: boolean;
+  
   @Expose()
   @CreateDateColumn()
   createdAt: Date;
@@ -36,4 +41,8 @@ export class UserAnswer {
   @Expose()
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
+
+  @Expose()
+  @ManyToOne(() => TestPractice, (testPractice) => testPractice.userAnswers)
+  testPractice: Promise<TestPractice>;
 }

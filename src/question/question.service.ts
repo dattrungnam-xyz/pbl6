@@ -30,4 +30,7 @@ export class QuestionService {
     if (!question) throw new NotFoundException('Question not found.');
     return await this.questionRepository.softDelete(id);
   }
+  async findOneById(id: string) {
+    return await this.questionRepository.findOneBy({ id });
+  }
 }
