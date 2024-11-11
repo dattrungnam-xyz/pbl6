@@ -41,7 +41,7 @@ export class AuthService {
       where: { username },
     });
     if (!user) {
-      this.logger.debug(`User ${username} not found!`);
+      this.logger.debug(`User ${username} not found`);
       throw new LoginException();
     }
     if (!(await this.comparePassword(password, user.password))) {
@@ -68,7 +68,7 @@ export class AuthService {
       email: email,
     });
     if (user == null) {
-      throw new NotFoundException('There is no user with email address.');
+      throw new NotFoundException('There is no user with email address');
     }
     const token = crypto.randomBytes(32).toString('hex');
     // console.log(token);

@@ -26,18 +26,16 @@ export class UsersController {
   @Patch('updateProfile')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  @UseInterceptors(FileInterceptor('avatar'))
   async updateProfile(
-    @UploadedFile() avatar: Express.Multer.File,
     @Body() updateProfileDTO: UpdateProfileDTO,
     @CurrentUser() user: User,
   ) {
     if (!user) {
       throw new UnauthorizedException();
     }
-    if (avatar) {
+    if (updateProfileDTO) {
       updateProfileDTO.avatar = (
-        await this.cloudinaryService.uploadImage(avatar)
+        await this.cloudinaryService.uploadImageBase64(updateProfileDTO.avatar)
       ).url;
       return await this.usersService.updateProfile(user, updateProfileDTO);
     }

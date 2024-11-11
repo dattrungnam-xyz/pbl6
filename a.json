@@ -1,0 +1,152 @@
+[
+  {
+    "_id": 1,
+    "title": "Spaghetti Carbonara",
+    "instructions": "1. Cook spaghetti until al dente. 2. In a separate pan, cook bacon until crispy. 3. Mix eggs, cheese, and pepper in a bowl. 4. Combine everything and serve.",
+    "thumbnail": "https://localhost:8080/uploads/2024-10-21_13-50-08_alibo.jpg",
+    "analysis": {
+      "calorific": 650,
+      "carbohydrates": 75,
+      "totalFat": 25,
+      "monounsaturatedFats": 12,
+      "saturatedFattyAcids": 8,
+      "polyunsaturatedFattyAcids": 3,
+      "sugar": 5,
+      "be": 1.5,
+      "salt": 1.2,
+      "protein": 22
+    },
+    "createdBy": {
+      "_id": 2,
+      "name": "Chef John",
+      "thumbnail": "https://localhost:8080/uploads/2024-10-21_13-50-08_alibo.jpg"
+    },
+    "updatedBy": {
+      "_id": 3,
+      "name": "Chef Lisa",
+      "thumbnail": "https://localhost:8080/uploads/2024-10-21_13-50-08_alibo.jpg"
+    },
+    "createdAt": "2024-10-20",
+    "updatedAt": "2024-10-22",
+    "connections": [
+      {
+        "data": { "_id": 4, "title": "Classic Italian Menu" },
+        "type": "menu_plan"
+      }
+    ],
+    "components": [
+      {
+        "data": {
+          "_id": 5,
+          "title": "Pasta",
+          "purchase": 500,
+          "gain/loss": 50
+        },
+        "type": "ingredient"
+      },
+      {
+        "data": {
+          "_id": 6,
+          "title": "Bacon",
+          "purchase": 200,
+          "gain/loss": 30
+        },
+        "type": "ingredient"
+      }
+    ],
+    "clients": [
+      {
+        "data": {
+          "_id": 7,
+          "client": "Restaurant A",
+          "portionSizeGam": 200,
+          "portionSizePercent": 25,
+          "clientPortionSize": 50
+        },
+        "type": "group"
+      }
+    ],
+    "additives": [{ "_id": 8, "title": "Salt", "active": true }],
+    "properties": [{ "_id": 9, "title": "Gluten-Free", "active": false }],
+    "allergens": [{ "_id": 10, "title": "Dairy", "active": true }],
+    "categories": [{ "_id": 11, "title": "Main Course", "active": true }],
+    "seasons": [{ "_id": 12, "title": "Winter", "active": true }],
+    "diets": [{ "_id": 13, "title": "Keto", "active": false }],
+    "cookingMethods": [{ "_id": 14, "title": "Boiling", "active": true }]
+  },
+  {
+    "_id": 15,
+    "title": "Chicken Alfredo",
+    "instructions": "1. Cook fettuccine pasta. 2. In a pan, cook chicken until golden. 3. Prepare Alfredo sauce with butter, cream, and cheese. 4. Combine everything and garnish with parsley.",
+    "thumbnail": "https://localhost:8080/uploads/2024-10-21_13-50-08_alibo.jpg",
+    "analysis": {
+      "calorific": 750,
+      "carbohydrates": 60,
+      "totalFat": 35,
+      "monounsaturatedFats": 15,
+      "saturatedFattyAcids": 10,
+      "polyunsaturatedFattyAcids": 5,
+      "sugar": 4,
+      "be": 2,
+      "salt": 1.5,
+      "protein": 35
+    },
+    "createdBy": {
+      "_id": 16,
+      "name": "Chef Emily",
+      "thumbnail": "https://localhost:8080/uploads/2024-10-21_13-50-08_alibo.jpg"
+    },
+    "updatedBy": {
+      "_id": 17,
+      "name": "Chef James",
+      "thumbnail": "https://localhost:8080/uploads/2024-10-21_13-50-08_alibo.jpg"
+    },
+    "createdAt": "2024-10-21",
+    "updatedAt": "2024-10-23",
+    "connections": [
+      {
+        "data": { "_id": 18, "title": "Comfort Food Menu" },
+        "type": "menu_plan"
+      }
+    ],
+    "components": [
+      {
+        "data": {
+          "_id": 19,
+          "title": "Fettuccine",
+          "purchase": 300,
+          "gain/loss": 40
+        },
+        "type": "ingredient"
+      },
+      {
+        "data": {
+          "_id": 20,
+          "title": "Chicken Breast",
+          "purchase": 250,
+          "gain/loss": 20
+        },
+        "type": "ingredient"
+      }
+    ],
+    "clients": [
+      {
+        "data": {
+          "_id": 21,
+          "client": "Cafe Bistro",
+          "portionSizeGam": 250,
+          "portionSizePercent": 30,
+          "clientPortionSize": 75
+        },
+        "type": "individual"
+      }
+    ],
+    "additives": [{ "_id": 22, "title": "Garlic Powder", "active": true }],
+    "properties": [{ "_id": 23, "title": "Creamy", "active": true }],
+    "allergens": [{ "_id": 24, "title": "Dairy", "active": true }],
+    "categories": [{ "_id": 25, "title": "Pasta", "active": true }],
+    "seasons": [{ "_id": 26, "title": "All Year", "active": true }],
+    "diets": [{ "_id": 27, "title": "Low Carb", "active": false }],
+    "cookingMethods": [{ "_id": 28, "title": "Sautéing", "active": true }]
+  }
+]

@@ -27,14 +27,9 @@ export class AppController {
   }
 
   // example use upload mp3 file
-  // @Post()
-  // @UseInterceptors(FileFieldsInterceptor([{ name: 'video', maxCount: 1 }]))
-  // async testUploadFile(
-  //   @UploadedFiles(ParseFile)
-  //   files: {
-  //     video: Express.Multer.File[];
-  //   },
-  // ) {
-  //   return await this.cloudinaryService.uploadAudioStream(files.video[0]);
-  // }
+  @Post()
+  async testUploadFile(@Body() body: { file: string }) {
+    const file = body.file;
+    return await this.cloudinaryService.uploadBase64(file);
+  }
 }

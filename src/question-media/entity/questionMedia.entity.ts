@@ -34,6 +34,10 @@ export class QuestionMedia {
   url: string;
 
   @Expose()
+  @Column({ nullable: true })
+  index: number;
+
+  @Expose()
   @CreateDateColumn()
   createdAt: Date;
 
@@ -43,5 +47,5 @@ export class QuestionMedia {
 
   @Expose()
   @ManyToOne(() => GroupQuestion, (grp) => grp.questionMedia)
-  groupQuestion: Promise<GroupQuestion[]>;
+  groupQuestion: Promise<GroupQuestion>;
 }

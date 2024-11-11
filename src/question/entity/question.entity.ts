@@ -37,26 +37,14 @@ export class Question {
   question: string;
 
   @Expose()
-  @Column({ nullable: true })
-  optionA: string;
-
-  @Expose()
-  @Column({ nullable: true })
-  optionB: string;
-
-  @Expose()
-  @Column({ nullable: true })
-  optionC: string;
-
-  @Expose()
-  @Column({ nullable: true })
-  optionD: string;
+  @Column("simple-array",{ nullable: true })
+  answer: string[];
 
   @Expose()
   @Column({
     nullable: false,
   })
-  answer: string;
+  correctAnswer: string;
 
   @Expose()
   @Column({ nullable: true })

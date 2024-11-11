@@ -29,7 +29,7 @@ export class GroupQuestion {
   detail: string;
 
   @Expose()
-  @Column({ nullable: true })
+  @Column("simple-array",{ nullable: true })
   describeAnswer: string;
 
   @Expose()
