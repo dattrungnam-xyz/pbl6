@@ -1,12 +1,15 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -26,15 +29,15 @@ export class TestController {
   ) {}
   //include group question, question, test, question media, question option, tag, part
   @Post()
-  async createTest(
-    @Body() createTestDTO: CreateTestDTO,
-  ) {
-
+  async createTest(@Body() createTestDTO: CreateTestDTO) {
     return await this.testService.createEntireTest(createTestDTO);
   }
   @Get()
-  async findAll() {
-    return await this.testService.findAll();
+  async findAll(
+    @Query('limit', new DefaultValuePipe(15), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ) {
+    return await this.testService.findPagination(limit, page);
   }
 
   @Patch(':id')
