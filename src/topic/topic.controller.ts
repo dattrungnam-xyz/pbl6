@@ -10,10 +10,12 @@ import {
   UploadedFiles,
 } from '@nestjs/common';
 import { TopicService } from './topic.service';
-import { CreateTopicDTO } from './input/createTopic.dto';
-import { UpdateTopicDTO } from './input/updateTopic.dto';
+import { CreateEntireTopicDTO } from './input/createEntireTopic.dto';
+import { UpdateEntireTopicDTO } from './input/updateEntireTopic.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { CreateTopicDTO } from './input/createTopic.dto';
+import { CreateListWordTopicDTO } from './input/createListWordTopic.dto';
 
 @Controller('topic')
 export class TopicController {
@@ -22,17 +24,31 @@ export class TopicController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  @Post(':idGroupTopic')
-  @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'thumbnail' }, { name: 'audio' }]),
-  )
+  @Post('entire/:idGroupTopic')
   async createEntireTopic(
-    @Body() createTopicDTO: CreateTopicDTO,
+    @Body() createEntireTopicDTO: CreateEntireTopicDTO,
     @Param('idGroupTopic') id: string,
   ) {
-    return await this.topicService.createEntireTopic(id, createTopicDTO);
+    return await this.topicService.createEntireTopic(id, createEntireTopicDTO);
   }
 
+  @Post(':idGroupTopic')
+  async createTopic(
+    @Body() createTopicDTO: CreateTopicDTO,
+    @Param('idGroupTopic') idGroupTopic: string,
+  ) {
+    return await this.topicService.createTopic(idGroupTopic, createTopicDTO);
+  }
+  @Post('word/:idTopic')
+  async createListWordTopic(
+    @Body() createListWordTopicDTO: CreateListWordTopicDTO,
+    @Param('idTopic') idTopic: string,
+  ) {
+    return await this.topicService.createListWordTopic(
+      idTopic,
+      createListWordTopicDTO,
+    );
+  }
   @Get()
   findAll() {
     return this.topicService.findAll();
@@ -44,8 +60,11 @@ export class TopicController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTopicDTO: UpdateTopicDTO) {
-    return this.topicService.updateTopic(id, updateTopicDTO);
+  update(
+    @Param('id') id: string,
+    @Body() updateEntireTopicDTO: UpdateEntireTopicDTO,
+  ) {
+    return this.topicService.updateEntireTopic(id, updateEntireTopicDTO);
   }
 
   @Delete(':id')

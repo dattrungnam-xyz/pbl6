@@ -1,15 +1,6 @@
-import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  Matches,
-  ValidateNested,
-} from 'class-validator';
-import { CreateTagDTO } from '../../tag/input/createTag.dto';
-import { CreateWordDTO } from '../../word/input/createWord.dto';
-
+import { IsNotEmpty, IsOptional, IsString, Matches, ValidateNested } from "class-validator";
+import { CreateTagDTO } from "../../tag/input/createTag.dto";
+import { Type } from "class-transformer";
 
 export class CreateTopicDTO {
   @IsOptional()
@@ -27,10 +18,4 @@ export class CreateTopicDTO {
   @ValidateNested({ each: true })
   @Type(() => CreateTagDTO)
   tags: CreateTagDTO[];
-
-  @IsNotEmpty()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateWordDTO)
-  listWord: CreateWordDTO[];
 }

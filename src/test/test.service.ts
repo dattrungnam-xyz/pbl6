@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Test } from './entity/test.entity';
+import { PaginatedTest, Test } from './entity/test.entity';
 import { Repository } from 'typeorm';
 import { CreateTestDTO } from './input/createTest.dto';
 import { UpdateTestDTO } from './input/updateTest.dto';
@@ -12,6 +12,7 @@ import { GroupQuestionService } from '../group-question/group-question.service';
 import { QuestionMediaService } from '../question-media/question-media.service';
 import { UpdateTagsTestDTO } from './input/updateTagTest.dto';
 import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
+import { paginate } from '../pagination/paginator';
 
 @Injectable()
 export class TestService {
@@ -118,6 +119,22 @@ export class TestService {
         'groupQuestions.questionMedia',
         'groupQuestions.part',
       ],
+    });
+  }
+
+  async findPagination(limit = 15, page = 0) {
+    const offset = page * limit;
+    const qb = this.testRepository
+      .createQueryBuilder('test')
+      .leftJoinAndSelect('test.tags', 'tags')
+      .leftJoinAndSelect('test.groupQuestions', 'groupQuestions')
+      .leftJoinAndSelect('groupQuestions.questions', 'questions')
+      .leftJoinAndSelect('groupQuestions.questionMedia', 'questionMedia')
+      .orderBy('test.createdAt', 'DESC');
+    return paginate<Test, PaginatedTest>(qb, PaginatedTest, {
+      limit,
+      page,
+      total: true,
     });
   }
 }

@@ -5,11 +5,13 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   Matches,
 } from 'class-validator';
 import { WordClassType } from '../../type/wordClass.type';
 
 export class CreateWordDTO {
+
   @IsOptional()
   @Matches(/^data:image\/(png|jpg|jpeg|gif);base64,[A-Za-z0-9+/]+={0,2}$/, {
     message:
@@ -48,7 +50,9 @@ export class CreateWordDTO {
   exampleMeaning: string;
 
   @IsOptional()
-  @IsString()
+  @Matches(/^data:audio\/(mp3|wav|mpeg);base64,[A-Za-z0-9+/]+={0,2}$/, {
+    message: 'Example audio must be a valid Base64 encoded audio file (MP3, WAV, MPEG)',
+  })
   exampleAudio: string;
 
   @IsOptional()
