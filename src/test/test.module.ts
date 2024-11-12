@@ -21,5 +21,7 @@ import { QuestionMediaModule } from '../question-media/question-media.module';
   ],
   controllers: [TestController],
   providers: [TestService],
+  exports: [TestService],
+ 
 })
 export class TestModule {}

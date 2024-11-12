@@ -63,6 +63,6 @@ export class Question {
   group: Promise<GroupQuestion>;
 
   @Expose()
-  @OneToOne(() => UserAnswer, (userAnswer) => userAnswer.question)
-  userAnswer: Promise<UserAnswer>;
+  @OneToMany(() => UserAnswer, (userAnswer) => userAnswer.question)
+  userAnswer: Promise<UserAnswer[]>;
 }

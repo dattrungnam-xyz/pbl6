@@ -23,6 +23,7 @@ import { GroupTopicModule } from './group-topic/group-topic.module';
 import { WordModule } from './word/word.module';
 import { UserTopicModule } from './user-topic/user-topic.module';
 import { CommentModule } from './comment/comment.module';
+import { TestPracticeModule } from './test-practice/test-practice.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { CommentModule } from './comment/comment.module';
     WordModule,
     UserTopicModule,
     CommentModule,
+    TestPracticeModule,
   ],
   controllers: [AppController],
   providers: [

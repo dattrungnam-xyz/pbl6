@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity';
 import { Tag } from '../../tag/entity/tag.entity';
+import { TestPractice } from '../../test-practice/entity/testPractice.entity';
 
 @Entity()
 export class Test {
@@ -48,5 +49,12 @@ export class Test {
     cascade: true,
     nullable: true,
   })
-  tags: Promise<Tag[]>
+  tags: Promise<Tag[]>;
+
+  @Expose()
+  @OneToMany(() => TestPractice, (testPractice) => testPractice.test, {
+    cascade: true,
+    nullable: true,
+  })
+  testPractices: Promise<TestPractice[]>;
 }
