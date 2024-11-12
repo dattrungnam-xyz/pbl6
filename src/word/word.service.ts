@@ -50,6 +50,11 @@ export class WordService {
         createWordDTO.audio,
       );
     }
+    if (createWordDTO.exampleAudio) {
+      createWordDTO.exampleAudio = await this.cloudinaryService.uploadBase64(
+        createWordDTO.exampleAudio,
+      );
+    }
     const newWord = new Word({ ...createWordDTO });
     if (id) {
       const topic = await this.topicRepository.findOneBy({ id });

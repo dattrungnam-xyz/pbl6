@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTopicDTO } from './input/createTopic.dto';
-import { UpdateTopicDTO } from './input/updateTopic.dto';
+import { CreateEntireTopicDTO } from './input/createEntireTopic.dto';
+import { UpdateEntireTopicDTO } from './input/updateEntireTopic.dto';
 import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
 import { Topic } from './entity/topic.entity';
 import { TagService } from '../tag/tag.service';
@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { GroupTopic } from '../group-topic/entity/groupTopic.entity';
 import { WordService } from '../word/word.service';
+import { CreateTopicDTO } from './input/createTopic.dto';
 
 @Injectable()
 export class TopicService {
@@ -21,12 +22,15 @@ export class TopicService {
     private readonly groupTopicRepository: Repository<GroupTopic>,
     private readonly wordService: WordService,
   ) {}
-  async createEntireTopic(id: string, createTopicDTO: CreateTopicDTO) {
-    const groupTopic = await this.groupTopicRepository.findOneBy({ id });
+
+  async createTopic(idGroupTopic: string, createTopicDTO: CreateTopicDTO) {
+    const groupTopic = await this.groupTopicRepository.findOneBy({
+      id: idGroupTopic,
+    });
     if (!groupTopic) {
       throw new NotFoundException('Group topic not found.');
     }
-    let thumbnailUrl;
+    let thumbnailUrl: string;
     if (createTopicDTO.thumbnail) {
       const topicThumbnail = await this.cloudinaryService.uploadImageBase64(
         createTopicDTO.thumbnail,
@@ -43,31 +47,61 @@ export class TopicService {
       createTopicDTO.tags || [],
     );
     newTopic.tags = Promise.resolve(tags);
+    return await this.topicRepository.save(newTopic);
+  }
+  async createEntireTopic(
+    id: string,
+    createEntireTopicDTO: CreateEntireTopicDTO,
+  ) {
+    const groupTopic = await this.groupTopicRepository.findOneBy({ id });
+    if (!groupTopic) {
+      throw new NotFoundException('Group topic not found.');
+    }
+    let thumbnailUrl: string;
+    if (createEntireTopicDTO.thumbnail) {
+      const topicThumbnail = await this.cloudinaryService.uploadImageBase64(
+        createEntireTopicDTO.thumbnail,
+      );
+      thumbnailUrl = topicThumbnail.url;
+    }
+    let newTopic = new Topic({
+      name: createEntireTopicDTO.name,
+      thumbnail: thumbnailUrl,
+    });
+    newTopic.groupTopic = Promise.resolve(groupTopic);
+
+    const tags = await this.tagService.findOrCreateTags(
+      createEntireTopicDTO.tags || [],
+    );
+    newTopic.tags = Promise.resolve(tags);
     const listWord = await this.wordService.createListWord(
-      createTopicDTO.listWord,
+      createEntireTopicDTO.listWord,
     );
     newTopic.listWord = Promise.resolve(listWord);
     return await this.topicRepository.save(newTopic);
   }
 
-  async updateTopic(id: string, updateTopicDTO: UpdateTopicDTO) {
+  async updateEntireTopic(
+    id: string,
+    updateEntireTopicDTO: UpdateEntireTopicDTO,
+  ) {
     const topic = await this.topicRepository.findOneBy({ id });
     if (!topic) {
       throw new NotFoundException('Topic not found');
     }
-    updateTopicDTO.listWord = undefined;
-    if (updateTopicDTO.tags) {
+    updateEntireTopicDTO.listWord = undefined;
+    if (updateEntireTopicDTO.tags) {
       const listTag = await this.tagService.findOrCreateTags(
-        updateTopicDTO.tags,
+        updateEntireTopicDTO.tags,
       );
-      updateTopicDTO.tags = listTag;
+      updateEntireTopicDTO.tags = listTag;
     }
-    Object.assign(topic, updateTopicDTO);
+    Object.assign(topic, updateEntireTopicDTO);
     return await this.topicRepository.save(topic);
   }
 
   async findAll() {
-    return await this.topicRepository.find({relations: ["listWord"]});
+    return await this.topicRepository.find({ relations: ['listWord'] });
   }
 
   findOne(id: number) {
