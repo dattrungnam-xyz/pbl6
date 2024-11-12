@@ -5,11 +5,13 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   Matches,
 } from 'class-validator';
 import { WordClassType } from '../../type/wordClass.type';
 
 export class CreateWordDTO {
+
   @IsOptional()
   @Matches(/^data:image\/(png|jpg|jpeg|gif);base64,[A-Za-z0-9+/]+={0,2}$/, {
     message:

@@ -10,6 +10,7 @@ import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { GroupTopic } from '../group-topic/entity/groupTopic.entity';
 import { WordService } from '../word/word.service';
 import { CreateTopicDTO } from './input/createTopic.dto';
+import { CreateListWordTopicDTO } from './input/createListWordTopic.dto';
 
 @Injectable()
 export class TopicService {
@@ -100,6 +101,20 @@ export class TopicService {
     return await this.topicRepository.save(topic);
   }
 
+  async createListWordTopic(
+    id: string,
+    createListWordTopicDTO: CreateListWordTopicDTO,
+  ) {
+    const topic = await this.topicRepository.findOneBy({ id });
+    if (!topic) {
+      throw new NotFoundException('Topic not found');
+    }
+    const listWord = await this.wordService.createListWord(
+      createListWordTopicDTO.listWord,
+    );
+    topic.listWord = Promise.resolve(listWord);
+    return await this.topicRepository.save(topic);
+  }
   async findAll() {
     return await this.topicRepository.find({ relations: ['listWord'] });
   }

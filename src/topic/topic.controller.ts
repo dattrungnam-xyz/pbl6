@@ -15,6 +15,7 @@ import { UpdateEntireTopicDTO } from './input/updateEntireTopic.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { CreateTopicDTO } from './input/createTopic.dto';
+import { CreateListWordTopicDTO } from './input/createListWordTopic.dto';
 
 @Controller('topic')
 export class TopicController {
@@ -38,7 +39,16 @@ export class TopicController {
   ) {
     return await this.topicService.createTopic(idGroupTopic, createTopicDTO);
   }
-
+  @Post('word/:idTopic')
+  async createListWordTopic(
+    @Body() createListWordTopicDTO: CreateListWordTopicDTO,
+    @Param('idTopic') idTopic: string,
+  ) {
+    return await this.topicService.createListWordTopic(
+      idTopic,
+      createListWordTopicDTO,
+    );
+  }
   @Get()
   findAll() {
     return this.topicService.findAll();
