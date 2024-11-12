@@ -38,7 +38,9 @@ export class TestService {
     test = await this.testRepository.save(test);
 
     // handle mapping tag or create tag
-    const tags = await this.tagService.findOrCreateTags(createTestDTO.tags || []);
+    const tags = await this.tagService.findOrCreateTags(
+      createTestDTO.tags || [],
+    );
     test.tags = Promise.resolve(tags);
 
     // handle create group question
@@ -104,6 +106,18 @@ export class TestService {
         'groupQuestions.questionMedia',
       ],
       order: { createdAt: 'DESC' },
+    });
+  }
+  async findOneById(id: string) {
+    return await this.testRepository.findOne({
+      where: { id: id },
+      relations: [
+        'tags',
+        'groupQuestions',
+        'groupQuestions.questions',
+        'groupQuestions.questionMedia',
+        'groupQuestions.part',
+      ],
     });
   }
 }

@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Role } from '../../type/role.type';
 import { UserTopic } from '../../user-topic/entity/userTopic.entity';
+import { TestPractice } from '../../test-practice/entity/testPractice.entity';
 
 @Entity()
 export class User {
@@ -69,5 +70,9 @@ export class User {
 
   @Expose()
   @OneToMany(() => UserTopic, (userTopic) => userTopic.user)
-  userTopic: Promise<UserTopic>;
+  userTopic: Promise<UserTopic[]>;
+
+  @Expose()
+  @OneToMany(() => TestPractice, (testPractice) => testPractice.user)
+  testPractices: Promise<TestPractice[]>;
 }

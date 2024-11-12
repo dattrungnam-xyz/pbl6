@@ -40,10 +40,15 @@ export class GroupQuestionService {
           newGroupQuestion.detail = groupQuestion.detail;
         }
         let listQuestionMedia = [];
-        if (groupQuestion.audio) {
-          let audioUrl = await this.cloudinaryService.uploadBase64(
-            groupQuestion.audio,
-          );
+        if (groupQuestion.audio || groupQuestion.audioUrl) {
+          let audioUrl: string;
+          if (groupQuestion.audio) {
+            audioUrl = await this.cloudinaryService.uploadBase64(
+              groupQuestion.audio,
+            );
+          } else {
+            audioUrl = groupQuestion.audioUrl;
+          }
           const newQuestionMedia = new QuestionMedia({
             type: MediaType.AUDIO,
             url: audioUrl,
@@ -54,6 +59,7 @@ export class GroupQuestionService {
           const listImagePromise = groupQuestion.image
             .sort((a, b) => a.index - b.index)
             .map((file) => {
+              if (file.fileUrl) return file.fileUrl;
               return this.cloudinaryService.uploadBase64(file.file);
             });
           const listFileUrl = await Promise.all(listImagePromise);
