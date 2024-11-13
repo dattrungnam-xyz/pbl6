@@ -56,7 +56,7 @@ export class TopicController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.topicService.findOne(+id);
+    return this.topicService.findOne(id);
   }
 
   @Patch(':id')
