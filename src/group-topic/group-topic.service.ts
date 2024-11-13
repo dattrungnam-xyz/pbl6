@@ -58,7 +58,11 @@ export class GroupTopicService {
   }
 
   async findGroupTopic() {
-    return this.groupTopicRepository.find();
+    return await this.groupTopicRepository
+    .createQueryBuilder("groupTopic")
+    .leftJoinAndSelect("groupTopic.topics", "topic")
+    .loadRelationCountAndMap("groupTopic.topicsCount", "groupTopic.topics")
+    .getMany();
   }
 
   async findGroupTopicById(id:string)

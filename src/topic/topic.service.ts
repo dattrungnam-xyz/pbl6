@@ -119,8 +119,11 @@ export class TopicService {
     return await this.topicRepository.find({ relations: ['listWord'] });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} topic`;
+  async findOne(id: string) {
+    return await this.topicRepository.findOne({
+      where: { id },
+      relations: ['listWord', "tags"],
+    })
   }
 
   async delete(id: string) {
