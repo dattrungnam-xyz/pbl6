@@ -110,16 +110,31 @@ export class TestService {
     });
   }
   async findOneById(id: string) {
-    return await this.testRepository.findOne({
-      where: { id: id },
-      relations: [
-        'tags',
-        'groupQuestions',
-        'groupQuestions.questions',
-        'groupQuestions.questionMedia',
-        'groupQuestions.part',
-      ],
-    });
+    const result = await this.testRepository
+      .createQueryBuilder('test')
+      .leftJoinAndSelect('test.tags', 'tags')
+      .leftJoinAndSelect('test.groupQuestions', 'groupQuestions')
+      .leftJoinAndSelect('groupQuestions.questions', 'questions')
+      .leftJoinAndSelect('groupQuestions.questionMedia', 'questionMedia')
+      .leftJoinAndSelect('groupQuestions.part', 'part')
+      .where('test.id = :id', { id })
+      .getOne();
+
+    if (result && result.groupQuestions) {
+      for (const group of await (result.groupQuestions)) {
+        group.audio = [];
+        group.image = [];
+        for (const media of await group.questionMedia) {
+          if (media.type === 'audio') {
+            group.audio.push(media);
+          } else if (media.type === 'image') {
+            group.image.push(media);
+          }
+        }
+      }
+    }
+
+    return result;
   }
 
   async findPagination(limit = 15, page = 0) {

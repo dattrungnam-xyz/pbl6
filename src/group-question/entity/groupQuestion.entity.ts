@@ -29,7 +29,7 @@ export class GroupQuestion {
   detail: string;
 
   @Expose()
-  @Column("simple-array",{ nullable: true })
+  @Column('simple-array', { nullable: true })
   describeAnswer: string;
 
   @Expose()
@@ -54,14 +54,20 @@ export class GroupQuestion {
   @Expose()
   @ManyToOne(() => Test, (test) => test.groupQuestions, {
     nullable: false,
-   
   })
   test: Promise<Test>;
 
   @Expose()
-  @OneToMany(() => QuestionMedia, (questionMedia) => questionMedia.groupQuestion, {
-    nullable: true,
-    cascade: true
-  })
+  @OneToMany(
+    () => QuestionMedia,
+    (questionMedia) => questionMedia.groupQuestion,
+    {
+      nullable: true,
+      cascade: true,
+    },
+  )
   questionMedia: Promise<QuestionMedia[]>;
+
+  audio: QuestionMedia[];
+  image: QuestionMedia[];
 }
