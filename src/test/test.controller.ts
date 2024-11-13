@@ -48,6 +48,13 @@ export class TestController {
     return await this.testService.updateTest(id, updateTestDTO);
   }
 
+  @Get(':id')
+  async getTestDetail(
+    @Param('id') id: string,
+  ) {
+    return await this.testService.findOneById(id);
+  }
+
   @Delete(':id')
   @HttpCode(200)
   async deleteTest(@Param('id') id: string) {

@@ -47,7 +47,7 @@ export class TestService {
     // handle create group question
     let groupQuestions = [];
     createTestDTO.partData.forEach(async (data) => {
-      let part = await this.partService.findPartBy({ name: data.part });
+      let part = await this.partService.findPartBy({ id: data.part });
       if (!part) {
         throw new NotFoundException('Part not found');
       }
