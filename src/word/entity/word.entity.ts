@@ -40,7 +40,7 @@ export class Word {
   exampleAudio: string;
 
   @Column({ nullable: true })
-  defenition: string;
+  definition: string;
 
   @Column({ nullable: true })
   translate: string;

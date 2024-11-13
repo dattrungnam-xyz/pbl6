@@ -57,5 +57,5 @@ export class CreateWordDTO {
 
   @IsOptional()
   @IsString()
-  defenition: string;
+  definition: string;
 }
