@@ -18,4 +18,11 @@ export class PartService {
   async findPartBy(params: { name: string } | { id: string }) {
     return this.partRepository.findOneBy(params);
   }
+
+  async findListPart() {
+    return await this.partRepository.find();
+  }
+  async deletePart(id: string) {
+    return this.partRepository.softDelete(id);
+  }
 }
