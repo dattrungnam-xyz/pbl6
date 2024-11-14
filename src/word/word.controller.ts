@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { WordService } from './word.service';
 import { CreateWordDTO } from './input/createWord.dto';
 
@@ -19,4 +19,8 @@ export class WordController {
     return await this.wordService.createWord(createWordDTO);
   }
 
+  @Get(':id')
+  async findWord(@Param('id') id: string) {
+    return await this.wordService.findWordById(id);
+  }
 }
