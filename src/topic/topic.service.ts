@@ -11,6 +11,7 @@ import { GroupTopic } from '../group-topic/entity/groupTopic.entity';
 import { WordService } from '../word/word.service';
 import { CreateTopicDTO } from './input/createTopic.dto';
 import { CreateListWordTopicDTO } from './input/createListWordTopic.dto';
+import { UpdateTopicDTO } from './input/updateTopic.dto';
 
 @Injectable()
 export class TopicService {
@@ -100,7 +101,20 @@ export class TopicService {
     Object.assign(topic, updateEntireTopicDTO);
     return await this.topicRepository.save(topic);
   }
-
+  async updateTopic(id: string, updateTopicDTO: UpdateTopicDTO) {
+    const topic = await this.topicRepository.findOneBy({ id });
+    if (!topic) {
+      throw new NotFoundException('Topic not found');
+    }
+    if (updateTopicDTO.thumbnail) {
+      const topicThumbnail = await this.cloudinaryService.uploadImageBase64(
+        updateTopicDTO.thumbnail,
+      );
+      updateTopicDTO.thumbnail = topicThumbnail.url;
+    }
+    Object.assign(topic, updateTopicDTO);
+    return await this.topicRepository.save(topic);
+  }
   async createListWordTopic(
     id: string,
     createListWordTopicDTO: CreateListWordTopicDTO,
@@ -122,8 +136,8 @@ export class TopicService {
   async findOne(id: string) {
     return await this.topicRepository.findOne({
       where: { id },
-      relations: ['listWord', "tags"],
-    })
+      relations: ['listWord', 'tags'],
+    });
   }
 
   async delete(id: string) {

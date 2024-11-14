@@ -16,6 +16,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { CreateTopicDTO } from './input/createTopic.dto';
 import { CreateListWordTopicDTO } from './input/createListWordTopic.dto';
+import { UpdateTopicDTO } from './input/updateTopic.dto';
 
 @Controller('topic')
 export class TopicController {
@@ -60,11 +61,8 @@ export class TopicController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateEntireTopicDTO: UpdateEntireTopicDTO,
-  ) {
-    return this.topicService.updateEntireTopic(id, updateEntireTopicDTO);
+  update(@Param('id') id: string, @Body() updateTopicDTO: UpdateTopicDTO) {
+    return this.topicService.updateTopic(id, updateTopicDTO);
   }
 
   @Delete(':id')
