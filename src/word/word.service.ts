@@ -69,6 +69,13 @@ export class WordService {
     if (!word) {
       throw new NotFoundException('Word not found');
     }
+    if (updateWordDTO.idTopic) {
+      const topic = await this.topicRepository.findOneBy({
+        id: updateWordDTO.idTopic,
+      });
+      if (!topic) throw new NotFoundException('Topic not found');
+      word.topic = Promise.resolve(topic);
+    }
     if (updateWordDTO.thumbnail) {
       updateWordDTO.thumbnail = await this.cloudinaryService.uploadBase64(
         updateWordDTO.thumbnail,

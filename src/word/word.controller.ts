@@ -1,6 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { WordService } from './word.service';
 import { CreateWordDTO } from './input/createWord.dto';
+import { UpdateWordDTO } from './input/updateWord.dto';
 
 @Controller('word')
 export class WordController {
@@ -22,5 +31,12 @@ export class WordController {
   @Get(':id')
   async findWord(@Param('id') id: string) {
     return await this.wordService.findWordById(id);
+  }
+  @Patch(':id')
+  async updateWord(
+    @Param('id') id: string,
+    @Body() updateWordDTO: UpdateWordDTO,
+  ) {
+    return await this.wordService.updateWord(id, updateWordDTO);
   }
 }
