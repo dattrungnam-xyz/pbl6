@@ -12,6 +12,7 @@ import { WordService } from '../word/word.service';
 import { CreateTopicDTO } from './input/createTopic.dto';
 import { CreateListWordTopicDTO } from './input/createListWordTopic.dto';
 import { UpdateTopicDTO } from './input/updateTopic.dto';
+import { UpdateListWordTopicDTO } from './input/updateListWordTopic.dto';
 
 @Injectable()
 export class TopicService {
@@ -112,6 +113,11 @@ export class TopicService {
       );
       updateTopicDTO.thumbnail = topicThumbnail.url;
     }
+    if (topic.tags) {
+      topic.tags = Promise.resolve(
+        await this.tagService.findOrCreateTags(updateTopicDTO.tags),
+      );
+    }
     Object.assign(topic, updateTopicDTO);
     return await this.topicRepository.save(topic);
   }
@@ -128,6 +134,13 @@ export class TopicService {
     );
     topic.listWord = Promise.resolve(listWord);
     return await this.topicRepository.save(topic);
+  }
+
+  async updateListWordTopic(
+    id: string,
+    updateListWordTopicDTO: UpdateListWordTopicDTO,
+  ) {
+    
   }
   async findAll() {
     return await this.topicRepository.find({ relations: ['listWord'] });

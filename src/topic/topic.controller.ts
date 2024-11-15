@@ -51,19 +51,25 @@ export class TopicController {
     );
   }
   @Get()
-  findAll() {
+  async findAll() {
     return this.topicService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.topicService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    return await this.topicService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTopicDTO: UpdateTopicDTO) {
-    return this.topicService.updateTopic(id, updateTopicDTO);
+  async update(
+    @Param('id') id: string,
+    @Body() updateTopicDTO: UpdateTopicDTO,
+  ) {
+    return await this.topicService.updateTopic(id, updateTopicDTO);
   }
+
+  @Patch('word/:idTopic')
+  async updateListWordOfT(@Param('idTopic') idTopic: string) {}
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
