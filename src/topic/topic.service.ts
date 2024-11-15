@@ -113,7 +113,7 @@ export class TopicService {
       );
       updateTopicDTO.thumbnail = topicThumbnail.url;
     }
-    if (topic.tags) {
+    if (updateTopicDTO.tags) {
       topic.tags = Promise.resolve(
         await this.tagService.findOrCreateTags(updateTopicDTO.tags),
       );
