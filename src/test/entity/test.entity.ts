@@ -11,6 +11,7 @@ import {
 import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity';
 import { Tag } from '../../tag/entity/tag.entity';
 import { TestPractice } from '../../test-practice/entity/testPractice.entity';
+import { Paginated } from '../../pagination/paginator';
 
 @Entity()
 export class Test {
@@ -58,3 +59,5 @@ export class Test {
   })
   testPractices: Promise<TestPractice[]>;
 }
+
+export class PaginatedTest extends Paginated<Test>(Test) {}

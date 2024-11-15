@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Test } from './entity/test.entity';
+import { PaginatedTest, Test } from './entity/test.entity';
 import { Repository } from 'typeorm';
 import { CreateTestDTO } from './input/createTest.dto';
 import { UpdateTestDTO } from './input/updateTest.dto';
@@ -12,6 +12,7 @@ import { GroupQuestionService } from '../group-question/group-question.service';
 import { QuestionMediaService } from '../question-media/question-media.service';
 import { UpdateTagsTestDTO } from './input/updateTagTest.dto';
 import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
+import { paginate } from '../pagination/paginator';
 
 @Injectable()
 export class TestService {
@@ -46,7 +47,7 @@ export class TestService {
     // handle create group question
     let groupQuestions = [];
     createTestDTO.partData.forEach(async (data) => {
-      let part = await this.partService.findPartBy({ name: data.part });
+      let part = await this.partService.findPartBy({ id: data.part });
       if (!part) {
         throw new NotFoundException('Part not found');
       }
@@ -109,15 +110,46 @@ export class TestService {
     });
   }
   async findOneById(id: string) {
-    return await this.testRepository.findOne({
-      where: { id: id },
-      relations: [
-        'tags',
-        'groupQuestions',
-        'groupQuestions.questions',
-        'groupQuestions.questionMedia',
-        'groupQuestions.part',
-      ],
+    const result = await this.testRepository
+      .createQueryBuilder('test')
+      .leftJoinAndSelect('test.tags', 'tags')
+      .leftJoinAndSelect('test.groupQuestions', 'groupQuestions')
+      .leftJoinAndSelect('groupQuestions.questions', 'questions')
+      .leftJoinAndSelect('groupQuestions.questionMedia', 'questionMedia')
+      .leftJoinAndSelect('groupQuestions.part', 'part')
+      .where('test.id = :id', { id })
+      .getOne();
+
+    if (result && result.groupQuestions) {
+      for (const group of await (result.groupQuestions)) {
+        group.audio = [];
+        group.image = [];
+        for (const media of await group.questionMedia) {
+          if (media.type === 'audio') {
+            group.audio.push(media);
+          } else if (media.type === 'image') {
+            group.image.push(media);
+          }
+        }
+      }
+    }
+
+    return result;
+  }
+
+  async findPagination(limit = 15, page = 0) {
+    const offset = page * limit;
+    const qb = this.testRepository
+      .createQueryBuilder('test')
+      .leftJoinAndSelect('test.tags', 'tags')
+      .leftJoinAndSelect('test.groupQuestions', 'groupQuestions')
+      .leftJoinAndSelect('groupQuestions.questions', 'questions')
+      .leftJoinAndSelect('groupQuestions.questionMedia', 'questionMedia')
+      .orderBy('test.createdAt', 'DESC');
+    return paginate<Test, PaginatedTest>(qb, PaginatedTest, {
+      limit,
+      page,
+      total: true,
     });
   }
 }

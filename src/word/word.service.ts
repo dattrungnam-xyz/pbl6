@@ -36,9 +36,10 @@ export class WordService {
     const wordPromise = newListWord.map(async (word) => {
       return this.wordRepository.save(new Word({ ...(await word) }));
     });
-    let listQuestion = await Promise.all(wordPromise);
-    return listQuestion;
+    let listWords = await Promise.all(wordPromise);
+    return listWords;
   }
+
   async createWord(createWordDTO: CreateWordDTO, id?: string) {
     if (createWordDTO.thumbnail) {
       createWordDTO.thumbnail = await this.cloudinaryService.uploadBase64(
@@ -48,6 +49,11 @@ export class WordService {
     if (createWordDTO.audio) {
       createWordDTO.audio = await this.cloudinaryService.uploadBase64(
         createWordDTO.audio,
+      );
+    }
+    if (createWordDTO.exampleAudio) {
+      createWordDTO.exampleAudio = await this.cloudinaryService.uploadBase64(
+        createWordDTO.exampleAudio,
       );
     }
     const newWord = new Word({ ...createWordDTO });
