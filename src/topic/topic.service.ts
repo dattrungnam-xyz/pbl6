@@ -136,12 +136,6 @@ export class TopicService {
     return await this.topicRepository.save(topic);
   }
 
-  async updateListWordTopic(
-    id: string,
-    updateListWordTopicDTO: UpdateListWordTopicDTO,
-  ) {
-    
-  }
   async findAll() {
     return await this.topicRepository.find({ relations: ['listWord'] });
   }

@@ -68,9 +68,6 @@ export class TopicController {
     return await this.topicService.updateTopic(id, updateTopicDTO);
   }
 
-  @Patch('word/:idTopic')
-  async updateListWordOfT(@Param('idTopic') idTopic: string) {}
-
   @Delete(':id')
   async delete(@Param('id') id: string) {
     await this.topicService.delete(id);

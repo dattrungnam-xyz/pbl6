@@ -69,7 +69,7 @@ export class GroupTopicService {
   {
     return this.groupTopicRepository.findOne({
       where: { id },
-      relations: ["tags", "topics"]
+      relations: ["tags", "topics", "topics.listWord"]
     })
   }
 }
