@@ -97,4 +97,9 @@ export class WordService {
   async findWordById(id: string) {
     return await this.wordRepository.findOneBy({ id });
   }
+  async deleteWord(id: string) {
+    const word = await this.wordRepository.findOneBy({ id });
+    if (!word) throw new NotFoundException('Word not found');
+    return await this.wordRepository.softDelete(id);
+  }
 }

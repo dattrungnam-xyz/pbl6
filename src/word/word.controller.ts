@@ -39,4 +39,8 @@ export class WordController {
   ) {
     return await this.wordService.updateWord(id, updateWordDTO);
   }
+  @Delete(':id')
+  async deleteWord(@Param('id') id: string) {
+    return await this.wordService.deleteWord(id);
+  }
 }
