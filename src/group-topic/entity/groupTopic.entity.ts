@@ -36,6 +36,14 @@ export class GroupTopic {
 
   @Expose()
   @Column()
+  target: string;
+
+  @Expose()
+  @Column()
+  description: string;
+
+  @Expose()
+  @Column()
   thumbnail: string;
 
   @Expose()
@@ -51,7 +59,7 @@ export class GroupTopic {
     nullable: true,
   })
   topics: Promise<Topic>;
-  
+
   @CreateDateColumn()
   createdAt: Date;
 

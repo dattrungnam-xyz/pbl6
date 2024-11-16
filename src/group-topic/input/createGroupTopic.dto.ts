@@ -27,7 +27,17 @@ export class CreateGroupTopicDTO {
   @Type(() => CreateTagDTO)
   tags: CreateTagDTO[];
 
+  @IsOptional()
+  @IsString()
+  description: string;
+
+  @IsOptional()
+  @IsString()
+  target: string;
+
   @IsNotEmpty()
-  @IsEnum(Level, { message: 'Level must be either advanced, beginner, or intermediate.' })
+  @IsEnum(Level, {
+    message: 'Level must be either advanced, beginner, or intermediate.',
+  })
   level: Level;
 }

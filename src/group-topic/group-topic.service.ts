@@ -27,6 +27,8 @@ export class GroupTopicService {
     newGroupTopic.tags = Promise.resolve(listTag);
     newGroupTopic.name = createGroupTopicDTO.name;
     newGroupTopic.level = createGroupTopicDTO.level;
+    newGroupTopic.target = createGroupTopicDTO.target;
+    newGroupTopic.description = createGroupTopicDTO.description;
     if (createGroupTopicDTO.thumbnail) {
       newGroupTopic.thumbnail = (
         await this.cloudinaryService.uploadImageBase64(
