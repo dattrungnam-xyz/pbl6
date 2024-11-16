@@ -48,6 +48,9 @@ export class Word {
   @Column({ nullable: true })
   pronunciation: string;
 
+  @Column({ nullable: true })
+  note: string;
+
   @Column({ type: 'enum', enum: WordClassType, nullable: true })
   wordClass: WordClassType;
 

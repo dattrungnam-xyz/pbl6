@@ -24,6 +24,8 @@ import { WordModule } from './word/word.module';
 import { UserTopicModule } from './user-topic/user-topic.module';
 import { CommentModule } from './comment/comment.module';
 import { TestPracticeModule } from './test-practice/test-practice.module';
+import { FlashCardModule } from './flash-card/flash-card.module';
+import { TranslateModule } from './translate/translate.module';
 
 @Module({
   imports: [
@@ -49,6 +51,8 @@ import { TestPracticeModule } from './test-practice/test-practice.module';
     UserTopicModule,
     CommentModule,
     TestPracticeModule,
+    FlashCardModule,
+    TranslateModule,
   ],
   controllers: [AppController],
   providers: [
