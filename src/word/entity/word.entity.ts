@@ -11,6 +11,7 @@ import {
 import { WordClassType } from '../../type/wordClass.type';
 import { Topic } from '../../topic/entity/topic.entity';
 import { UserTopic } from '../../user-topic/entity/userTopic.entity';
+import { FlashCard } from '../../flash-card/entity/flashCard.entity';
 
 @Entity()
 export class Word {
@@ -61,6 +62,9 @@ export class Word {
 
   @ManyToMany(() => UserTopic, (userTopic) => userTopic.words)
   userTopic: Promise<UserTopic[]>;
+
+  @ManyToOne(() => FlashCard, (flashCard) => flashCard.words)
+  flashCard: Promise<FlashCard>;
 
   @CreateDateColumn()
   createdAt: Date;

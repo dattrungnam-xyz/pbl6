@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Word } from './entity/word.entity';
 import { Repository } from 'typeorm';
@@ -6,6 +10,7 @@ import { CreateWordDTO } from './input/createWord.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UpdateWordDTO } from './input/updateWord.dto';
 import { Topic } from '../topic/entity/topic.entity';
+import { FlashCardService } from '../flash-card/flash-card.service';
 
 @Injectable()
 export class WordService {
@@ -14,22 +19,11 @@ export class WordService {
     @InjectRepository(Topic)
     private readonly topicRepository: Repository<Topic>,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly flashCardService: FlashCardService,
   ) {}
   async createListWord(listWord: CreateWordDTO[]) {
     const newListWord = listWord.map(async (word) => {
-      if (word.thumbnail) {
-        word.thumbnail = await this.cloudinaryService.uploadBase64(
-          word.thumbnail,
-        );
-      }
-      if (word.audio) {
-        word.audio = await this.cloudinaryService.uploadBase64(word.audio);
-      }
-      if (word.exampleAudio) {
-        word.exampleAudio = await this.cloudinaryService.uploadBase64(
-          word.exampleAudio,
-        );
-      }
+      word = (await this.handleImageAudio(word)) as CreateWordDTO;
       return word;
     });
 
@@ -41,21 +35,9 @@ export class WordService {
   }
 
   async createWord(createWordDTO: CreateWordDTO, id?: string) {
-    if (createWordDTO.thumbnail) {
-      createWordDTO.thumbnail = await this.cloudinaryService.uploadBase64(
-        createWordDTO.thumbnail,
-      );
-    }
-    if (createWordDTO.audio) {
-      createWordDTO.audio = await this.cloudinaryService.uploadBase64(
-        createWordDTO.audio,
-      );
-    }
-    if (createWordDTO.exampleAudio) {
-      createWordDTO.exampleAudio = await this.cloudinaryService.uploadBase64(
-        createWordDTO.exampleAudio,
-      );
-    }
+    createWordDTO = (await this.handleImageAudio(
+      createWordDTO,
+    )) as CreateWordDTO;
     const newWord = new Word({ ...createWordDTO });
     if (id) {
       const topic = await this.topicRepository.findOneBy({ id });
@@ -76,21 +58,9 @@ export class WordService {
       if (!topic) throw new NotFoundException('Topic not found');
       word.topic = Promise.resolve(topic);
     }
-    if (updateWordDTO.thumbnail) {
-      updateWordDTO.thumbnail = await this.cloudinaryService.uploadBase64(
-        updateWordDTO.thumbnail,
-      );
-    }
-    if (updateWordDTO.audio) {
-      updateWordDTO.audio = await this.cloudinaryService.uploadBase64(
-        updateWordDTO.audio,
-      );
-    }
-    if (updateWordDTO.exampleAudio) {
-      updateWordDTO.exampleAudio = await this.cloudinaryService.uploadBase64(
-        updateWordDTO.exampleAudio,
-      );
-    }
+    updateWordDTO = (await this.handleImageAudio(
+      updateWordDTO,
+    )) as UpdateWordDTO;
     Object.assign(word, updateWordDTO);
     return await this.wordRepository.save(word);
   }
@@ -101,5 +71,86 @@ export class WordService {
     const word = await this.wordRepository.findOneBy({ id });
     if (!word) throw new NotFoundException('Word not found');
     return await this.wordRepository.softDelete(id);
+  }
+
+  async createWordFlashCard(
+    idFlashCard: string,
+    createWordDTO: CreateWordDTO,
+    userId: string,
+  ) {
+    const flashCard = await this.flashCardService.findFlashCardById(
+      idFlashCard,
+    );
+    if (!flashCard) {
+      throw new NotFoundException('Flash card not found');
+    }
+    if ((await flashCard.user).id !== userId) {
+      throw new ForbiddenException(
+        'You are not authorized to create a word for this flashcard',
+      );
+    }
+
+    createWordDTO = (await this.handleImageAudio(
+      createWordDTO,
+    )) as CreateWordDTO;
+    const newWord = new Word({ ...createWordDTO });
+    newWord.flashCard = Promise.resolve(flashCard);
+    return await this.wordRepository.save(newWord);
+  }
+
+  async deleteWordFlashCard(idWord: string, userId: string) {
+    const word = await this.wordRepository.findOne({
+      where: { id: idWord },
+      relations: ['flashCard', 'flashCard.user'],
+    });
+    if (!word) throw new NotFoundException('Word not found');
+    if ((await (await word.flashCard).user).id !== userId) {
+      throw new ForbiddenException(
+        'You are not authorized to delete this word',
+      );
+    }
+    return await this.wordRepository.softDelete(idWord);
+  }
+
+  async updateWordFlashCard(
+    idWord: string,
+    updateWordDTO: UpdateWordDTO,
+    userId: string,
+  ) {
+    let word = await this.wordRepository.findOne({
+      where: { id: idWord },
+      relations: ['flashCard', 'flashCard.user'],
+    });
+    if (!word) {
+      throw new NotFoundException('Word not found');
+    }
+    if ((await (await word.flashCard).user).id !== userId) {
+      throw new ForbiddenException(
+        'You are not authorized to update this word',
+      );
+    }
+    updateWordDTO = (await this.handleImageAudio(
+      updateWordDTO,
+    )) as UpdateWordDTO;
+  }
+  async handleImageAudio(obj: CreateWordDTO | UpdateWordDTO) {
+    if (obj.audioUrl) {
+      obj.audio = obj.audioUrl;
+    } else if (obj.audio) {
+      obj.audio = await this.cloudinaryService.uploadBase64(obj.audio);
+    }
+    if (obj.exampleAudioUrl) {
+      obj.exampleAudio = obj.exampleAudioUrl;
+    } else if (obj.exampleAudio) {
+      obj.exampleAudio = await this.cloudinaryService.uploadBase64(
+        obj.exampleAudio,
+      );
+    }
+    if (obj.thumbnailUrl) {
+      obj.thumbnail = obj.thumbnailUrl;
+    } else if (obj.thumbnail) {
+      obj.thumbnail = await this.cloudinaryService.uploadBase64(obj.thumbnail);
+    }
+    return obj;
   }
 }
