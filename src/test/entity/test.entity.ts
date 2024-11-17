@@ -12,6 +12,7 @@ import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity'
 import { Tag } from '../../tag/entity/tag.entity';
 import { TestPractice } from '../../test-practice/entity/testPractice.entity';
 import { Paginated } from '../../pagination/paginator';
+import { Comment } from '../../comment/entity/comment.entity';
 
 @Entity()
 export class Test {
@@ -58,6 +59,12 @@ export class Test {
     nullable: true,
   })
   testPractices: Promise<TestPractice[]>;
+
+  @Expose()
+  @OneToMany(() => Comment, (comment) => comment.test, {
+    nullable: true,
+  })
+  comments: Promise<Comment[]>;
 }
 
 export class PaginatedTest extends Paginated<Test>(Test) {}

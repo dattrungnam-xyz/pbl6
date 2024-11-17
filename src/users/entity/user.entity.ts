@@ -11,6 +11,7 @@ import { Role } from '../../type/role.type';
 import { UserTopic } from '../../user-topic/entity/userTopic.entity';
 import { TestPractice } from '../../test-practice/entity/testPractice.entity';
 import { FlashCard } from '../../flash-card/entity/flashCard.entity';
+import { Comment } from '../../comment/entity/comment.entity';
 
 @Entity()
 export class User {
@@ -80,4 +81,8 @@ export class User {
   @Expose()
   @OneToMany(() => TestPractice, (testPractice) => testPractice.user)
   testPractices: Promise<TestPractice[]>;
+
+  @Expose()
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Promise<Comment[]>;
 }

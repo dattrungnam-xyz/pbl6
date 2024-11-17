@@ -13,6 +13,7 @@ import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity'
 import { UserAnswer } from '../../user-answer/entity/userAnswer.entity';
 import { QuestionMedia } from '../../question-media/entity/questionMedia.entity';
 import { AnswerType } from '../../type/answer.type';
+import { Comment } from '../../comment/entity/comment.entity';
 
 @Entity()
 export class Question {
@@ -37,7 +38,7 @@ export class Question {
   question: string;
 
   @Expose()
-  @Column("simple-array",{ nullable: true })
+  @Column('simple-array', { nullable: true })
   answer: string[];
 
   @Expose()
@@ -65,4 +66,10 @@ export class Question {
   @Expose()
   @OneToMany(() => UserAnswer, (userAnswer) => userAnswer.question)
   userAnswer: Promise<UserAnswer[]>;
+
+  @Expose()
+  @OneToMany(() => Comment, (comment) => comment.question, {
+    nullable: true,
+  })
+  comments: Promise<Comment[]>;
 }

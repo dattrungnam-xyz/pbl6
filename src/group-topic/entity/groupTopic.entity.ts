@@ -11,6 +11,7 @@ import {
 import { Tag } from '../../tag/entity/tag.entity';
 import { Topic } from '../../topic/entity/topic.entity';
 import { Level } from '../../type/level.type';
+import { Comment } from '../../comment/entity/comment.entity';
 
 @Entity()
 export class GroupTopic {
@@ -58,7 +59,13 @@ export class GroupTopic {
     cascade: true,
     nullable: true,
   })
-  topics: Promise<Topic>;
+  topics: Promise<Topic[]>;
+
+  @Expose()
+  @OneToMany(() => Comment, (comment) => comment.groupTopic, {
+    nullable: true,
+  })
+  comments: Promise<Comment[]>;
 
   @CreateDateColumn()
   createdAt: Date;
