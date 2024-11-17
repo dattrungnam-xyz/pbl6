@@ -11,7 +11,6 @@ import { QuestionModule } from './question/question.module';
 import { GroupQuestionModule } from './group-question/group-question.module';
 import { PartModule } from './part/part.module';
 import { QuestionMediaModule } from './question-media/question-media.module';
-import { SubmissionModule } from './submission/submission.module';
 import { UserAnswerModule } from './user-answer/user-answer.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { APP_GUARD } from '@nestjs/core';
@@ -40,7 +39,6 @@ import { TranslateModule } from './translate/translate.module';
     GroupQuestionModule,
     PartModule,
     QuestionMediaModule,
-    SubmissionModule,
     UserAnswerModule,
     CloudinaryModule,
     UsersModule,
