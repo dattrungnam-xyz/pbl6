@@ -63,6 +63,4 @@ export class Comment {
   @ManyToOne(() => Comment, (comment) => comment.subComment, { nullable: true })
   @Expose()
   parentComment?: Promise<Comment>;
-
-
 }
