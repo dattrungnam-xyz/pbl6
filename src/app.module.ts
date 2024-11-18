@@ -11,7 +11,6 @@ import { QuestionModule } from './question/question.module';
 import { GroupQuestionModule } from './group-question/group-question.module';
 import { PartModule } from './part/part.module';
 import { QuestionMediaModule } from './question-media/question-media.module';
-import { SubmissionModule } from './submission/submission.module';
 import { UserAnswerModule } from './user-answer/user-answer.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { APP_GUARD } from '@nestjs/core';
@@ -24,6 +23,8 @@ import { WordModule } from './word/word.module';
 import { UserTopicModule } from './user-topic/user-topic.module';
 import { CommentModule } from './comment/comment.module';
 import { TestPracticeModule } from './test-practice/test-practice.module';
+import { FlashCardModule } from './flash-card/flash-card.module';
+import { TranslateModule } from './translate/translate.module';
 
 @Module({
   imports: [
@@ -38,7 +39,6 @@ import { TestPracticeModule } from './test-practice/test-practice.module';
     GroupQuestionModule,
     PartModule,
     QuestionMediaModule,
-    SubmissionModule,
     UserAnswerModule,
     CloudinaryModule,
     UsersModule,
@@ -49,6 +49,8 @@ import { TestPracticeModule } from './test-practice/test-practice.module';
     UserTopicModule,
     CommentModule,
     TestPracticeModule,
+    FlashCardModule,
+    TranslateModule,
   ],
   controllers: [AppController],
   providers: [

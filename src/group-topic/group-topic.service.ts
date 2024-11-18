@@ -27,6 +27,8 @@ export class GroupTopicService {
     newGroupTopic.tags = Promise.resolve(listTag);
     newGroupTopic.name = createGroupTopicDTO.name;
     newGroupTopic.level = createGroupTopicDTO.level;
+    newGroupTopic.target = createGroupTopicDTO.target;
+    newGroupTopic.description = createGroupTopicDTO.description;
     if (createGroupTopicDTO.thumbnail) {
       newGroupTopic.thumbnail = (
         await this.cloudinaryService.uploadImageBase64(
@@ -69,7 +71,7 @@ export class GroupTopicService {
   {
     return this.groupTopicRepository.findOne({
       where: { id },
-      relations: ["tags", "topics"]
+      relations: ["tags", "topics", "topics.listWord"]
     })
   }
 }
