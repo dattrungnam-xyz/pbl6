@@ -153,4 +153,8 @@ export class WordService {
     }
     return obj;
   }
+  async findWord()
+  {
+    return await this.wordRepository.find();
+  }
 }

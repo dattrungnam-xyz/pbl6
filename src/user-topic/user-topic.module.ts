@@ -5,9 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserTopic } from './entity/userTopic.entity';
 import { User } from '../users/entity/user.entity';
 import { WordModule } from '../word/word.module';
+import { TopicModule } from '../topic/topic.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserTopic, User]), WordModule],
+  imports: [
+    TypeOrmModule.forFeature([UserTopic, User]),
+    WordModule,
+    TopicModule,
+  ],
   controllers: [UserTopicController],
   providers: [UserTopicService],
 })
