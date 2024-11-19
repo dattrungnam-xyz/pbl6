@@ -12,5 +12,6 @@ import { WordModule } from '../word/word.module';
   imports: [TypeOrmModule.forFeature([Topic, GroupTopic]), CloudinaryModule, TagModule, WordModule],
   controllers: [TopicController],
   providers: [TopicService],
+  exports: [TopicService],
 })
 export class TopicModule {}

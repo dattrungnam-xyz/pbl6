@@ -54,4 +54,9 @@ export class TestPracticeService {
     testPractice.userAnswers = Promise.resolve(listUserAnswer);
     return await this.testPracticeRepository.save(testPractice);
   }
+  async getListTestPracticeByUserIdAndTestId(idUser: string, idTest: string) {
+    return await this.testPracticeRepository.find({
+      where: { user: { id: idUser }, test: { id: idTest } },
+    });
+  }
 }

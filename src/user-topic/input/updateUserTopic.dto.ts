@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class updateUserTopic {
+export class UpdateUserTopicDTO {
   @IsNotEmpty()
   @IsString()
   name: string;
