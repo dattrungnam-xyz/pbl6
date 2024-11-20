@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Req,
+  Request,
   UnauthorizedException,
   UseGuards,
   UseInterceptors,
@@ -21,7 +22,8 @@ import { ForgotPassWordDTO } from './input/forgotPassword.dto';
 import { ResetPassworDTO } from './input/resetPassword.dto';
 import { JwtAuthGuard } from './authGuard.jwt';
 import { UpdatePasswordDTO } from './input/updatePassword.dto';
-import { Request } from 'express';
+import { GoogleOAuthGuard } from './authGuard.google';
+import { Request as RequestType } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -62,7 +64,7 @@ export class AuthController {
   @UseInterceptors(ClassSerializerInterceptor)
   async forgotPassword(
     @Body() forgotPassWordDTO: ForgotPassWordDTO,
-    @Req() req: Request,
+    @Req() req: RequestType,
   ) {
     let host = `${req.protocol}://${req.get('Host')}`;
     return await this.authService.forgotPassword(forgotPassWordDTO.email, host);
@@ -86,5 +88,15 @@ export class AuthController {
   ) {
     if (!user) throw new UnauthorizedException();
     return await this.authService.updatePassword(user.id, updatePasswordDTO);
+  }
+
+  @Get()
+  @UseGuards(GoogleOAuthGuard)
+  async googleAuth(@Request() req) {}
+
+  @Get('google-redirect')
+  @UseGuards(GoogleOAuthGuard)
+  googleAuthRedirect(@Request() req) {
+    return this.authService.googleLogin(req);
   }
 }

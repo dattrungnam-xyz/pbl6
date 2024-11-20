@@ -37,6 +37,9 @@ export class AuthService {
     return await bcrypt.compare(password, userpassword);
   }
   public async validateUser(username: string, password: string): Promise<User> {
+    if (!username.trim() || !password.trim()) {
+      throw new LoginException();
+    }
     const user: User = await this.userRepository.findOne({
       where: { username },
     });
@@ -137,5 +140,23 @@ export class AuthService {
       }),
     );
     return newUser;
+  }
+  async googleLogin(req: any) {
+    if (!req.user) {
+      throw new UnauthorizedException();
+    }
+    const user = await this.userRepository.findOneBy({ email: req.user.email });
+    if (!user) {
+      const newUser = new User({ ...req.user, roles: ['user'] });
+      await this.userRepository.save(newUser);
+      return {
+        token: this.signToken(newUser),
+        user: newUser,
+      };
+    }
+    return {
+      token: this.signToken(user),
+      user: user,
+    };
   }
 }

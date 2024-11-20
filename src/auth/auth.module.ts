@@ -8,6 +8,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { MailModule } from '../mail/mail.module';
 import { User } from '../users/entity/user.entity';
 import { UserDoesNotExistConstraint } from '../validation/UserDoesNotExist.constraint';
+import { GoogleStrategy } from './google.strategy';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UserDoesNotExistConstraint } from '../validation/UserDoesNotExist.const
     AuthService,
     LocalStrategy,
     JwtStrategy,
+    GoogleStrategy,
     UserDoesNotExistConstraint,
   ],
 })
