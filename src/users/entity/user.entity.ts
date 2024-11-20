@@ -24,7 +24,7 @@ export class User {
   id: string;
 
   @Expose()
-  @Column({ unique: true })
+  @Column({ nullable: true })
   username: string;
 
   @Expose()
@@ -44,7 +44,7 @@ export class User {
   phone: string;
 
   @Exclude({ toPlainOnly: true })
-  @Column()
+  @Column({ nullable: true })
   password: string;
 
   @Exclude({ toPlainOnly: true })
