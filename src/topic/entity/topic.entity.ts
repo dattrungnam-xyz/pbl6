@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -11,6 +12,7 @@ import {
 import { Tag } from '../../tag/entity/tag.entity';
 import { GroupTopic } from '../../group-topic/entity/groupTopic.entity';
 import { Word } from '../../word/entity/word.entity';
+import { UserTopic } from '../../user-topic/entity/userTopic.entity';
 
 @Entity()
 export class Topic {
@@ -52,4 +54,9 @@ export class Topic {
 
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
+
+  @OneToMany(() => UserTopic, (userTopic) => userTopic.topic, {
+    nullable: true,
+  })
+  userTopics: Promise<UserTopic[]>;
 }

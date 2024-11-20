@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entity/user.entity';
 import { Word } from '../../word/entity/word.entity';
+import { Topic } from '../../topic/entity/topic.entity';
 
 @Entity()
 export class UserTopic {
@@ -37,7 +38,10 @@ export class UserTopic {
   @ManyToOne(() => User, (user) => user.userTopic)
   user: Promise<User>;
 
-  @ManyToMany(() => Word, (word) => word.userTopic)
+  @ManyToMany(() => Word, (word) => word.userTopic, { nullable: true })
   @JoinTable()
   words: Promise<Word[]>;
+
+  @ManyToOne(() => Topic, (topic) => topic.userTopics, { nullable: true })
+  topic: Promise<Topic>;
 }

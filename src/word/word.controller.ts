@@ -36,6 +36,10 @@ export class WordController {
   async createWord(@Body() createWordDTO: CreateWordDTO) {
     return await this.wordService.createWord(createWordDTO);
   }
+  @Get('')
+  async findListWord() {
+    return await this.wordService.findWord();
+  }
 
   @Get(':id')
   async findWord(@Param('id') id: string) {

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { TestPracticeService } from './test-practice.service';
 import { CreateTestPracticeDTO } from './input/createTestPratice.dto';
 import { ClassSerializerInterceptor } from '@nestjs/common';
@@ -16,4 +16,7 @@ export class TestPracticeController {
       createTestPracticeDTO,
     );
   }
+
+  @Get()
+  async getTestPracticeByUserIdAndTestId() {}
 }
