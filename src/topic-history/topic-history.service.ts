@@ -51,12 +51,14 @@ export class TopicHistoryService {
     return await this.topicHistoryRepository.find({
       where: { user: { id: userId } },
       relations: ['topic'],
+      order: { createdAt: 'DESC' },
     });
   }
   async getTopicHistoryByUserIdTopicId(userId: string, topicId: string) {
     return await this.topicHistoryRepository.find({
       where: { user: { id: userId }, topic: { id: topicId } },
       relations: ['topic'],
+      order: { createdAt: 'DESC' },
     });
   }
   async getTopicHistoryDetail(id: string) {
@@ -68,6 +70,7 @@ export class TopicHistoryService {
   async getAllTopicHistory() {
     return await this.topicHistoryRepository.find({
       relations: ['topic', 'correctWord', 'incorrectWord'],
+      order: { createdAt: 'DESC' },
     });
   }
 }
