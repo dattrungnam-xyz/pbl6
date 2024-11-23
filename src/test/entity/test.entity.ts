@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -47,7 +48,7 @@ export class Test {
   groupQuestions: Promise<GroupQuestion[]>;
 
   @Expose()
-  @OneToMany(() => Tag, (tag) => tag.test, {
+  @ManyToMany(() => Tag, (tag) => tag.test, {
     cascade: true,
     nullable: true,
   })

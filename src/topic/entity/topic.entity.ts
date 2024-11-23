@@ -13,6 +13,7 @@ import { Tag } from '../../tag/entity/tag.entity';
 import { GroupTopic } from '../../group-topic/entity/groupTopic.entity';
 import { Word } from '../../word/entity/word.entity';
 import { UserTopic } from '../../user-topic/entity/userTopic.entity';
+import { TopicHistory } from '../../topic-history/entity/topicHistory.entity';
 
 @Entity()
 export class Topic {
@@ -30,7 +31,7 @@ export class Topic {
   thumbnail: string;
 
   @Expose()
-  @OneToMany(() => Tag, (tag) => tag.topic, {
+  @ManyToMany(() => Tag, (tag) => tag.topic, {
     cascade: true,
     nullable: true,
   })
@@ -59,4 +60,8 @@ export class Topic {
     nullable: true,
   })
   userTopics: Promise<UserTopic[]>;
+
+  @Expose()
+  @OneToMany(() => TopicHistory, (topicHistories) => topicHistories.topic)
+  topicHistories: Promise<TopicHistory[]>;
 }

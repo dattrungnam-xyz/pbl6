@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -48,7 +49,7 @@ export class GroupTopic {
   thumbnail: string;
 
   @Expose()
-  @OneToMany(() => Tag, (tag) => tag.groupTopic, {
+  @ManyToMany(() => Tag, (tag) => tag.groupTopic, {
     cascade: true,
     nullable: true,
   })

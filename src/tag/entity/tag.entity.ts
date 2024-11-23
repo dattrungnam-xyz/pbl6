@@ -4,6 +4,8 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -36,22 +38,25 @@ export class Tag {
   deletedAt: Date;
 
   @Expose()
-  @ManyToOne(() => Test, (test) => test.tags, {
+  @JoinTable()
+  @ManyToMany(() => Test, (test) => test.tags, {
     nullable: true,
   })
-  test: Promise<Test>;
+  test: Promise<Test[]>;
 
   @Expose()
-  @ManyToOne(() => Topic, (Topic) => Topic.tags, {
+  @JoinTable()
+  @ManyToMany(() => Topic, (Topic) => Topic.tags, {
     nullable: true,
   })
-  topic: Promise<Topic>;
+  topic: Promise<Topic[]>;
 
   @Expose()
-  @ManyToOne(() => GroupTopic, (GroupTopic) => GroupTopic.tags, {
+  @JoinTable()
+  @ManyToMany(() => GroupTopic, (GroupTopic) => GroupTopic.tags, {
     nullable: true,
   })
-  groupTopic: Promise<GroupTopic>;
+  groupTopic: Promise<GroupTopic[]>;
 
   @Expose()
   @Column({
