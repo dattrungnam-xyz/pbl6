@@ -10,7 +10,7 @@ import { getLCScore, getRCScore } from '../utils/getScore';
 import { UserAnswer } from '../user-answer/entity/userAnswer.entity';
 import { Test } from '../test/entity/test.entity';
 import { User } from '../users/entity/user.entity';
-
+import { DataSource } from 'typeorm';
 @Injectable()
 export class TestPracticeService {
   constructor(
@@ -21,6 +21,7 @@ export class TestPracticeService {
     @InjectRepository(Test)
     private readonly testRepository: Repository<Test>,
     private readonly userAnswerService: UserAnswerService,
+    private dataSource: DataSource,
   ) {}
   async createTestPractice(createTestPractice: CreateTestPracticeDTO) {
     const test = await this.testRepository.findOneBy({
@@ -36,10 +37,24 @@ export class TestPracticeService {
       throw new NotFoundException('User not found');
     }
     const testPractice = new TestPractice();
-    testPractice.user = Promise.resolve(user);
-    testPractice.test = Promise.resolve(test);
     Object.assign(testPractice, createTestPractice);
+    await this.testPracticeRepository.save(testPractice);
+    const userTestPractices = await user.testPractices;
+    await this.userRepository.save(
+      new User({
+        ...user,
+        testPractices: Promise.resolve([...userTestPractices, testPractice]),
+      }),
+    );
+    const testTestPractices = await test.testPractices;
+    await this.testRepository.save(
+      new Test({
+        ...test,
+        testPractices: Promise.resolve([...testTestPractices, testPractice]),
+      }),
+    );
     const listUserAnswer = await this.userAnswerService.createListUserAnswer(
+      testPractice,
       createTestPractice.userAnswer,
     );
     let totalQuestion = listUserAnswer.length;
@@ -52,6 +67,19 @@ export class TestPracticeService {
         if (+question.questionNumber <= 100) {
           LCCount++;
         } else {
+          let RCCount = 0;
+          for (const answer of listUserAnswer) {
+            if (answer.isCorrect) {
+              const question = await answer.question;
+              if (+question.questionNumber <= 100) {
+                LCCount++;
+              } else {
+                RCCount++;
+              }
+            }
+          }
+          testPractice.LCScore = getLCScore(LCCount);
+          testPractice.RCScore = getRCScore(RCCount);
           RCCount++;
         }
       }
@@ -60,18 +88,60 @@ export class TestPracticeService {
     testPractice.RCScore = getRCScore(RCCount);
     testPractice.totalQuestion = totalQuestion;
     testPractice.numCorrect = numCorrect;
-    testPractice.userAnswers = Promise.resolve(listUserAnswer);
     return await this.testPracticeRepository.save(testPractice);
   }
-  async getListTestPracticeByUser(idUser: string, idTest?: string) {
-    let filter: any = {
-      where: { user: { id: idUser } },
-      relations: ['user', 'test'],
-    };
-    if (idTest) {
-      filter.where.test = { id: idTest };
-    }
-    console.log(filter);
-    return await this.testPracticeRepository.find(filter);
+  async getListTestPracticeByUser(idUser: string) {
+    const query = `SELECT testPractice.id AS testPractice_id,
+    testPractice.createdAt AS testPractice_createdAt,
+    testPractice.deletedAt AS testPractice_deletedAt,
+    testPractice.time AS testPractice_time, 
+    testPractice.LCScore AS testPractice_LCScore, 
+    testPractice.RCScore AS testPractice_RCScore, 
+    testPractice.totalQuestion AS testPractice_totalQuestion, 
+    testPractice.numCorrect AS testPractice_numCorrect, 
+    testPractice.userId AS testPractice_userId, 
+    testPractice.testId AS testPractice_testId, 
+    user.id AS user_id, 
+    user.name AS user_name, 
+    test.id AS test_id, 
+    test.name AS test_name 
+    FROM test_practice testPractice 
+    LEFT JOIN user user 
+    ON user.id=testPractice.userId 
+    AND (user.deletedAt IS NULL)  
+    LEFT JOIN test test 
+    ON test.id=testPractice.testId 
+    AND (test.deletedAt IS NULL)
+    WHERE ( user.id = "${idUser}" )
+    AND ( testPractice.deletedAt IS NULL )`;
+    const result = await this.dataSource.query(query);
+    return result;
+  }
+  async getListTestPracticeByUserTest(idUser: string, idTest: string) {
+    const query = `SELECT testPractice.id AS testPractice_id,
+    testPractice.createdAt AS testPractice_createdAt,
+    testPractice.deletedAt AS testPractice_deletedAt,
+    testPractice.time AS testPractice_time, 
+    testPractice.LCScore AS testPractice_LCScore, 
+    testPractice.RCScore AS testPractice_RCScore, 
+    testPractice.totalQuestion AS testPractice_totalQuestion, 
+    testPractice.numCorrect AS testPractice_numCorrect, 
+    testPractice.userId AS testPractice_userId, 
+    testPractice.testId AS testPractice_testId, 
+    user.id AS user_id, 
+    user.name AS user_name, 
+    test.id AS test_id, 
+    test.name AS test_name 
+    FROM test_practice testPractice 
+    LEFT JOIN user user 
+    ON user.id=testPractice.userId 
+    AND (user.deletedAt IS NULL)  
+    LEFT JOIN test test 
+    ON test.id=testPractice.testId 
+    AND (test.deletedAt IS NULL)
+    WHERE ( user.id = "${idUser}" AND test.id = "${idTest}" )
+    AND ( testPractice.deletedAt IS NULL )`;
+    const result = await this.dataSource.query(query);
+    return result;
   }
 }

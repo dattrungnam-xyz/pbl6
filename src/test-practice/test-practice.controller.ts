@@ -29,20 +29,20 @@ export class TestPracticeController {
     );
   }
 
-  // @Get('test/:id')
-  // @UseGuards(JwtAuthGuard)
-  // async getListTestPracticeByUserIdAndTestId(
-  //   @CurrentUser() user: User,
-  //   @Param('id') id: string,
-  // ) {
-  //   return await this.testPracticeService.getListTestPracticeByUser(
-  //     user.id,
-  //     id,
-  //   );
-  // }
-  // @Get()
-  // @UseGuards(JwtAuthGuard)
-  // async getListTestPracticeByUserAndTest(@CurrentUser() user: User) {
-  //   return await this.testPracticeService.getListTestPracticeByUser(user.id);
-  // }
+  @Get('test/:id')
+  @UseGuards(JwtAuthGuard)
+  async getListTestPracticeByUserIdAndTestId(
+    @CurrentUser() user: User,
+    @Param('id') id: string,
+  ) {
+    return await this.testPracticeService.getListTestPracticeByUserTest(
+      user.id,
+      id,
+    );
+  }
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async getListTestPracticeByUserAndTest(@CurrentUser() user: User) {
+    return await this.testPracticeService.getListTestPracticeByUser(user.id);
+  }
 }

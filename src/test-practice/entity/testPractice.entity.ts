@@ -30,19 +30,19 @@ export class TestPractice {
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   time: number;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   LCScore: number;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   RCScore: number;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   totalQuestion: number;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   numCorrect: number;
 
   @ManyToOne(() => Test, (test) => test.testPractices)
