@@ -33,14 +33,9 @@ export class UsersController {
     if (!user) {
       throw new UnauthorizedException();
     }
-    if (updateProfileDTO) {
-      updateProfileDTO.avatar = (
-        await this.cloudinaryService.uploadImageBase64(updateProfileDTO.avatar)
-      ).url;
-      return await this.usersService.updateProfile(user, updateProfileDTO);
-    }
-
-    if (updateProfileDTO.avatar) {
+    if (updateProfileDTO.avatarUrl) {
+      updateProfileDTO.avatar = updateProfileDTO.avatarUrl;
+    } else if (updateProfileDTO.avatar) {
       updateProfileDTO.avatar = (
         await this.cloudinaryService.uploadImageBase64(updateProfileDTO.avatar)
       ).url;

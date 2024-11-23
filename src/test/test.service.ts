@@ -110,7 +110,7 @@ export class TestService {
     });
   }
   async findOneById(id: string) {
-    const result = await this.testRepository
+    let result = await this.testRepository
       .createQueryBuilder('test')
       .leftJoinAndSelect('test.tags', 'tags')
       .leftJoinAndSelect('test.groupQuestions', 'groupQuestions')
@@ -121,7 +121,7 @@ export class TestService {
       .getOne();
 
     if (result && result.groupQuestions) {
-      for (const group of await (result.groupQuestions)) {
+      for (const group of await result.groupQuestions) {
         group.audio = [];
         group.image = [];
         for (const media of await group.questionMedia) {
@@ -131,9 +131,16 @@ export class TestService {
             group.image.push(media);
           }
         }
+        if (group.questions) {
+          (await group.questions).sort(
+            (a, b) => a.questionNumber - b.questionNumber,
+          );
+        }
       }
     }
-
+    // (await result.groupQuestions).sort((a, b) => {
+    //   return a.questions[0].questionNumber - b.questions[0].questionNumber;
+    // });
     return result;
   }
 

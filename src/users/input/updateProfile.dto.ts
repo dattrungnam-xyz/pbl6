@@ -4,6 +4,7 @@ import {
   IsBase64,
   IsEmail,
   IsEnum,
+  IsNotEmpty,
   IsOptional,
   IsString,
   Matches,
@@ -41,4 +42,9 @@ export class UpdateProfileDTO {
       'Avatar must be a valid Base64 encoded image (PNG, JPG, JPEG, GIF)',
   })
   avatar?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  avatarUrl?: string;
 }

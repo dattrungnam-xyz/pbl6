@@ -143,7 +143,7 @@ export class TopicService {
   async findOne(id: string) {
     return await this.topicRepository.findOne({
       where: { id },
-      relations: ['listWord', 'tags'],
+      relations: ['listWord', 'tags', 'groupTopic'],
     });
   }
 
