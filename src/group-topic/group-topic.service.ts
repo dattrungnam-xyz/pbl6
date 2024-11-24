@@ -7,12 +7,16 @@ import { TagService } from '../tag/tag.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UpdateGroupTopicDTO } from './input/updateGroupTopic.dto';
 import { NotFoundError } from 'rxjs';
+import { TopicHistory } from '../topic-history/entity/topicHistory.entity';
+import { Topic } from '../topic/entity/topic.entity';
 
 @Injectable()
 export class GroupTopicService {
   constructor(
     @InjectRepository(GroupTopic)
     private readonly groupTopicRepository: Repository<GroupTopic>,
+    @InjectRepository(TopicHistory)
+    private readonly topicHistoryRepository: Repository<TopicHistory>,
     private readonly tagService: TagService,
     private readonly cloudinaryService: CloudinaryService,
   ) {}
@@ -61,17 +65,34 @@ export class GroupTopicService {
 
   async findGroupTopic() {
     return await this.groupTopicRepository
-    .createQueryBuilder("groupTopic")
-    .leftJoinAndSelect("groupTopic.topics", "topic")
-    .loadRelationCountAndMap("groupTopic.topicsCount", "groupTopic.topics")
-    .getMany();
+      .createQueryBuilder('groupTopic')
+      .leftJoinAndSelect('groupTopic.topics', 'topic')
+      .loadRelationCountAndMap('groupTopic.topicsCount', 'groupTopic.topics')
+      .orderBy('groupTopic.createdAt', 'DESC')
+      .getMany();
   }
 
-  async findGroupTopicById(id:string)
-  {
+  async findGroupTopicById(id: string) {
     return this.groupTopicRepository.findOne({
       where: { id },
-      relations: ["tags", "topics", "topics.listWord"]
-    })
+      relations: ['tags', 'topics', 'topics.listWord'],
+    });
+  }
+  async findGroupTopicByIdAndUser(id: string, idUser: string) {
+    let result = await this.groupTopicRepository.findOne({
+      where: { id },
+      relations: ['tags', 'topics', 'topics.listWord'],
+      order: { createdAt: 'DESC' },
+    });
+    for (let i = 0; i < (await result.topics).length; i++) {
+      let topic: any = (await result.topics)[i];
+      const topicHistory = await this.topicHistoryRepository.findOne({
+        where: { user: { id: idUser }, topic: { id: topic.id } },
+        order: { numCorrect: 'DESC' },
+      });
+      topic.isLearned = topicHistory ? true : false;
+      topic.retainedWord = topicHistory ? topicHistory.numCorrect : 0;
+    }
+    return result;
   }
 }

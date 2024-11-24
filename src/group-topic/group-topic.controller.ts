@@ -1,7 +1,19 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { GroupTopicService } from './group-topic.service';
 import { CreateGroupTopicDTO } from './input/createGroupTopic.dto';
 import { UpdateGroupTopicDTO } from './input/updateGroupTopic.dto';
+import { JwtAuthGuard } from '../auth/authGuard.jwt';
+import { CurrentUser } from '../decorator/currentUser.decorator';
+import { User } from '../users/entity/user.entity';
 
 @Controller('group-topic')
 export class GroupTopicController {
@@ -18,6 +30,14 @@ export class GroupTopicController {
   @Get(':id')
   async findGroupTopicById(@Param('id') id: string) {
     return await this.groupTopicService.findGroupTopicById(id);
+  }
+  @Get(':id/user')
+  @UseGuards(JwtAuthGuard)
+  async findGroupTopicByIdAndUser(
+    @CurrentUser() user: User,
+    @Param('id') id: string,
+  ) {
+    return await this.groupTopicService.findGroupTopicByIdAndUser(id, user.id);
   }
   @Patch(':id')
   async updateGroupTopic(
