@@ -54,4 +54,10 @@ export class TopicHistoryController {
   async getHistoryDetail(@CurrentUser() user: User, @Param('id') id: string) {
     return await this.topicHistoryService.getTopicHistoryDetail(id);
   }
+
+  @Get('statistic/topic/:id')
+  @UseGuards(JwtAuthGuard)
+  async getHistoryStatisticDetail(@CurrentUser() user: User, @Param('id') id: string) {
+    return await this.topicHistoryService.getTopicHistoryStatisticDetail(user.id, id);
+  }
 }

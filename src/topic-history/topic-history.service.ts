@@ -50,14 +50,14 @@ export class TopicHistoryService {
   async getTopicHistoryByUserId(userId: string) {
     return await this.topicHistoryRepository.find({
       where: { user: { id: userId } },
-      relations: ['topic'],
+      relations: ['topic', 'correctWord', 'incorrectWord'],
       order: { createdAt: 'DESC' },
     });
   }
   async getTopicHistoryByUserIdTopicId(userId: string, topicId: string) {
     return await this.topicHistoryRepository.find({
       where: { user: { id: userId }, topic: { id: topicId } },
-      relations: ['topic'],
+      relations: ['topic', 'correctWord', 'incorrectWord'],
       order: { createdAt: 'DESC' },
     });
   }
@@ -72,5 +72,34 @@ export class TopicHistoryService {
       relations: ['topic', 'correctWord', 'incorrectWord'],
       order: { createdAt: 'DESC' },
     });
+  }
+  async getTopicHistoryStatisticDetail(idUser: string, idTopic: string) {
+    const listTopicHistory = await this.getTopicHistoryByUserIdTopicId(
+      idUser,
+      idTopic,
+    );
+    let current = {};
+    let last = {};
+    if (listTopicHistory && listTopicHistory.length > 0) {
+      current = listTopicHistory[0];
+      if (listTopicHistory.length > 1) {
+        last = listTopicHistory[1];
+      }
+    }
+    let maxPercent = 0;
+    let max = {};
+    for (let topicHistory of listTopicHistory) {
+      const ratio = topicHistory.numCorrect / topicHistory.totalWord;
+      if (ratio > maxPercent) {
+        maxPercent = ratio;
+        max = topicHistory;
+      }
+    }
+    const result = {
+      current,
+      last,
+      max,
+    };
+    return result;
   }
 }
