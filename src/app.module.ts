@@ -25,6 +25,7 @@ import { CommentModule } from './comment/comment.module';
 import { TestPracticeModule } from './test-practice/test-practice.module';
 import { FlashCardModule } from './flash-card/flash-card.module';
 import { TranslateModule } from './translate/translate.module';
+import { TopicHistoryModule } from './topic-history/topic-history.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { TranslateModule } from './translate/translate.module';
     TestPracticeModule,
     FlashCardModule,
     TranslateModule,
+    TopicHistoryModule,
   ],
   controllers: [AppController],
   providers: [

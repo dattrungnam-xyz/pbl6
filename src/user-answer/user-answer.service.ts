@@ -4,6 +4,7 @@ import { UserAnswer } from './entity/userAnswer.entity';
 import { Repository } from 'typeorm';
 import { CreateUserAnswerDTO } from './input/createUserAnswer.dto';
 import { QuestionService } from '../question/question.service';
+import { TestPractice } from '../test-practice/entity/testPractice.entity';
 
 @Injectable()
 export class UserAnswerService {
@@ -12,7 +13,7 @@ export class UserAnswerService {
     private readonly userAnswerRepository: Repository<UserAnswer>,
     private readonly questionService: QuestionService,
   ) {}
-  async createListUserAnswer(listUserAnswer: CreateUserAnswerDTO[]) {
+  async createListUserAnswer(testPractice: TestPractice,listUserAnswer: CreateUserAnswerDTO[]) {
     const listUserAnswerPromise = listUserAnswer.map(async (userAnswer) => {
       const newUserAnswer = new UserAnswer();
       const question = await this.questionService.findOneById(
@@ -29,6 +30,7 @@ export class UserAnswerService {
         newUserAnswer.isCorrect = false;
       }
       newUserAnswer.question = Promise.resolve(question);
+      newUserAnswer.testPractice = Promise.resolve(testPractice);
       newUserAnswer.userAnswer = userAnswer.answer;
       return this.userAnswerRepository.save(newUserAnswer);
     });

@@ -12,6 +12,7 @@ import { WordClassType } from '../../type/wordClass.type';
 import { Topic } from '../../topic/entity/topic.entity';
 import { UserTopic } from '../../user-topic/entity/userTopic.entity';
 import { FlashCard } from '../../flash-card/entity/flashCard.entity';
+import { TopicHistory } from '../../topic-history/entity/topicHistory.entity';
 
 @Entity()
 export class Word {
@@ -71,4 +72,16 @@ export class Word {
 
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
+
+  @ManyToMany(
+    () => TopicHistory,
+    (topicHistories) => topicHistories.correctWord,
+  )
+  topicHistoriesCorrect: Promise<TopicHistory[]>;
+
+  @ManyToMany(
+    () => TopicHistory,
+    (topicHistories) => topicHistories.incorrectWord,
+  )
+  topicHistoriesIncorrect: Promise<TopicHistory[]>;
 }
