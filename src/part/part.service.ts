@@ -12,7 +12,7 @@ export class PartService {
 
   async createPart(createPartDTO: CreatePartDTO): Promise<Part> {
     let part = new Part({ ...createPartDTO });
-
+    part.key = part.name.toLowerCase().split(' ').join('');
     return await this.partRepository.save(part);
   }
   async findPartBy(params: { name: string } | { id: string }) {

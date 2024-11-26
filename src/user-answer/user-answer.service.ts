@@ -13,7 +13,10 @@ export class UserAnswerService {
     private readonly userAnswerRepository: Repository<UserAnswer>,
     private readonly questionService: QuestionService,
   ) {}
-  async createListUserAnswer(testPractice: TestPractice,listUserAnswer: CreateUserAnswerDTO[]) {
+  async createListUserAnswer(
+    testPractice: TestPractice,
+    listUserAnswer: CreateUserAnswerDTO[],
+  ) {
     const listUserAnswerPromise = listUserAnswer.map(async (userAnswer) => {
       const newUserAnswer = new UserAnswer();
       const question = await this.questionService.findOneById(
@@ -35,5 +38,21 @@ export class UserAnswerService {
       return this.userAnswerRepository.save(newUserAnswer);
     });
     return await Promise.all(listUserAnswerPromise);
+  }
+
+  async getListPartOfUserAnswer(idTestPractice: string) {
+    let listPartInUserAnswer = await this.userAnswerRepository
+      .createQueryBuilder('ua')
+      .innerJoin('ua.question', 'q') 
+      .innerJoin('q.group', 'g') 
+      .innerJoin('g.part', 'p') 
+      .where('ua.testPracticeId = :idTestPractice', { idTestPractice }) 
+      .andWhere('ua.deletedAt IS NULL') 
+      .andWhere('q.deletedAt IS NULL')
+      .andWhere('g.deletedAt IS NULL')
+      .andWhere('p.deletedAt IS NULL')
+      .select('DISTINCT p.name')
+      .getRawMany();
+    return listPartInUserAnswer.map((item) => item.name).sort();
   }
 }
