@@ -102,7 +102,10 @@ export class AuthController {
   }
 
   @Post('google')
-  async loginGoogle(@Body() body: LoginGoogleDTO) {
-    return this.authService.googleLogin(body);
+  async googleLogin(@Body() googleLoginDto: LoginGoogleDTO) {
+    const { token } = googleLoginDto;
+
+    const user = await this.authService.validateGoogleToken(token);
+    return user;
   }
 }

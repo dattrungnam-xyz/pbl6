@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
-
+import { OAuth2Client } from 'google-auth-library';
 import { User } from '../users/entity/user.entity';
 import { MoreThan, Repository } from 'typeorm';
 import { CreateUserDTO } from './input/createUser.dto';
@@ -16,16 +16,20 @@ import { ResetPassworDTO } from './input/resetPassword.dto';
 import { UpdatePasswordDTO } from './input/updatePassword.dto';
 import { MailService } from '../mail/mail.service';
 import { LoginException } from '../exception/login.exception';
+import { Role } from '../type/role.type';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
+  private oauth2Client: OAuth2Client;
   constructor(
     private readonly jwtService: JwtService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly mailService: MailService,
-  ) {}
+  ) {
+    this.oauth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  }
 
   public async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 10);
@@ -155,5 +159,41 @@ export class AuthService {
       token: this.signToken(user),
       user: user,
     };
+  }
+
+  async validateGoogleToken(token: string) {
+    try {
+      const ticket = await this.oauth2Client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      const avatar = payload?.picture;
+      const googleId = payload?.sub;
+      const email = payload?.email;
+      const name = payload?.name;
+      const user = await this.userRepository.findOneBy({
+        email,
+      });
+      if (!user) {
+        const newUser = new User({
+          avatar,
+          email,
+          name,
+          roles: ['user'] as Role[],
+        });
+        await this.userRepository.save(newUser);
+        return {
+          token: this.signToken(newUser),
+          user: newUser,
+        };
+      }
+      return {
+        token: this.signToken(user),
+        user: user,
+      };
+    } catch (error) {
+      throw new Error('Invalid Google token');
+    }
   }
 }
