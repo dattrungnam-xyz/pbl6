@@ -35,20 +35,20 @@ export class Topic {
     cascade: true,
     nullable: true,
   })
-  tags: Promise<Tag[]>;
+  tags: Tag[];
 
   @Expose()
   @OneToMany(() => Word, (word) => word.topic, {
     cascade: true,
     nullable: true,
   })
-  listWord: Promise<Word[]>;
+  listWord: Word[];
 
   @Expose()
   @ManyToOne(() => GroupTopic, (groupTopic) => groupTopic.topics, {
     nullable: true,
   })
-  groupTopic: Promise<GroupTopic>;
+  groupTopic: GroupTopic;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -59,9 +59,9 @@ export class Topic {
   @OneToMany(() => UserTopic, (userTopic) => userTopic.topic, {
     nullable: true,
   })
-  userTopics: Promise<UserTopic[]>;
+  userTopics: UserTopic[];
 
   @Expose()
   @OneToMany(() => TopicHistory, (topicHistories) => topicHistories.topic)
-  topicHistories: Promise<TopicHistory[]>;
+  topicHistories: TopicHistory[];
 }

@@ -36,12 +36,12 @@ export class UserTopic {
   deletedAt: Date;
 
   @ManyToOne(() => User, (user) => user.userTopic)
-  user: Promise<User>;
+  user: User;
 
   @ManyToMany(() => Word, (word) => word.userTopic, { nullable: true })
   @JoinTable()
-  words: Promise<Word[]>;
+  words: Word[];
 
   @ManyToOne(() => Topic, (topic) => topic.userTopics, { nullable: true })
-  topic: Promise<Topic>;
+  topic: Topic;
 }

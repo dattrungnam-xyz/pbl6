@@ -43,6 +43,6 @@ export class Part {
 
   @Expose()
   @OneToMany(() => GroupQuestion, (grp) => grp.part)
-  listGroupQuestion: Promise<GroupQuestion[]>;
+  listGroupQuestion: GroupQuestion[];
 
 }

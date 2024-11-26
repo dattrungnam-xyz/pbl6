@@ -53,20 +53,20 @@ export class GroupTopic {
     cascade: true,
     nullable: true,
   })
-  tags: Promise<Tag[]>;
+  tags: Tag[];
 
   @Expose()
   @OneToMany(() => Topic, (topic) => topic.groupTopic, {
     cascade: true,
     nullable: true,
   })
-  topics: Promise<Topic[]>;
+  topics: Topic[];
 
   @Expose()
   @OneToMany(() => Comment, (comment) => comment.groupTopic, {
     nullable: true,
   })
-  comments: Promise<Comment[]>;
+  comments: Comment[];
 
   @CreateDateColumn()
   createdAt: Date;

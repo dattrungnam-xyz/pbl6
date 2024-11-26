@@ -39,7 +39,7 @@ export class TestService {
     const tags = await this.tagService.findOrCreateTags(
       createTestDTO.tags || [],
     );
-    test.tags = Promise.resolve(tags);
+    test.tags = tags;
 
     // handle create group question
     let groupQuestions = [];
@@ -56,7 +56,7 @@ export class TestService {
         );
       groupQuestions = [...groupQuestions, ...listGroupQuestion];
     });
-    test.groupQuestions = Promise.resolve(groupQuestions);
+    test.groupQuestions = groupQuestions;
     return await this.testRepository.save(test);
   }
 
@@ -82,7 +82,7 @@ export class TestService {
     if (!test) {
       throw new NotFoundException('Test not found');
     }
-    let listTag = (await test.tags).filter(
+    let listTag = test.tags.filter(
       (tag) => !updateTagsTestDTO.pull.includes(tag.id),
     );
     for (let tag of await this.tagService.findOrCreateTags(
@@ -92,7 +92,7 @@ export class TestService {
         listTag.push(tag);
       }
     }
-    test.tags = Promise.resolve(listTag);
+    test.tags = listTag;
     return await this.testRepository.save(test);
   }
   async findAll() {
@@ -118,10 +118,10 @@ export class TestService {
       .getOne();
 
     if (result && result.groupQuestions) {
-      for (const group of await result.groupQuestions) {
+      for (const group of result.groupQuestions) {
         group.audio = [];
         group.image = [];
-        for (const media of await group.questionMedia) {
+        for (const media of group.questionMedia) {
           if (media.type === 'audio') {
             group.audio.push(media);
           } else if (media.type === 'image') {
@@ -129,9 +129,7 @@ export class TestService {
           }
         }
         if (group.questions) {
-          (await group.questions).sort(
-            (a, b) => a.questionNumber - b.questionNumber,
-          );
+          group.questions.sort((a, b) => a.questionNumber - b.questionNumber);
         }
       }
     }
@@ -180,13 +178,12 @@ export class TestService {
       AND test.id = "${idTest}"
       AND t.deletedAt IS NULL
     ORDER BY t.createdAt DESC`;
-    let testPractice = await Promise.all(
-      (await this.dataSource.query(query)).map(async (it) => {
-        it.listPart = await this.userAnswerService.getListPartOfUserAnswer(it.id);
-        return it;
-      }),
-    );
+    let testPractice = await this.dataSource.query(query);
 
+    testPractice.map(async (it) => {
+      it.listPart = await this.userAnswerService.getListPartOfUserAnswer(it.id);
+      return it;
+    });
     return { test: result, testPractice };
   }
 }

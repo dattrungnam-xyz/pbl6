@@ -41,10 +41,10 @@ export class TopicHistoryService {
         incorrectWord.push(word);
       }
     }
-    topicHistory.correctWord = Promise.resolve(correctWord);
-    topicHistory.incorrectWord = Promise.resolve(incorrectWord);
-    topicHistory.user = Promise.resolve(user);
-    topicHistory.topic = Promise.resolve(topic);
+    topicHistory.correctWord = correctWord;
+    topicHistory.incorrectWord = incorrectWord;
+    topicHistory.user = user;
+    topicHistory.topic = topic;
     return await this.topicHistoryRepository.save(topicHistory);
   }
   async getTopicHistoryByUserId(userId: string) {

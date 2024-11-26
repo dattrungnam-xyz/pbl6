@@ -22,7 +22,7 @@ export class TestPractice {
   id: string;
 
   @ManyToOne(() => User, (user) => user.testPractices)
-  user: Promise<User>;
+  user: User;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -46,10 +46,10 @@ export class TestPractice {
   numCorrect: number;
 
   @ManyToOne(() => Test, (test) => test.testPractices)
-  test: Promise<Test>;
+  test: Test;
 
   @OneToMany(() => UserAnswer, (userAnswer) => userAnswer.testPractice, {
     nullable: true,
   })
-  userAnswers: Promise<UserAnswer[]>;
+  userAnswers: UserAnswer[];
 }

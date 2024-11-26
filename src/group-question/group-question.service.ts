@@ -31,7 +31,7 @@ export class GroupQuestionService {
     let listGroupQuestionPromise = listGroupQuestionDTO.map(
       async (groupQuestion) => {
         const newGroupQuestion = new GroupQuestion({
-          part: Promise.resolve(part),
+          part: part,
         });
         if (groupQuestion.describeAnswer) {
           newGroupQuestion.describeAnswer = groupQuestion.describeAnswer;
@@ -72,7 +72,7 @@ export class GroupQuestionService {
             listQuestionMedia.push(newQuestionMedia);
           }
         }
-        newGroupQuestion.questionMedia = Promise.resolve(listQuestionMedia);
+        newGroupQuestion.questionMedia = listQuestionMedia;
         const listQuestion = groupQuestion.questionData.map((question) => {
           const newQuestion = new Question({
             answer: question.answer,
@@ -84,8 +84,8 @@ export class GroupQuestionService {
           return newQuestion;
         });
 
-        newGroupQuestion.questions = Promise.resolve(listQuestion);
-        newGroupQuestion.test = Promise.resolve(test);
+        newGroupQuestion.questions = listQuestion;
+        newGroupQuestion.test = test;
         return this.groupQuestionRepository.save(newGroupQuestion);
       },
     );

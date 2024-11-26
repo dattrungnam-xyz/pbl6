@@ -42,7 +42,7 @@ export class WordService {
     if (id) {
       const topic = await this.topicRepository.findOneBy({ id });
       if (!topic) throw new NotFoundException('Topic not found');
-      newWord.topic = Promise.resolve(topic);
+      newWord.topic = topic;
     }
     return await this.wordRepository.save(newWord);
   }
@@ -56,7 +56,7 @@ export class WordService {
         id: updateWordDTO.idTopic,
       });
       if (!topic) throw new NotFoundException('Topic not found');
-      word.topic = Promise.resolve(topic);
+      word.topic = topic;
     }
     updateWordDTO = (await this.handleImageAudio(
       updateWordDTO,
@@ -84,7 +84,7 @@ export class WordService {
     if (!flashCard) {
       throw new NotFoundException('Flash card not found');
     }
-    if ((await flashCard.user).id !== userId) {
+    if (flashCard.user.id !== userId) {
       throw new ForbiddenException(
         'You are not authorized to create a word for this flashcard',
       );
@@ -94,7 +94,7 @@ export class WordService {
       createWordDTO,
     )) as CreateWordDTO;
     const newWord = new Word({ ...createWordDTO });
-    newWord.flashCard = Promise.resolve(flashCard);
+    newWord.flashCard = flashCard;
     return await this.wordRepository.save(newWord);
   }
 
@@ -104,7 +104,7 @@ export class WordService {
       relations: ['flashCard', 'flashCard.user'],
     });
     if (!word) throw new NotFoundException('Word not found');
-    if ((await (await word.flashCard).user).id !== userId) {
+    if (word.flashCard.user.id !== userId) {
       throw new ForbiddenException(
         'You are not authorized to delete this word',
       );
@@ -124,7 +124,7 @@ export class WordService {
     if (!word) {
       throw new NotFoundException('Word not found');
     }
-    if ((await (await word.flashCard).user).id !== userId) {
+    if (word.flashCard.user.id !== userId) {
       throw new ForbiddenException(
         'You are not authorized to update this word',
       );
@@ -153,8 +153,7 @@ export class WordService {
     }
     return obj;
   }
-  async findWord()
-  {
+  async findWord() {
     return await this.wordRepository.find();
   }
 }
