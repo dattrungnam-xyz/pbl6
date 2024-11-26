@@ -33,7 +33,10 @@ export class FlashCardService {
     userId: string,
     updateFlashCardDTO: UpdateFlashCardDTO,
   ) {
-    const flashCard = await this.flashCardRepository.findOneBy({ id });
+    const flashCard = await this.flashCardRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
     if (!flashCard) throw new NotFoundException('Flash card not found');
     if (userId !== flashCard.user.id) {
       throw new ForbiddenException(
@@ -45,7 +48,10 @@ export class FlashCardService {
     );
   }
   async deleteFlashCard(id: string, userId: string) {
-    const flashCard = await this.flashCardRepository.findOneBy({ id });
+    const flashCard = await this.flashCardRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
     if (!flashCard) throw new NotFoundException('Flash card not found');
     if (flashCard.user.id !== userId) {
       throw new ForbiddenException('User not allowed to view this flash card');
@@ -62,7 +68,7 @@ export class FlashCardService {
   async findFlashCardDetail(id: string, userId: string) {
     const flashCard = await this.flashCardRepository.findOne({
       where: { id },
-      relations: ['words'],
+      relations: ['words', 'user'],
     });
     if (flashCard.user.id !== userId) {
       throw new ForbiddenException('User not allowed to view this flash card');

@@ -45,7 +45,7 @@ export class User {
   phone: string;
 
   @Expose()
-  @Column({ nullable: true })
+  @Column({ default: 0 })
   targetScore: number;
 
   @Expose()
