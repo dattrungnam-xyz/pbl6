@@ -4,26 +4,23 @@ import { PaginatedTest, Test } from './entity/test.entity';
 import { Repository } from 'typeorm';
 import { CreateTestDTO } from './input/createTest.dto';
 import { UpdateTestDTO } from './input/updateTest.dto';
-import { GroupQuestion } from '../group-question/entity/groupQuestion.entity';
-import { Question } from '../question/entity/question.entity';
 import { TagService } from '../tag/tag.service';
 import { PartService } from '../part/part.service';
 import { GroupQuestionService } from '../group-question/group-question.service';
-import { QuestionMediaService } from '../question-media/question-media.service';
 import { UpdateTagsTestDTO } from './input/updateTagTest.dto';
-import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
 import { paginate } from '../pagination/paginator';
+import { DataSource } from 'typeorm';
+import { UserAnswerService } from '../user-answer/user-answer.service';
 
 @Injectable()
 export class TestService {
   constructor(
     @InjectRepository(Test) private readonly testRepository: Repository<Test>,
-    @InjectRepository(GroupQuestion)
-    private readonly groupQuestionRepository: Repository<GroupQuestion>,
     private readonly tagService: TagService,
     private readonly partService: PartService,
     private readonly groupQuestionService: GroupQuestionService,
-    private readonly questionMediaService: QuestionMediaService,
+    private dataSource: DataSource,
+    private readonly userAnswerService: UserAnswerService,
   ) {}
 
   // async createTest(createTestDTO: CreateTestDTO): Promise<Test> {
@@ -158,5 +155,38 @@ export class TestService {
       page,
       total: true,
     });
+  }
+  async getTestHistory(idTest: string, idUser: string) {
+    let result = await this.testRepository.findOne({
+      where: { id: idTest },
+    });
+    const query = `SELECT 
+      t.id AS id,
+      t.createdAt AS createdAt,
+      t.deletedAt AS deletedAt,
+      t.time AS time, 
+      t.LCScore AS LCScore, 
+      t.RCScore AS RCScore, 
+      t.totalQuestion AS totalQuestion, 
+      t.numCorrect AS numCorrect
+    FROM test_practice as t
+    LEFT JOIN user as u 
+      ON u.id = t.userId 
+      AND u.deletedAt IS NULL
+    LEFT JOIN test as test 
+      ON test.id = t.testId 
+      AND test.deletedAt IS NULL
+    WHERE u.id = "${idUser}" 
+      AND test.id = "${idTest}"
+      AND t.deletedAt IS NULL
+    ORDER BY t.createdAt DESC`;
+    let testPractice = await Promise.all(
+      (await this.dataSource.query(query)).map(async (it) => {
+        it.listPart = await this.userAnswerService.getListPartOfUserAnswer(it.id);
+        return it;
+      }),
+    );
+
+    return { test: result, testPractice };
   }
 }

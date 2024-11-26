@@ -11,6 +11,7 @@ import {
   Post,
   Query,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { TestService } from './test.service';
@@ -20,6 +21,9 @@ import { ParseFile } from '../validation/ParseFile.pipe';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UpdateTestDTO } from './input/updateTest.dto';
 import { UpdateTagsTestDTO } from './input/updateTagTest.dto';
+import { JwtAuthGuard } from '../auth/authGuard.jwt';
+import { CurrentUser } from '../decorator/currentUser.decorator';
+import { User } from '../users/entity/user.entity';
 
 @Controller('test')
 export class TestController {
@@ -49,12 +53,14 @@ export class TestController {
   }
 
   @Get(':id')
-  async getTestDetail(
-    @Param('id') id: string,
-  ) {
+  async getTestDetail(@Param('id') id: string) {
     return await this.testService.findOneById(id);
   }
-
+  @Get(':id/user')
+  @UseGuards(JwtAuthGuard)
+  async getTestHistory(@Param('id') id: string, @CurrentUser() user: User) {
+    return await this.testService.getTestHistory(id, user.id);
+  }
   @Delete(':id')
   @HttpCode(200)
   async deleteTest(@Param('id') id: string) {

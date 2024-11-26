@@ -9,6 +9,7 @@ import { TagModule } from '../tag/tag.module';
 import { PartModule } from '../part/part.module';
 import { GroupQuestionModule } from '../group-question/group-question.module';
 import { QuestionMediaModule } from '../question-media/question-media.module';
+import { UserAnswerModule } from '../user-answer/user-answer.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { QuestionMediaModule } from '../question-media/question-media.module';
     TagModule,
     PartModule,
     GroupQuestionModule,
-    QuestionMediaModule
+    QuestionMediaModule,
+    UserAnswerModule
   ],
   controllers: [TestController],
   providers: [TestService],
