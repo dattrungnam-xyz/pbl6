@@ -27,6 +27,10 @@ export class Part {
 
   @Expose()
   @Column()
+  key: string;
+
+  @Expose()
+  @Column()
   totalQuestion: number;
 
   @Expose()
