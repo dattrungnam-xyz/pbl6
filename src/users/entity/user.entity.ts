@@ -44,6 +44,14 @@ export class User {
   @Column({ nullable: true, length: 11 })
   phone: string;
 
+  @Expose()
+  @Column({ nullable: true })
+  targetScore: string;
+
+  @Expose()
+  @Column({ nullable: true })
+  testDate: Date;
+
   @Exclude({ toPlainOnly: true })
   @Column({ nullable: true })
   password: string;
