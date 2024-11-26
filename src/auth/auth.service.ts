@@ -142,9 +142,6 @@ export class AuthService {
     return newUser;
   }
   async googleLogin(req: any) {
-    if (!req.user) {
-      throw new UnauthorizedException();
-    }
     const user = await this.userRepository.findOneBy({ email: req.user.email });
     if (!user) {
       const newUser = new User({ ...req.user, roles: ['user'] });
