@@ -63,9 +63,12 @@ export class AuthService {
   }
   public async createUser(createUserDTO: CreateUserDTO): Promise<User> {
     createUserDTO.passwordConfirm = undefined;
+    let date = new Date();
+    date.setMonth(date.getMonth() + 3);
     return this.userRepository.save(
       new User({
         ...createUserDTO,
+        testDate: date,
         password: await this.hashPassword(createUserDTO.password),
       }),
     );
@@ -176,9 +179,12 @@ export class AuthService {
         email,
       });
       if (!user) {
+        const date = new Date();
+        date.setMonth(date.getMonth() + 3);
         const newUser = new User({
           avatar,
           email,
+          testDate: date,
           name,
           roles: ['user'] as Role[],
         });
