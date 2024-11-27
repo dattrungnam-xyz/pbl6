@@ -48,7 +48,6 @@ export class AuthController {
   @UseInterceptors(ClassSerializerInterceptor)
   async getMe(@Req() req: any){
     // this.mailService.sendMailResetPassword(req.user, 'testurl');
-    return "aaaaa"
     return req.user;
   }
 
