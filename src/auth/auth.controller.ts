@@ -46,8 +46,9 @@ export class AuthController {
   @Get('me')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async getMe(@Req() req: any): Promise<User> {
+  async getMe(@Req() req: any){
     // this.mailService.sendMailResetPassword(req.user, 'testurl');
+    return "aaaaa"
     return req.user;
   }
 
