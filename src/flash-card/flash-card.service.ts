@@ -70,6 +70,7 @@ export class FlashCardService {
       where: { id },
       relations: ['words', 'user'],
     });
+    if (!flashCard) throw new NotFoundException('Flash card not found');
     if (flashCard.user.id !== userId) {
       throw new ForbiddenException('User not allowed to view this flash card');
     }
