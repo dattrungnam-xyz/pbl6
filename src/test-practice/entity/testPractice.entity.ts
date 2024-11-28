@@ -39,6 +39,9 @@ export class TestPractice {
   @Column({ default: 0 })
   RCScore: number;
 
+  @Column({ default: false })
+  isFullTest: boolean;
+
   @Column({ default: 0 })
   totalQuestion: number;
 

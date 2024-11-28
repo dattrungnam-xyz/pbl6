@@ -136,7 +136,7 @@ export class TestService {
     // (await result.groupQuestions).sort((a, b) => {
     //   return a.questions[0].questionNumber - b.questions[0].questionNumber;
     // });
-  
+
     return result;
   }
 
@@ -165,7 +165,8 @@ export class TestService {
       t.deletedAt AS deletedAt,
       t.time AS time, 
       t.LCScore AS LCScore, 
-      t.RCScore AS RCScore, 
+      t.RCScore AS RCScore,
+      t.isFullTest AS isFullTest, 
       t.totalQuestion AS totalQuestion, 
       t.numCorrect AS numCorrect
     FROM test_practice as t
@@ -181,10 +182,14 @@ export class TestService {
     ORDER BY t.createdAt DESC`;
     let testPractice = await this.dataSource.query(query);
 
-    testPractice.map(async (it) => {
-      it.listPart = await this.userAnswerService.getListPartOfUserAnswer(it.id);
-      return it;
-    });
+    testPractice = await Promise.all(
+      testPractice.map(async (it) => {
+        it.listPart = await this.userAnswerService.getListPartOfUserAnswer(
+          it.id,
+        );
+        return it;
+      }),
+    );
     return { test: result, testPractice };
   }
 }

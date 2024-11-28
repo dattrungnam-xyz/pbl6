@@ -90,6 +90,7 @@ export class TestPracticeService {
     testPractice.RCScore = getRCScore(RCCount);
     testPractice.totalQuestion = totalQuestion;
     testPractice.numCorrect = numCorrect;
+    testPractice.isFullTest = createTestPractice.isFullTest;
     return await this.testPracticeRepository.save(testPractice);
   }
   async getListTestPracticeByUser(idUser: string) {
