@@ -83,4 +83,13 @@ export class UserTopicController {
   async getTopicByUserId(@CurrentUser() user: User) {
     return await this.userTopicService.getTopicByUserId(user.id);
   }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  async getTopicDetailByUserId(
+    @CurrentUser() user: User,
+    @Param('id') id: string,
+  ) {
+    return await this.userTopicService.getTopicDetailByUserId(id, user.id);
+  }
 }

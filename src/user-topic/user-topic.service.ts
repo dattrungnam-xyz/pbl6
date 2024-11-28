@@ -163,4 +163,10 @@ export class UserTopicService {
       relations: ['words', 'topic', 'user'],
     });
   }
+  async getTopicDetailByUserId(id: string, userId: string) {
+    return await this.userTopicRepository.find({
+      where: { user: { id: userId }, id: id },
+      relations: ['words', 'topic', 'user'],
+    });
+  }
 }
