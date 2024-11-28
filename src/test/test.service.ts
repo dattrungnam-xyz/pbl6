@@ -140,15 +140,20 @@ export class TestService {
     return result;
   }
 
-  async findPagination(limit = 15, page = 0) {
+  async findPagination(limit = 15, page = 0, tag_id?: string) {
     const offset = page * limit;
-    const qb = this.testRepository
+    let qb = this.testRepository
       .createQueryBuilder('test')
-      .leftJoinAndSelect('test.tags', 'tags')
+      .leftJoinAndSelect('test.tags', 'tags');
+    if (tag_id) {
+      qb = qb.andWhere('tags.id = :tag_id', { tag_id });
+    }
+    qb = qb
       .leftJoinAndSelect('test.groupQuestions', 'groupQuestions')
       .leftJoinAndSelect('groupQuestions.questions', 'questions')
       .leftJoinAndSelect('groupQuestions.questionMedia', 'questionMedia')
       .orderBy('test.createdAt', 'DESC');
+
     return paginate<Test, PaginatedTest>(qb, PaginatedTest, {
       limit,
       page,
