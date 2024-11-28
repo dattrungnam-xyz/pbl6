@@ -28,6 +28,10 @@ export class UserTopic {
   name: string;
 
   @Expose()
+  @Column()
+  description: string;
+
+  @Expose()
   @CreateDateColumn()
   createdAt: Date;
 

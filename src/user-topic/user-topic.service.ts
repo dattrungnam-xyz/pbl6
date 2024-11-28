@@ -35,7 +35,7 @@ export class UserTopicService {
     }
     let newUserTopic = new UserTopic();
     newUserTopic.user = currentUser;
-    newUserTopic.name = createUserTopicDTO.name;
+    Object.assign(newUserTopic, createUserTopicDTO);
     return await this.userTopicRepository.save(newUserTopic);
   }
   async deleteUserTopic(idUserTopic: string, idUser: string) {
@@ -65,10 +65,7 @@ export class UserTopicService {
       return this.wordService.findWordById(id);
     });
     const listWord = await Promise.all(listWordPromise);
-    userTopic.words = [
-      ...userTopic.words,
-      ...listWord,
-    ];
+    userTopic.words = [...userTopic.words, ...listWord];
     return await this.userTopicRepository.save(userTopic);
   }
   async addWordToUserTopic(id: string, idWord: string, idUser: string) {
@@ -88,10 +85,10 @@ export class UserTopicService {
     if (!word) {
       throw new NotFoundException('Word not found');
     }
-    if ( userTopic.words.some((word) => word.id === idWord)) {
+    if (userTopic.words.some((word) => word.id === idWord)) {
       throw new ConflictException('Word already exists');
     }
-    userTopic.words = [...userTopic.words, word]
+    userTopic.words = [...userTopic.words, word];
     return await this.userTopicRepository.save(userTopic);
   }
   async deleteListWordUserTopic(id: string, deleteWordDTO: DeleteWordDTO) {
@@ -102,11 +99,10 @@ export class UserTopicService {
     if (!userTopic) {
       throw new NotFoundException('User Topic not found');
     }
-    userTopic.words = 
-      userTopic.words.filter((word) => {
-        return !deleteWordDTO.listWordId.includes(word.id);
-      })
-   
+    userTopic.words = userTopic.words.filter((word) => {
+      return !deleteWordDTO.listWordId.includes(word.id);
+    });
+
     return await this.userTopicRepository.save(userTopic);
   }
   async deleteWordUserTopic(id: string, idWord: string, idUser: string) {
@@ -126,9 +122,8 @@ export class UserTopicService {
     if (!word) {
       throw new NotFoundException('Word not found');
     }
-    userTopic.words = 
-      userTopic.words.filter((word) => word.id !== idWord)
-    
+    userTopic.words = userTopic.words.filter((word) => word.id !== idWord);
+
     return await this.userTopicRepository.save(userTopic);
   }
   async updateUserTopic(
