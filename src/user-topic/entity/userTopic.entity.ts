@@ -28,7 +28,7 @@ export class UserTopic {
   name: string;
 
   @Expose()
-  @Column()
+  @Column({nullable: true})
   description: string;
 
   @Expose()
