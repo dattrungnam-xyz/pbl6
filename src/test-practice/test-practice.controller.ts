@@ -45,4 +45,10 @@ export class TestPracticeController {
   async getListTestPracticeByUserAndTest(@CurrentUser() user: User) {
     return await this.testPracticeService.getListTestPracticeByUser(user.id);
   }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  async getTestPracticeDetail(@Param('id') id: string) {
+    return await this.testPracticeService.getTestPracticeDetail(id);
+  }
 }

@@ -155,4 +155,61 @@ export class TestPracticeService {
       relations: ['user', 'test'],
     });
   }
+  async getTestPracticeDetail(id: string) {
+    const testPractice = await this.testPracticeRepository.findOne({
+      where: { id },
+      relations: ['user', 'test', 'userAnswers', 'userAnswers.question'],
+    });
+    if (!testPractice) {
+      throw new NotFoundException('Test practice not found');
+    }
+    let test = await this.testRepository.findOne({
+      where: {
+        id: testPractice.test.id,
+      },
+      relations: [
+        'tags',
+        'groupQuestions',
+        'groupQuestions.questions',
+        'groupQuestions.part',
+        'groupQuestions.questionMedia',
+      ],
+    });
+    if (!test) {
+      throw new NotFoundException('Test not found');
+    }
+
+    if (test && test.groupQuestions) {
+      for (const group of test.groupQuestions) {
+        group.audio = [];
+        group.image = [];
+        for (const media of group.questionMedia) {
+          if (media.type === 'audio') {
+            group.audio.push(media);
+          } else if (media.type === 'image') {
+            group.image.push(media);
+          }
+        }
+        if (group.questions) {
+          group.questions.sort((a, b) => a.questionNumber - b.questionNumber);
+          // group.questions.forEach((question) => {
+
+          //   for (let i = 0; i < testPractice.userAnswers.length; i++) {
+          //     if (testPractice.userAnswers[i].id === question.id) {
+          //       question.userAnswer = [testPractice.userAnswers[i]];
+          //     }
+          //   }
+          // });
+          for (let question of group.questions) {
+            for (let i = 0; i < testPractice.userAnswers.length; i++) {
+              if (testPractice.userAnswers[i].question.id === question.id) {
+                question.userAnswer = [testPractice.userAnswers[i]];
+              }
+            }
+          }
+        }
+      }
+    }
+    return { test, testPractice };
+  }
 }
