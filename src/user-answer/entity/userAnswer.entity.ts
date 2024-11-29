@@ -28,12 +28,12 @@ export class UserAnswer {
 
   @Expose()
   @ManyToOne(() => Question, (question) => question.userAnswer)
-  question: Promise<Question>;
+  question: Question;
 
   @Expose()
   @Column()
   isCorrect: boolean;
-  
+
   @Expose()
   @CreateDateColumn()
   createdAt: Date;
@@ -44,5 +44,5 @@ export class UserAnswer {
 
   @Expose()
   @ManyToOne(() => TestPractice, (testPractice) => testPractice.userAnswers)
-  testPractice: Promise<TestPractice>;
+  testPractice: TestPractice;
 }

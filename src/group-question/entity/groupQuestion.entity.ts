@@ -45,17 +45,17 @@ export class GroupQuestion {
     nullable: false,
     cascade: true,
   })
-  questions: Promise<Question[]>;
+  questions: Question[];
 
   @Expose()
   @ManyToOne(() => Part, (part) => part.listGroupQuestion, { nullable: false })
-  part: Promise<Part>;
+  part: Part;
 
   @Expose()
   @ManyToOne(() => Test, (test) => test.groupQuestions, {
     nullable: false,
   })
-  test: Promise<Test>;
+  test: Test;
 
   @Expose()
   @OneToMany(
@@ -66,7 +66,7 @@ export class GroupQuestion {
       cascade: true,
     },
   )
-  questionMedia: Promise<QuestionMedia[]>;
+  questionMedia: QuestionMedia[];
 
   audio: QuestionMedia[];
   image: QuestionMedia[];

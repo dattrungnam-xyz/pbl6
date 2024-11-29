@@ -59,13 +59,13 @@ export class Word {
   @ManyToOne(() => Topic, (Topic) => Topic.listWord, {
     nullable: true,
   })
-  topic: Promise<Topic>;
+  topic: Topic;
 
   @ManyToMany(() => UserTopic, (userTopic) => userTopic.words)
-  userTopic: Promise<UserTopic[]>;
+  userTopic: UserTopic[];
 
   @ManyToOne(() => FlashCard, (flashCard) => flashCard.words)
-  flashCard: Promise<FlashCard>;
+  flashCard: FlashCard;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -77,11 +77,11 @@ export class Word {
     () => TopicHistory,
     (topicHistories) => topicHistories.correctWord,
   )
-  topicHistoriesCorrect: Promise<TopicHistory[]>;
+  topicHistoriesCorrect: TopicHistory[];
 
   @ManyToMany(
     () => TopicHistory,
     (topicHistories) => topicHistories.incorrectWord,
   )
-  topicHistoriesIncorrect: Promise<TopicHistory[]>;
+  topicHistoriesIncorrect: TopicHistory[];
 }

@@ -30,7 +30,7 @@ export class CommentService {
       throw new Error('User not found');
     }
     const newComment = new Comment();
-    newComment.user = Promise.resolve(user);
+    newComment.user = user;
     if (createCommentDTO.idTest) {
       const test = await this.testRepository.findOneBy({
         id: createCommentDTO.idTest,
@@ -38,7 +38,7 @@ export class CommentService {
       if (!test) {
         throw new NotFoundException('Test not found');
       }
-      newComment.test = Promise.resolve(test);
+      newComment.test = test;
     } else if (createCommentDTO.idQuestion) {
       const question = await this.questionRepository.findOneBy({
         id: createCommentDTO.idQuestion,
@@ -46,7 +46,7 @@ export class CommentService {
       if (!question) {
         throw new NotFoundException('Question not found');
       }
-      newComment.question = Promise.resolve(question);
+      newComment.question = question;
     } else if (createCommentDTO.idGroupTopic) {
       const groupTopic = await this.groupTopicRepository.findOneBy({
         id: createCommentDTO.idGroupTopic,
@@ -54,7 +54,7 @@ export class CommentService {
       if (!groupTopic) {
         throw new NotFoundException('Group topic not found');
       }
-      newComment.groupTopic = Promise.resolve(groupTopic);
+      newComment.groupTopic = groupTopic;
     } else if (createCommentDTO.idComment) {
       const comment = await this.commentRepository.findOneBy({
         id: createCommentDTO.idComment,
@@ -62,7 +62,7 @@ export class CommentService {
       if (!comment) {
         throw new NotFoundException('Comment not found');
       }
-      newComment.parentComment = Promise.resolve(comment);
+      newComment.parentComment = comment;
     }
     Object.assign(newComment, createCommentDTO);
     return await this.commentRepository.save(newComment);
@@ -79,7 +79,7 @@ export class CommentService {
     if (!comment) {
       throw new Error('Comment not found');
     }
-    if ((await comment.user).id !== idUser) {
+    if (comment.user.id !== idUser) {
       throw new Error('User not allowed to update this comment');
     }
     return await this.commentRepository.save(
@@ -95,8 +95,8 @@ export class CommentService {
       throw new Error('Comment not found');
     }
     if (
-      (await comment.user).id !== idUser &&
-      !(await comment.user).roles.includes(Role.ADMIN)
+      comment.user.id !== idUser &&
+      !comment.user.roles.includes(Role.ADMIN)
     ) {
       throw new Error('User not allowed to delete this comment');
     }
@@ -112,7 +112,7 @@ export class CommentService {
         return this.loadSubComment(sub);
       });
       let sub = await Promise.all(promise);
-      comment.subComment = Promise.resolve(sub);
+      comment.subComment = sub;
     }
     return comment;
   }

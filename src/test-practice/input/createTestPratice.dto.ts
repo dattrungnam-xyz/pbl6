@@ -1,6 +1,7 @@
 import {
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -30,6 +31,10 @@ export class CreateTestPracticeDTO {
   @IsOptional()
   @IsNumber()
   totalQuestion: number;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isFullTest: boolean;
 
   @IsOptional()
   @IsNumber()

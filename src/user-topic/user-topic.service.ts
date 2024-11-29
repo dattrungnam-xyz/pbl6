@@ -34,8 +34,8 @@ export class UserTopicService {
       throw new NotFoundException('User not found');
     }
     let newUserTopic = new UserTopic();
-    newUserTopic.user = Promise.resolve(currentUser);
-    newUserTopic.name = createUserTopicDTO.name;
+    newUserTopic.user = currentUser;
+    Object.assign(newUserTopic, createUserTopicDTO);
     return await this.userTopicRepository.save(newUserTopic);
   }
   async deleteUserTopic(idUserTopic: string, idUser: string) {
@@ -46,7 +46,7 @@ export class UserTopicService {
     if (!userTopic) {
       throw new NotFoundException('User Topic not found');
     }
-    if ((await userTopic.user).id !== idUser) {
+    if (userTopic.user.id !== idUser) {
       throw new ForbiddenException(
         'You do not have permission to access this resource',
       );
@@ -65,10 +65,7 @@ export class UserTopicService {
       return this.wordService.findWordById(id);
     });
     const listWord = await Promise.all(listWordPromise);
-    userTopic.words = Promise.resolve([
-      ...(await userTopic.words),
-      ...listWord,
-    ]);
+    userTopic.words = [...userTopic.words, ...listWord];
     return await this.userTopicRepository.save(userTopic);
   }
   async addWordToUserTopic(id: string, idWord: string, idUser: string) {
@@ -79,7 +76,7 @@ export class UserTopicService {
     if (!userTopic) {
       throw new NotFoundException('User Topic not found');
     }
-    if ((await userTopic.user).id !== idUser) {
+    if (userTopic.user.id !== idUser) {
       throw new ForbiddenException(
         'You do not have permission to access this resource',
       );
@@ -88,10 +85,10 @@ export class UserTopicService {
     if (!word) {
       throw new NotFoundException('Word not found');
     }
-    if ((await userTopic.words).some((word) => word.id === idWord)) {
+    if (userTopic.words.some((word) => word.id === idWord)) {
       throw new ConflictException('Word already exists');
     }
-    userTopic.words = Promise.resolve([...(await userTopic.words), word]);
+    userTopic.words = [...userTopic.words, word];
     return await this.userTopicRepository.save(userTopic);
   }
   async deleteListWordUserTopic(id: string, deleteWordDTO: DeleteWordDTO) {
@@ -102,11 +99,10 @@ export class UserTopicService {
     if (!userTopic) {
       throw new NotFoundException('User Topic not found');
     }
-    userTopic.words = Promise.resolve(
-      (await userTopic.words).filter((word) => {
-        return !deleteWordDTO.listWordId.includes(word.id);
-      }),
-    );
+    userTopic.words = userTopic.words.filter((word) => {
+      return !deleteWordDTO.listWordId.includes(word.id);
+    });
+
     return await this.userTopicRepository.save(userTopic);
   }
   async deleteWordUserTopic(id: string, idWord: string, idUser: string) {
@@ -117,7 +113,7 @@ export class UserTopicService {
     if (!userTopic) {
       throw new NotFoundException('User Topic not found');
     }
-    if ((await userTopic.user).id !== idUser) {
+    if (userTopic.user.id !== idUser) {
       throw new ForbiddenException(
         'You do not have permission to access this resource',
       );
@@ -126,9 +122,8 @@ export class UserTopicService {
     if (!word) {
       throw new NotFoundException('Word not found');
     }
-    userTopic.words = Promise.resolve(
-      (await userTopic.words).filter((word) => word.id !== idWord),
-    );
+    userTopic.words = userTopic.words.filter((word) => word.id !== idWord);
+
     return await this.userTopicRepository.save(userTopic);
   }
   async updateUserTopic(
@@ -143,7 +138,7 @@ export class UserTopicService {
     if (!userTopic) {
       throw new NotFoundException('User Topic not found');
     }
-    if ((await userTopic.user).id !== idUser) {
+    if (userTopic.user.id !== idUser) {
       throw new ForbiddenException(
         'You do not have permission to access this resource',
       );
@@ -157,7 +152,7 @@ export class UserTopicService {
       throw new NotFoundException('Topic not found');
     }
     const newUserTopic = new UserTopic();
-    newUserTopic.topic = Promise.resolve(topic);
+    newUserTopic.topic = topic;
     newUserTopic.name = topic.name;
     return this.userRepository.save(newUserTopic);
   }
@@ -165,6 +160,12 @@ export class UserTopicService {
   async getTopicByUserId(id: string) {
     return await this.userTopicRepository.find({
       where: { user: { id } },
+      relations: ['words', 'topic', 'user'],
+    });
+  }
+  async getTopicDetailByUserId(id: string, userId: string) {
+    return await this.userTopicRepository.find({
+      where: { user: { id: userId }, id: id },
       relations: ['words', 'topic', 'user'],
     });
   }

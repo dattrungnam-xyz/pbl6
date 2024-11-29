@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { TagService } from './tag.service';
 import { CreateTagDTO } from './input/createTag.dto';
 import { UpdateTagDTO } from './input/updateTag.dto';
@@ -8,13 +17,16 @@ export class TagController {
   constructor(private readonly tagService: TagService) {}
 
   @Post()
-  create(@Body() createTagDto: CreateTagDTO) {
-    return this.tagService.create(createTagDto);
+  async create(@Body() createTagDto: CreateTagDTO) {
+    return await this.tagService.create(createTagDto);
   }
 
   @Get()
-  findAll() {
-    return this.tagService.findAll();
+  async findAll(@Query('type') type: string) {
+    if (type) {
+      return await this.tagService.findAllByType(type);
+    }
+    return await this.tagService.findAll();
   }
 
   @Get(':id')

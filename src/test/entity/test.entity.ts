@@ -45,27 +45,27 @@ export class Test {
     cascade: true,
     nullable: false,
   })
-  groupQuestions: Promise<GroupQuestion[]>;
+  groupQuestions: GroupQuestion[];
 
   @Expose()
   @ManyToMany(() => Tag, (tag) => tag.test, {
     cascade: true,
     nullable: true,
   })
-  tags: Promise<Tag[]>;
+  tags: Tag[];
 
   @Expose()
   @OneToMany(() => TestPractice, (testPractice) => testPractice.test, {
     cascade: true,
     nullable: true,
   })
-  testPractices: Promise<TestPractice[]>;
+  testPractices: TestPractice[];
 
   @Expose()
   @OneToMany(() => Comment, (comment) => comment.test, {
     nullable: true,
   })
-  comments: Promise<Comment[]>;
+  comments: Comment[];
 }
 
 export class PaginatedTest extends Paginated<Test>(Test) {}

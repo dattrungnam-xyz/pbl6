@@ -32,8 +32,8 @@ export class UserAnswerService {
       } else {
         newUserAnswer.isCorrect = false;
       }
-      newUserAnswer.question = Promise.resolve(question);
-      newUserAnswer.testPractice = Promise.resolve(testPractice);
+      newUserAnswer.question = question;
+      newUserAnswer.testPractice = testPractice;
       newUserAnswer.userAnswer = userAnswer.answer;
       return this.userAnswerRepository.save(newUserAnswer);
     });
@@ -43,11 +43,11 @@ export class UserAnswerService {
   async getListPartOfUserAnswer(idTestPractice: string) {
     let listPartInUserAnswer = await this.userAnswerRepository
       .createQueryBuilder('ua')
-      .innerJoin('ua.question', 'q') 
-      .innerJoin('q.group', 'g') 
-      .innerJoin('g.part', 'p') 
-      .where('ua.testPracticeId = :idTestPractice', { idTestPractice }) 
-      .andWhere('ua.deletedAt IS NULL') 
+      .innerJoin('ua.question', 'q')
+      .innerJoin('q.group', 'g')
+      .innerJoin('g.part', 'p')
+      .where('ua.testPracticeId = :idTestPractice', { idTestPractice })
+      .andWhere('ua.deletedAt IS NULL')
       .andWhere('q.deletedAt IS NULL')
       .andWhere('g.deletedAt IS NULL')
       .andWhere('p.deletedAt IS NULL')

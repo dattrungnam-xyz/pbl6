@@ -27,18 +27,18 @@ export class TopicHistory {
   time: number;
 
   @ManyToOne(() => User, (user) => user.topicHistories)
-  user: Promise<User>;
+  user: User;
 
   @ManyToOne(() => Topic, (topic) => topic.topicHistories)
-  topic: Promise<Topic>;
+  topic: Topic;
 
   @ManyToMany(() => Word, (word) => word.topicHistoriesCorrect)
   @JoinTable()
-  correctWord: Promise<Word[]>;
+  correctWord: Word[];
 
   @ManyToMany(() => Word, (word) => word.topicHistoriesIncorrect)
   @JoinTable()
-  incorrectWord: Promise<Word[]>;
+  incorrectWord: Word[];
 
   @CreateDateColumn()
   createdAt: Date;

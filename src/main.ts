@@ -13,12 +13,12 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
     transformOptions: {
-      enableImplicitConversion: true, // <- This line here
+      enableImplicitConversion: true,
     },
   }));
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.setGlobalPrefix('api/v1');
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();

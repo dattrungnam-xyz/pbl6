@@ -44,12 +44,12 @@ export class TopicService {
       name: createTopicDTO.name,
       thumbnail: thumbnailUrl,
     });
-    newTopic.groupTopic = Promise.resolve(groupTopic);
+    newTopic.groupTopic = groupTopic;
 
     const tags = await this.tagService.findOrCreateTags(
       createTopicDTO.tags || [],
     );
-    newTopic.tags = Promise.resolve(tags);
+    newTopic.tags = tags;
     return await this.topicRepository.save(newTopic);
   }
   async createEntireTopic(
@@ -71,16 +71,16 @@ export class TopicService {
       name: createEntireTopicDTO.name,
       thumbnail: thumbnailUrl,
     });
-    newTopic.groupTopic = Promise.resolve(groupTopic);
+    newTopic.groupTopic = groupTopic;
 
     const tags = await this.tagService.findOrCreateTags(
       createEntireTopicDTO.tags || [],
     );
-    newTopic.tags = Promise.resolve(tags);
+    newTopic.tags = tags;
     const listWord = await this.wordService.createListWord(
       createEntireTopicDTO.listWord,
     );
-    newTopic.listWord = Promise.resolve(listWord);
+    newTopic.listWord = listWord;
     return await this.topicRepository.save(newTopic);
   }
 
@@ -114,9 +114,7 @@ export class TopicService {
       updateTopicDTO.thumbnail = topicThumbnail.url;
     }
     if (updateTopicDTO.tags) {
-      topic.tags = Promise.resolve(
-        await this.tagService.findOrCreateTags(updateTopicDTO.tags),
-      );
+      topic.tags = await this.tagService.findOrCreateTags(updateTopicDTO.tags);
     }
     Object.assign(topic, updateTopicDTO);
     return await this.topicRepository.save(topic);
@@ -132,7 +130,7 @@ export class TopicService {
     const listWord = await this.wordService.createListWord(
       createListWordTopicDTO.listWord,
     );
-    topic.listWord = Promise.resolve(listWord);
+    topic.listWord = listWord;
     return await this.topicRepository.save(topic);
   }
 

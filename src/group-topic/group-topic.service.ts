@@ -28,7 +28,7 @@ export class GroupTopicService {
     const listTag = await this.tagService.findOrCreateTags(
       createGroupTopicDTO.tags || [],
     );
-    newGroupTopic.tags = Promise.resolve(listTag);
+    newGroupTopic.tags = listTag;
     newGroupTopic.name = createGroupTopicDTO.name;
     newGroupTopic.level = createGroupTopicDTO.level;
     newGroupTopic.target = createGroupTopicDTO.target;
@@ -56,7 +56,7 @@ export class GroupTopicService {
       const listTag = await this.tagService.findOrCreateTags(
         updateGroupTopicDTO.tags,
       );
-      groupTopic.tags = Promise.resolve(listTag);
+      groupTopic.tags = listTag;
       updateGroupTopicDTO.tags = undefined;
     }
     Object.assign(groupTopic, updateGroupTopicDTO);
@@ -84,8 +84,8 @@ export class GroupTopicService {
       relations: ['tags', 'topics', 'topics.listWord'],
       order: { createdAt: 'DESC' },
     });
-    for (let i = 0; i < (await result.topics).length; i++) {
-      let topic: any = (await result.topics)[i];
+    for (let i = 0; i < result.topics.length; i++) {
+      let topic: any = result.topics[i];
       const topicHistory = await this.topicHistoryRepository.findOne({
         where: { user: { id: idUser }, topic: { id: topic.id } },
         order: { numCorrect: 'DESC' },

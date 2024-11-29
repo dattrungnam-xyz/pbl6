@@ -24,7 +24,7 @@ export class Comment {
 
   @ManyToOne(() => User, (user) => user.comments)
   @Expose()
-  user: Promise<User>;
+  user: User;
 
   @Expose()
   @CreateDateColumn()
@@ -40,27 +40,27 @@ export class Comment {
 
   @ManyToOne(() => Test, (test) => test.comments, { nullable: true })
   @Expose()
-  test?: Promise<Test>;
+  test?: Test;
 
   @ManyToOne(() => Question, (question) => question.comments, {
     nullable: true,
   })
   @Expose()
-  question?: Promise<Question>;
+  question?: Question;
 
   @ManyToOne(() => GroupTopic, (groupTopic) => groupTopic.comments, {
     nullable: true,
   })
   @Expose()
-  groupTopic?: Promise<GroupTopic>;
+  groupTopic?: GroupTopic;
 
   @OneToMany(() => Comment, (comment) => comment.parentComment, {
     nullable: true,
   })
   @Expose()
-  subComment?: Promise<Comment[]>;
+  subComment?: Comment[];
 
   @ManyToOne(() => Comment, (comment) => comment.subComment, { nullable: true })
   @Expose()
-  parentComment?: Promise<Comment>;
+  parentComment?: Comment;
 }

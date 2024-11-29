@@ -45,7 +45,7 @@ export class QuestionMediaService {
       type: file.type as MediaType,
       index: createQuestionMediaDTO.index,
     });
-    questionMedia.groupQuestion = Promise.resolve(groupQuestion);
+    questionMedia.groupQuestion = groupQuestion;
     return await this.questionMediaRepository.save(questionMedia);
   }
 }

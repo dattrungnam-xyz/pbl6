@@ -42,21 +42,21 @@ export class Tag {
   @ManyToMany(() => Test, (test) => test.tags, {
     nullable: true,
   })
-  test: Promise<Test[]>;
+  test: Test[];
 
   @Expose()
   @JoinTable()
   @ManyToMany(() => Topic, (Topic) => Topic.tags, {
     nullable: true,
   })
-  topic: Promise<Topic[]>;
+  topic: Topic[];
 
   @Expose()
   @JoinTable()
   @ManyToMany(() => GroupTopic, (GroupTopic) => GroupTopic.tags, {
     nullable: true,
   })
-  groupTopic: Promise<GroupTopic[]>;
+  groupTopic: GroupTopic[];
 
   @Expose()
   @Column({

@@ -61,15 +61,15 @@ export class Question {
 
   @Expose()
   @ManyToOne(() => GroupQuestion, (grp) => grp.questions)
-  group: Promise<GroupQuestion>;
+  group: GroupQuestion;
 
   @Expose()
   @OneToMany(() => UserAnswer, (userAnswer) => userAnswer.question)
-  userAnswer: Promise<UserAnswer[]>;
+  userAnswer: UserAnswer[];
 
   @Expose()
   @OneToMany(() => Comment, (comment) => comment.question, {
     nullable: true,
   })
-  comments: Promise<Comment[]>;
+  comments: Comment[];
 }

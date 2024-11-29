@@ -24,6 +24,7 @@ import { JwtAuthGuard } from './authGuard.jwt';
 import { UpdatePasswordDTO } from './input/updatePassword.dto';
 import { GoogleOAuthGuard } from './authGuard.google';
 import { Request as RequestType } from 'express';
+import { LoginGoogleDTO } from './input/loginGoogle.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -45,7 +46,7 @@ export class AuthController {
   @Get('me')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async getMe(@Req() req: any): Promise<User> {
+  async getMe(@Req() req: any){
     // this.mailService.sendMailResetPassword(req.user, 'testurl');
     return req.user;
   }
@@ -98,5 +99,13 @@ export class AuthController {
   @UseGuards(GoogleOAuthGuard)
   googleAuthRedirect(@Request() req) {
     return this.authService.googleLogin(req);
+  }
+
+  @Post('google')
+  async googleLogin(@Body() googleLoginDto: LoginGoogleDTO) {
+    const { token } = googleLoginDto;
+
+    const user = await this.authService.validateGoogleToken(token);
+    return user;
   }
 }

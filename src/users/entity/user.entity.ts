@@ -44,6 +44,14 @@ export class User {
   @Column({ nullable: true, length: 11 })
   phone: string;
 
+  @Expose()
+  @Column({ nullable: true })
+  targetScore: number;
+
+  @Expose()
+  @Column({ nullable: true })
+  testDate: Date;
+
   @Exclude({ toPlainOnly: true })
   @Column({ nullable: true })
   password: string;
@@ -73,21 +81,21 @@ export class User {
 
   @Expose()
   @OneToMany(() => UserTopic, (userTopic) => userTopic.user)
-  userTopic: Promise<UserTopic[]>;
+  userTopic: UserTopic[];
 
   @Expose()
   @OneToMany(() => FlashCard, (flashCard) => flashCard.user)
-  flashCard: Promise<FlashCard[]>;
+  flashCard: FlashCard[];
 
   @Expose()
   @OneToMany(() => TestPractice, (testPractice) => testPractice.user)
-  testPractices: Promise<TestPractice[]>;
+  testPractices: TestPractice[];
 
   @Expose()
   @OneToMany(() => Comment, (comment) => comment.user)
-  comments: Promise<Comment[]>;
+  comments: Comment[];
 
   @Expose()
   @OneToMany(() => TopicHistory, (topicHistories) => topicHistories.user)
-  topicHistories: Promise<TopicHistory[]>;
+  topicHistories: TopicHistory[];
 }

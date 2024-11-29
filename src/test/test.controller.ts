@@ -40,8 +40,9 @@ export class TestController {
   async findAll(
     @Query('limit', new DefaultValuePipe(15), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('tag_id') tag_id: string,
   ) {
-    return await this.testService.findPagination(limit, page);
+    return await this.testService.findPagination(limit, page, tag_id);
   }
 
   @Patch(':id')

@@ -36,8 +36,7 @@ export class FlashCard {
   deletedAt: Date;
 
   @ManyToOne(() => User, (user) => user.flashCard)
-  user: Promise<User>;
-
+  user: User;
   @OneToMany(() => Word, (word) => word.flashCard)
-  words: Promise<Word[]>;
+  words: Word[];
 }
