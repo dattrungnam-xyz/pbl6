@@ -128,14 +128,14 @@ export class TestService {
             group.image.push(media);
           }
         }
-        if (group.questions) {
-          group.questions.sort((a, b) => a.questionNumber - b.questionNumber);
-        }
+        group.questions = group.questions.sort(
+          (a, b) => +a.questionNumber - +b.questionNumber,
+        );
       }
     }
-    // (await result.groupQuestions).sort((a, b) => {
-    //   return a.questions[0].questionNumber - b.questions[0].questionNumber;
-    // });
+    result.groupQuestions = result.groupQuestions.sort((a, b) => {
+      return +a.questions[0].questionNumber - +b.questions[0].questionNumber;
+    });
 
     return result;
   }
