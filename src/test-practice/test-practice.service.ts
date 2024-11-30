@@ -210,6 +210,9 @@ export class TestPracticeService {
         }
       }
     }
+    test.groupQuestions = test.groupQuestions.sort((a, b) => {
+      return +a.questions[0].questionNumber - +b.questions[0].questionNumber;
+    });
     return { test, testPractice };
   }
 }
