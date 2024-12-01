@@ -24,6 +24,9 @@ import { UpdateTagsTestDTO } from './input/updateTagTest.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
 import { CurrentUser } from '../decorator/currentUser.decorator';
 import { User } from '../users/entity/user.entity';
+import { Roles } from '../decorator/role.decorator';
+import { Role } from '../type/role.type';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('test')
 export class TestController {
@@ -33,6 +36,8 @@ export class TestController {
   ) {}
   //include group question, question, test, question media, question option, tag, part
   @Post()
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async createTest(@Body() createTestDTO: CreateTestDTO) {
     return await this.testService.createEntireTest(createTestDTO);
   }
@@ -46,6 +51,8 @@ export class TestController {
   }
 
   @Patch(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async updateTest(
     @Param('id') id: string,
     @Body() updateTestDTO: UpdateTestDTO,
@@ -63,6 +70,8 @@ export class TestController {
     return await this.testService.getTestHistory(id, user.id);
   }
   @Delete(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @HttpCode(200)
   async deleteTest(@Param('id') id: string) {
     await this.testService.deleteTest(id);

@@ -17,6 +17,9 @@ import { UpdateWordDTO } from './input/updateWord.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
 import { CurrentUser } from '../decorator/currentUser.decorator';
 import { User } from '../users/entity/user.entity';
+import { Roles } from '../decorator/role.decorator';
+import { Role } from '../type/role.type';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('word')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -25,6 +28,8 @@ export class WordController {
   private readonly logger = new Logger(WordController.name);
 
   @Post(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async createWordWithTopic(
     @Param('id') topicId: string,
     @Body() createWordDTO: CreateWordDTO,
@@ -46,6 +51,8 @@ export class WordController {
     return await this.wordService.findWordById(id);
   }
   @Patch(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async updateWord(
     @Param('id') id: string,
     @Body() updateWordDTO: UpdateWordDTO,
@@ -53,6 +60,8 @@ export class WordController {
     return await this.wordService.updateWord(id, updateWordDTO);
   }
   @Delete(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteWord(@Param('id') id: string) {
     return await this.wordService.deleteWord(id);
   }

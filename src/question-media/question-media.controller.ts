@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { QuestionMediaService } from './question-media.service';
@@ -15,6 +16,10 @@ import {
 } from '@nestjs/platform-express';
 import { CreateQuestionMediaDTO } from './input/createQuestionMedia.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { Roles } from '../decorator/role.decorator';
+import { Role } from '../type/role.type';
+import { JwtAuthGuard } from '../auth/authGuard.jwt';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('question-media')
 export class QuestionMediaController {
@@ -24,37 +29,21 @@ export class QuestionMediaController {
   ) {}
 
   @Delete(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteQuestionMedia(@Param('id') id: string) {
     await this.questionMediaService.deleteQuestionMedia(id);
     return { message: 'Question media deleted successfully' };
   }
 
   @Post()
-  @UseInterceptors(FileInterceptor('media'))
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async createQuestionMedia(
-    @UploadedFile() media: Express.Multer.File,
     @Body() createQuestionMediaDTO: CreateQuestionMediaDTO,
   ) {
-    if (!media) {
-      throw new BadRequestException('Media cannot be empty');
-    }
-    if (media.mimetype.startsWith('image')) {
-      const file = await this.cloudinaryService.uploadImage(media);
-      return await this.questionMediaService.updateQuestionMediaGroupQuestion(
-        file,
-        createQuestionMediaDTO,
-      );
-    } else if (
-      media.mimetype.startsWith('video') ||
-      media.mimetype.startsWith('audio')
-    ) {
-      const file = await this.cloudinaryService.uploadAudioStream(media);
-      return await this.questionMediaService.updateQuestionMediaGroupQuestion(
-        file,
-        createQuestionMediaDTO,
-      );
-    } else {
-      throw new BadRequestException('Invalid media type');
-    }
+    return await this.questionMediaService.createQuestionMedia(
+      createQuestionMediaDTO,
+    );
   }
 }

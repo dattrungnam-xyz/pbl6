@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AppService } from './app.service';
@@ -12,6 +13,9 @@ import { Role } from './type/role.type';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ParseFile } from './validation/ParseFile.pipe';
 import { CloudinaryService } from './cloudinary/cloudinary.service';
+import { JwtAuthGuard } from './auth/authGuard.jwt';
+import { CurrentUser } from './decorator/currentUser.decorator';
+import { RolesGuard } from './auth/roles.guard';
 
 @Controller()
 export class AppController {
@@ -21,8 +25,10 @@ export class AppController {
   ) {}
 
   @Get()
-  // @Roles(Role.ADMIN)
-  getHello(): string {
+  @Roles(Role.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  getHello(@CurrentUser() user: any): string {
+    // console.log(user);
     return this.appService.getHello();
   }
 

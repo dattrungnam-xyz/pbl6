@@ -14,12 +14,17 @@ import { UpdateGroupTopicDTO } from './input/updateGroupTopic.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
 import { CurrentUser } from '../decorator/currentUser.decorator';
 import { User } from '../users/entity/user.entity';
+import { Roles } from '../decorator/role.decorator';
+import { Role } from '../type/role.type';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('group-topic')
 export class GroupTopicController {
   constructor(private readonly groupTopicService: GroupTopicService) {}
 
   @Post()
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async createGroupTopic(@Body() createGroupTopicDTO: CreateGroupTopicDTO) {
     return await this.groupTopicService.createGroupTopic(createGroupTopicDTO);
   }
@@ -40,6 +45,8 @@ export class GroupTopicController {
     return await this.groupTopicService.findGroupTopicByIdAndUser(id, user.id);
   }
   @Patch(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async updateGroupTopic(
     @Param('id') id: string,
     @Body() updateGroupTopicDTO: UpdateGroupTopicDTO,

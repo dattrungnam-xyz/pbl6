@@ -55,12 +55,6 @@ import { TopicHistoryModule } from './topic-history/topic-history.module';
     TopicHistoryModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

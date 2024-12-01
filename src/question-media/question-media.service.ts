@@ -7,6 +7,7 @@ import { CloudinaryResponse } from '../cloudinary/cloudinary-response';
 import { GroupQuestion } from '../group-question/entity/groupQuestion.entity';
 import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
 import { MediaType } from '../type/media.type';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class QuestionMediaService {
@@ -15,13 +16,32 @@ export class QuestionMediaService {
     private readonly questionMediaRepository: Repository<QuestionMedia>,
     @InjectRepository(GroupQuestion)
     private readonly groupQuestionRepository: Repository<GroupQuestion>,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
   async createQuestionMedia(
     createQuestionMediaDTO: CreateQuestionMediaDTO,
   ): Promise<QuestionMedia> {
-    return await this.questionMediaRepository.save(
-      new QuestionMedia({ ...createQuestionMediaDTO }),
-    );
+    let newQuestionMedia: QuestionMedia = new QuestionMedia();
+    if (createQuestionMediaDTO.idGroupQuestion) {
+      const groupQuestion = await this.groupQuestionRepository.findOneBy({
+        id: createQuestionMediaDTO.idGroupQuestion,
+      });
+      if (!groupQuestion) {
+        throw new NotFoundException('Group question not found');
+      }
+      newQuestionMedia.groupQuestion = groupQuestion;
+    }
+    if (createQuestionMediaDTO.file) {
+      const url = await this.cloudinaryService.uploadBase64(
+        createQuestionMediaDTO.file,
+      );
+      newQuestionMedia.url = url;
+    } else if (createQuestionMediaDTO.fileUrl) {
+      newQuestionMedia.url = createQuestionMediaDTO.fileUrl;
+    }
+
+    Object.assign(newQuestionMedia, createQuestionMediaDTO);
+    return await this.questionMediaRepository.save(newQuestionMedia);
   }
   async deleteQuestionMedia(id: string) {
     const questionMedia = await this.questionMediaRepository.findOneBy({ id });

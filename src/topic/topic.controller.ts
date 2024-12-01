@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFiles,
+  UseGuards,
 } from '@nestjs/common';
 import { TopicService } from './topic.service';
 import { CreateEntireTopicDTO } from './input/createEntireTopic.dto';
@@ -17,6 +18,10 @@ import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { CreateTopicDTO } from './input/createTopic.dto';
 import { CreateListWordTopicDTO } from './input/createListWordTopic.dto';
 import { UpdateTopicDTO } from './input/updateTopic.dto';
+import { JwtAuthGuard } from '../auth/authGuard.jwt';
+import { Roles } from '../decorator/role.decorator';
+import { Role } from '../type/role.type';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('topic')
 export class TopicController {
@@ -26,6 +31,8 @@ export class TopicController {
   ) {}
 
   @Post('entire/:idGroupTopic')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async createEntireTopic(
     @Body() createEntireTopicDTO: CreateEntireTopicDTO,
     @Param('idGroupTopic') id: string,
@@ -34,6 +41,8 @@ export class TopicController {
   }
 
   @Post(':idGroupTopic')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async createTopic(
     @Body() createTopicDTO: CreateTopicDTO,
     @Param('idGroupTopic') idGroupTopic: string,
@@ -41,6 +50,8 @@ export class TopicController {
     return await this.topicService.createTopic(idGroupTopic, createTopicDTO);
   }
   @Post('word/:idTopic')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async createListWordTopic(
     @Body() createListWordTopicDTO: CreateListWordTopicDTO,
     @Param('idTopic') idTopic: string,
@@ -61,6 +72,8 @@ export class TopicController {
   }
 
   @Patch(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id') id: string,
     @Body() updateTopicDTO: UpdateTopicDTO,
@@ -69,6 +82,8 @@ export class TopicController {
   }
 
   @Delete(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async delete(@Param('id') id: string) {
     await this.topicService.delete(id);
     return { message: 'Topic deleted successfully' };
