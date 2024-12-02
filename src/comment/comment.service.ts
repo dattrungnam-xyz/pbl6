@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCommentDTO } from './input/createComment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -64,6 +68,7 @@ export class CommentService {
       }
       newComment.parentComment = comment;
     }
+    delete createCommentDTO['rating'];
     Object.assign(newComment, createCommentDTO);
     return await this.commentRepository.save(newComment);
   }

@@ -26,6 +26,7 @@ import { TestPracticeModule } from './test-practice/test-practice.module';
 import { FlashCardModule } from './flash-card/flash-card.module';
 import { TranslateModule } from './translate/translate.module';
 import { TopicHistoryModule } from './topic-history/topic-history.module';
+import { RatingModule } from './rating/rating.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { TopicHistoryModule } from './topic-history/topic-history.module';
     FlashCardModule,
     TranslateModule,
     TopicHistoryModule,
+    RatingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

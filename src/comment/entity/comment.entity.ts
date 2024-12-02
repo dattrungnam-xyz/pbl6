@@ -38,6 +38,10 @@ export class Comment {
   @Expose()
   content: string;
 
+  @Column({ nullable: true })
+  @Expose()
+  rating: string;
+
   @ManyToOne(() => Test, (test) => test.comments, { nullable: true })
   @Expose()
   test?: Test;

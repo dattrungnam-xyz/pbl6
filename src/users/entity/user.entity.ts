@@ -13,6 +13,7 @@ import { TestPractice } from '../../test-practice/entity/testPractice.entity';
 import { FlashCard } from '../../flash-card/entity/flashCard.entity';
 import { Comment } from '../../comment/entity/comment.entity';
 import { TopicHistory } from '../../topic-history/entity/topicHistory.entity';
+import { Rating } from '../../rating/entity/rating.entity';
 
 @Entity()
 export class User {
@@ -98,4 +99,10 @@ export class User {
   @Expose()
   @OneToMany(() => TopicHistory, (topicHistories) => topicHistories.user)
   topicHistories: TopicHistory[];
+
+  @Expose()
+  @OneToMany(() => Rating, (rating) => rating.user, {
+    nullable: true,
+  })
+  ratings: Rating[];
 }
