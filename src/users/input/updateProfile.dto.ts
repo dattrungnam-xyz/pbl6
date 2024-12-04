@@ -15,9 +15,9 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import { Role } from '../../type/role.type';
-import { UserDoesNotExist } from '../../validation/UserDoesNotExist.constraint';
-import { IsDivisibleBy5 } from '../../validation/IsDivisibleBy5.constraint';
+import { Role } from '../../common/type/role.type';
+import { UserDoesNotExist } from '../../common/validation/UserDoesNotExist.constraint';
+import { IsDivisibleBy5 } from '../../common/validation/IsDivisibleBy5.constraint';
 
 export class UpdateProfileDTO {
   @IsOptional()

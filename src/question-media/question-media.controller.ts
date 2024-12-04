@@ -16,8 +16,8 @@ import {
 } from '@nestjs/platform-express';
 import { CreateQuestionMediaDTO } from './input/createQuestionMedia.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { Roles } from '../decorator/role.decorator';
-import { Role } from '../type/role.type';
+import { Roles } from '../common/decorator/role.decorator';
+import { Role } from '../common/type/role.type';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
 import { RolesGuard } from '../auth/roles.guard';
 

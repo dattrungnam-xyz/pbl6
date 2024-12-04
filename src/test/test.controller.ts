@@ -16,16 +16,14 @@ import {
 } from '@nestjs/common';
 import { TestService } from './test.service';
 import { CreateTestDTO } from './input/createTest.dto';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ParseFile } from '../validation/ParseFile.pipe';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UpdateTestDTO } from './input/updateTest.dto';
 import { UpdateTagsTestDTO } from './input/updateTagTest.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
-import { CurrentUser } from '../decorator/currentUser.decorator';
+import { CurrentUser } from '../common/decorator/currentUser.decorator';
 import { User } from '../users/entity/user.entity';
-import { Roles } from '../decorator/role.decorator';
-import { Role } from '../type/role.type';
+import { Roles } from '../common/decorator/role.decorator';
+import { Role } from '../common/type/role.type';
 import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('test')

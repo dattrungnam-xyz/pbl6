@@ -6,11 +6,13 @@ import { ListenGroup } from '../listen-group/entity/listenGroup.entity';
 import { ListenLession } from './entity/listenLession.entity';
 import { ListenSentence } from '../listen-sentence/entity/listenSentence.entity';
 import { ListenSentenceModule } from '../listen-sentence/listen-sentence.module';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ListenGroup, ListenLession, ListenSentence]),
     ListenSentenceModule,
+    CloudinaryModule,
   ],
   controllers: [ListenLessionController],
   providers: [ListenLessionService],

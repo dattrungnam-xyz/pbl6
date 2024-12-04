@@ -8,7 +8,7 @@ import {
   IsUUID,
   Matches,
 } from 'class-validator';
-import { WordClassType } from '../../type/wordClass.type';
+import { WordClassType } from '../../common/type/wordClass.type';
 
 export class CreateWordDTO {
   @IsOptional()

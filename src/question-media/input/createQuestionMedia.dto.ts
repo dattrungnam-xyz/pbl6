@@ -5,7 +5,7 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { MediaType } from '../../type/media.type';
+import { MediaType } from '../../common/type/media.type';
 
 export class CreateQuestionMediaDTO {
   @IsOptional()

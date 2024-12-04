@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { TopicHistoryService } from './topic-history.service';
 import { CreateTopicHistoryDTO } from './input/createTopicHistory.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
-import { CurrentUser } from '../decorator/currentUser.decorator';
+import { CurrentUser } from '../common/decorator/currentUser.decorator';
 import { User } from '../users/entity/user.entity';
 
 @Controller('topic-history')

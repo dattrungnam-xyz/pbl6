@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
-import { TagType } from '../../type/tag.type';
+import { TagType } from '../../common/type/tag.type';
 
 export class CreateTagDTO {
   @IsOptional()

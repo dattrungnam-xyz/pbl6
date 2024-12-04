@@ -19,8 +19,8 @@ import { CreateTopicDTO } from './input/createTopic.dto';
 import { CreateListWordTopicDTO } from './input/createListWordTopic.dto';
 import { UpdateTopicDTO } from './input/updateTopic.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
-import { Roles } from '../decorator/role.decorator';
-import { Role } from '../type/role.type';
+import { Roles } from '../common/decorator/role.decorator';
+import { Role } from '../common/type/role.type';
 import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('topic')

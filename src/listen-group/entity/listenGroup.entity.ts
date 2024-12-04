@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ListenLession } from '../../listen-lession/entity/listenLession.entity';
-import { Level } from '../../type/level.type';
+import { Level } from '../../common/type/level.type';
 
 @Entity()
 export class ListenGroup {

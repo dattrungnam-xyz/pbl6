@@ -15,10 +15,10 @@ import { WordService } from './word.service';
 import { CreateWordDTO } from './input/createWord.dto';
 import { UpdateWordDTO } from './input/updateWord.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
-import { CurrentUser } from '../decorator/currentUser.decorator';
+import { CurrentUser } from '../common/decorator/currentUser.decorator';
 import { User } from '../users/entity/user.entity';
-import { Roles } from '../decorator/role.decorator';
-import { Role } from '../type/role.type';
+import { Roles } from '../common/decorator/role.decorator';
+import { Role } from '../common/type/role.type';
 import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('word')

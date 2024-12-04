@@ -6,7 +6,7 @@ import { CreateQuestionMediaDTO } from './input/createQuestionMedia.dto';
 import { CloudinaryResponse } from '../cloudinary/cloudinary-response';
 import { GroupQuestion } from '../group-question/entity/groupQuestion.entity';
 import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
-import { MediaType } from '../type/media.type';
+import { MediaType } from '../common/type/media.type';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()

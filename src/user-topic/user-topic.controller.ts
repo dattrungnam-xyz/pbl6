@@ -11,7 +11,7 @@ import {
 import { UserTopicService } from './user-topic.service';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
 import { CreateUserTopicDTO } from './input/createUserTopic.dto';
-import { CurrentUser } from '../decorator/currentUser.decorator';
+import { CurrentUser } from '../common/decorator/currentUser.decorator';
 import { User } from '../users/entity/user.entity';
 import { UpdateUserTopicDTO } from './input/updateUserTopic.dto';
 

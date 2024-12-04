@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { dataSourceOptions } from './config/typeorm.config';
+import { dataSourceOptions } from './common/config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { TestModule } from './test/test.module';

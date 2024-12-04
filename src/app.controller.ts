@@ -8,13 +8,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Roles } from './decorator/role.decorator';
-import { Role } from './type/role.type';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ParseFile } from './validation/ParseFile.pipe';
+import { Roles } from './common/decorator/role.decorator';
+import { Role } from './common/type/role.type';
 import { CloudinaryService } from './cloudinary/cloudinary.service';
 import { JwtAuthGuard } from './auth/authGuard.jwt';
-import { CurrentUser } from './decorator/currentUser.decorator';
+import { CurrentUser } from './common/decorator/currentUser.decorator';
 import { RolesGuard } from './auth/roles.guard';
 
 @Controller()

@@ -12,7 +12,7 @@ import {
 import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity';
 import { UserAnswer } from '../../user-answer/entity/userAnswer.entity';
 import { QuestionMedia } from '../../question-media/entity/questionMedia.entity';
-import { AnswerType } from '../../type/answer.type';
+import { AnswerType } from '../../common/type/answer.type';
 import { Comment } from '../../comment/entity/comment.entity';
 
 @Entity()

@@ -7,7 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Role } from '../../type/role.type';
+import { Role } from '../../common/type/role.type';
 import { UserTopic } from '../../user-topic/entity/userTopic.entity';
 import { TestPractice } from '../../test-practice/entity/testPractice.entity';
 import { FlashCard } from '../../flash-card/entity/flashCard.entity';

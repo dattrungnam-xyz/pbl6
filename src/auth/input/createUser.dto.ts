@@ -7,9 +7,9 @@ import {
   IsString,
   Length,
 } from 'class-validator';
-import { UserDoesNotExist } from '../../validation/UserDoesNotExist.constraint';
-import { IsRepeated } from '../../validation/IsRepeated.constraint';
-import { Role } from '../../type/role.type';
+import { UserDoesNotExist } from '../../common/validation/UserDoesNotExist.constraint';
+import { IsRepeated } from '../../common/validation/IsRepeated.constraint';
+import { Role } from '../../common/type/role.type';
 
 export class CreateUserDTO {
   @IsNotEmpty()

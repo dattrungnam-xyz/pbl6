@@ -7,7 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { MailModule } from '../mail/mail.module';
 import { User } from '../users/entity/user.entity';
-import { UserDoesNotExistConstraint } from '../validation/UserDoesNotExist.constraint';
+import { UserDoesNotExistConstraint } from '../common/validation/UserDoesNotExist.constraint';
 import { GoogleStrategy } from './google.strategy';
 
 @Module({

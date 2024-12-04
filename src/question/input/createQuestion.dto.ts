@@ -8,8 +8,8 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { AnswerType } from '../../type/answer.type';
-import { IsValidAnswer } from '../../validation/IsValidAnswer.constraint';
+import { AnswerType } from '../../common/type/answer.type';
+import { IsValidAnswer } from '../../common/validation/IsValidAnswer.constraint';
 
 export class CreateQuestionDTO {
   @IsNotEmpty()

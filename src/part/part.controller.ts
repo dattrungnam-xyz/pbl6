@@ -2,8 +2,8 @@ import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/c
 import { PartService } from './part.service';
 import { CreatePartDTO } from './input/createPart.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
-import { Roles } from '../decorator/role.decorator';
-import { Role } from '../type/role.type';
+import { Roles } from '../common/decorator/role.decorator';
+import { Role } from '../common/type/role.type';
 import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('part')

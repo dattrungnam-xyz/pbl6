@@ -9,11 +9,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ListenGroupService } from './listen-group.service';
-import { Roles } from '../decorator/role.decorator';
-import { Role } from '../type/role.type';
+import { Roles } from '../common/decorator/role.decorator';
+import { Role } from '../common/type/role.type';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
 import { RolesGuard } from '../auth/roles.guard';
 import { CreateListenGroupDTO } from './input/createListenGroup.dto';
+import { UpdateListenGroupDTO } from './input/updateListenGroup.dto';
 
 @Controller('listen-group')
 export class ListenGroupController {
@@ -33,11 +34,11 @@ export class ListenGroupController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateListenGroup(
     @Param('id') id: string,
-    @Body() createListenGroupDTO: CreateListenGroupDTO,
+    @Body() updateListenGroupDTO: UpdateListenGroupDTO,
   ) {
     return await this.listenGroupService.updateListenGroup(
       id,
-      createListenGroupDTO,
+      updateListenGroupDTO,
     );
   }
 
@@ -52,6 +53,8 @@ export class ListenGroupController {
   }
 
   @Delete(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteListenGroup(@Param('id') id: string) {
     return await this.listenGroupService.deleteListenGroup(id);
   }

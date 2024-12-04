@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { User } from '../users/entity/user.entity';
 import { Comment } from './entity/comment.entity';
 import { UpdateCommentDTO } from './input/updateComment.dto';
-import { Role } from '../type/role.type';
+import { Role } from '../common/type/role.type';
 import { Question } from '../question/entity/question.entity';
 import { Test } from '../test/entity/test.entity';
 import { GroupTopic } from '../group-topic/entity/groupTopic.entity';

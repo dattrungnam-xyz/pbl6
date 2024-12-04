@@ -5,7 +5,7 @@ export class CreateListenSentenceDTO {
   @Matches(/^data:audio\/(mp3|wav|mpeg);base64,[A-Za-z0-9+/]+={0,2}$/, {
     message: 'Audio must be a valid Base64 encoded audio file (MP3, WAV, MPEG)',
   })
-  audioFile: string;
+  audio: string;
 
   @IsOptional()
   @IsString()

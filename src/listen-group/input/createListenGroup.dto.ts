@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { Level } from '../../type/level.type';
+import { Level } from '../../common/type/level.type';
 
 export class CreateListenGroupDTO {
   @IsNotEmpty()

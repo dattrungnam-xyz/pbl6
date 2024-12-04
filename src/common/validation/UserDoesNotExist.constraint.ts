@@ -8,7 +8,7 @@ import {
   registerDecorator,
 } from 'class-validator';
 import { Repository } from 'typeorm';
-import { User } from '../users/entity/user.entity';
+import { User } from '../../users/entity/user.entity';
 
 @ValidatorConstraint({ name: 'UserDoesNotExist', async: true })
 @Injectable()

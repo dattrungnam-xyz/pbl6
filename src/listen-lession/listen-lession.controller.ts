@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
 import { ListenLessionService } from './listen-lession.service';
-import { Roles } from '../decorator/role.decorator';
-import { Role } from '../type/role.type';
+import { Roles } from '../common/decorator/role.decorator';
+import { Role } from '../common/type/role.type';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
 import { RolesGuard } from '../auth/roles.guard';
 import { CreateListenLessionDTO } from './input/createListenLession.dto';

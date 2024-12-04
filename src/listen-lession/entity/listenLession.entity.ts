@@ -22,7 +22,7 @@ export class ListenLession {
   name: string;
 
   @Column()
-  fullAudio: string;
+  audio: string;
 
   @CreateDateColumn()
   createdAt: Date;

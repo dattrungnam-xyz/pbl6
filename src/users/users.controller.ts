@@ -11,7 +11,7 @@ import {
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
 import { UpdateProfileDTO } from './input/updateProfile.dto';
-import { CurrentUser } from '../decorator/currentUser.decorator';
+import { CurrentUser } from '../common/decorator/currentUser.decorator';
 import { User } from './entity/user.entity';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 

@@ -29,12 +29,12 @@ export class ListenGroupService {
     );
   }
   async getAllListenGroup() {
-    return await this.listenGroupRepository.find();
+    return await this.listenGroupRepository.find({ order: { name: 'ASC' } });
   }
   async getListenGroup(id: string) {
     return await this.listenGroupRepository.findOne({
       where: { id },
-      relations: ['groupTopics'],
+      relations: ['listenLessions'],
     });
   }
   async deleteListenGroup(id: string) {
@@ -42,6 +42,9 @@ export class ListenGroupService {
     if (!groupListenDTO) {
       throw new NotFoundException('Group listen not found');
     }
-    return await this.listenGroupRepository.softDelete(id);
+    await this.listenGroupRepository.softDelete(id);
+    return {
+      message: 'Delete group listen successfully',
+    };
   }
 }
