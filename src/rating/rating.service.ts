@@ -48,6 +48,9 @@ export class RatingService {
     // const groupTopic = await this.groupTopicRepository;
   }
   async getRatingGroupTopic(id: string) {
-    return await this.ratingRepository.find({ where: { groupTopic: { id } } });
+    return await this.ratingRepository.find({
+      where: { groupTopic: { id } },
+      relations: ['user'],
+    });
   }
 }

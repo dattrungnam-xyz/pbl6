@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, Param, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { RatingService } from './rating.service';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
 import { CurrentUser } from '../decorator/currentUser.decorator';
@@ -23,6 +23,7 @@ export class RatingController {
     );
   }
   @Get('/groupTopic/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
   async getRatingGroupTopic(@Param('id') id: string) {
     return await this.ratingService.getRatingGroupTopic(id);
   }
