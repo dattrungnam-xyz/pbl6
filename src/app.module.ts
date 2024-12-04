@@ -27,6 +27,9 @@ import { FlashCardModule } from './flash-card/flash-card.module';
 import { TranslateModule } from './translate/translate.module';
 import { TopicHistoryModule } from './topic-history/topic-history.module';
 import { RatingModule } from './rating/rating.module';
+import { ListenGroupModule } from './listen-group/listen-group.module';
+import { ListenLessionModule } from './listen-lession/listen-lession.module';
+import { ListenSentenceModule } from './listen-sentence/listen-sentence.module';
 
 @Module({
   imports: [
@@ -55,6 +58,9 @@ import { RatingModule } from './rating/rating.module';
     TranslateModule,
     TopicHistoryModule,
     RatingModule,
+    ListenGroupModule,
+    ListenLessionModule,
+    ListenSentenceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -28,14 +29,17 @@ export class GroupTopicController {
   async createGroupTopic(@Body() createGroupTopicDTO: CreateGroupTopicDTO) {
     return await this.groupTopicService.createGroupTopic(createGroupTopicDTO);
   }
+
   @Get()
   async findGroupTopic() {
     return await this.groupTopicService.findGroupTopic();
   }
+
   @Get(':id')
   async findGroupTopicById(@Param('id') id: string) {
     return await this.groupTopicService.findGroupTopicById(id);
   }
+
   @Get(':id/user')
   @UseGuards(JwtAuthGuard)
   async findGroupTopicByIdAndUser(
@@ -44,6 +48,7 @@ export class GroupTopicController {
   ) {
     return await this.groupTopicService.findGroupTopicByIdAndUser(id, user.id);
   }
+
   @Patch(':id')
   @Roles(Role.MODERATOR)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -55,5 +60,12 @@ export class GroupTopicController {
       id,
       updateGroupTopicDTO,
     );
+  }
+
+  @Delete(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async deleteGroupTopic(@Param('id') id: string) {
+    return await this.groupTopicService.deleteGroupTopic(id);
   }
 }
