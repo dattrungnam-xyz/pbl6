@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 
 export class CreateListenSentenceDTO {
   @IsOptional()
@@ -14,4 +20,8 @@ export class CreateListenSentenceDTO {
   @IsNotEmpty()
   @IsString()
   sentence: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  index: number;
 }

@@ -23,6 +23,9 @@ export class ListenSentence {
   @Column()
   audio: string;
 
+  @Column()
+  index: number;
+
   @CreateDateColumn()
   createdAt: Date;
 

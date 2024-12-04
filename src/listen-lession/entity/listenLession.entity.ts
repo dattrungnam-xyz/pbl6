@@ -36,6 +36,7 @@ export class ListenLession {
   @OneToMany(
     () => ListenSentence,
     (listenSentence) => listenSentence.listenLession,
+    { cascade: true },
   )
   listenSentences: ListenSentence[];
 }
