@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ListenSentence } from './entity/listenSentence.entity';
 import { Repository } from 'typeorm';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { CreateListenSentenceDTO } from './input/createListenSentence.dto';
+import { UpdateListenSentenceDTO } from './input/updateListenSentence.dto';
 
 @Injectable()
 export class ListenSentenceService {
@@ -37,5 +38,38 @@ export class ListenSentenceService {
       },
     );
     return await Promise.all(listenSentencesPromise);
+  }
+
+  async updateListenSentence(
+    id: string,
+    updateListenSentenceDTO: UpdateListenSentenceDTO,
+  ) {
+    const listenSentence = await this.listenSentenceRepository.findOneBy({
+      id,
+    });
+    if (!listenSentence) {
+      throw new NotFoundException('Listen Sentence not found');
+    }
+    if (updateListenSentenceDTO.audioUrl) {
+      updateListenSentenceDTO.audio = updateListenSentenceDTO.audioUrl;
+    } else if (updateListenSentenceDTO.audio) {
+      const uploadResult = await this.cloudinaryService.uploadBase64(
+        updateListenSentenceDTO.audio,
+      );
+      updateListenSentenceDTO.audio = uploadResult;
+    }
+    return await this.listenSentenceRepository.save(
+      new ListenSentence({ ...listenSentence, ...updateListenSentenceDTO }),
+    );
+  }
+  async deleteListenSentence(id: string) {
+    const listenSentence = await this.listenSentenceRepository.findOneBy({
+      id,
+    });
+    if (!listenSentence) {
+      throw new NotFoundException('Listen Sentence not found');
+    }
+    await this.listenSentenceRepository.softDelete({ id });
+    return { message: 'Listen Sentence deleted successfully' };
   }
 }

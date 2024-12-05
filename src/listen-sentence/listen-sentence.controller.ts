@@ -1,7 +1,38 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { ListenSentenceService } from './listen-sentence.service';
+import { Roles } from '../common/decorator/role.decorator';
+import { Role } from '../common/type/role.type';
+import { JwtAuthGuard } from '../auth/authGuard.jwt';
+import { RolesGuard } from '../auth/roles.guard';
+import { UpdateListenSentenceDTO } from './input/updateListenSentence.dto';
 
 @Controller('listen-sentence')
 export class ListenSentenceController {
   constructor(private readonly listenSentenceService: ListenSentenceService) {}
+
+  @Patch(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async updateListenSentence(
+    @Param('id') id: string,
+    @Body() updateListenSentenceDTO: UpdateListenSentenceDTO,
+  ) {
+    return await this.listenSentenceService.updateListenSentence(
+      id,
+      updateListenSentenceDTO,
+    );
+  }
+  @Delete(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async deleteListenSentence(@Param('id') id: string) {
+    return await this.listenSentenceService.deleteListenSentence(id);
+  }
 }

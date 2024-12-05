@@ -92,7 +92,7 @@ export class AuthService {
         passwordResetExpires: new Date(Date.now() + 10 * 60 * 1000),
       }),
     );
-    const resetURL = `${host}/auth/resetPassword/${token}`;
+    const resetURL = `${host}/reset-password/${token}`;
     await this.mailService.sendMailResetPassword(user, resetURL);
     return {
       status: 'success',
