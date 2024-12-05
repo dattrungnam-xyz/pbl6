@@ -1,5 +1,12 @@
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { IsValidAnswer } from '../../validation/IsValidAnswer.constraint';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { IsValidAnswer } from '../../common/validation/IsValidAnswer.constraint';
 
 export class QuestionData {
   @IsNotEmpty()

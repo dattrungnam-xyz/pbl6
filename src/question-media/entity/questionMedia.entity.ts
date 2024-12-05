@@ -7,7 +7,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { MediaType } from '../../type/media.type';
+import { MediaType } from '../../common/type/media.type';
 import { Question } from '../../question/entity/question.entity';
 import { GroupQuestion } from '../../group-question/entity/groupQuestion.entity';
 

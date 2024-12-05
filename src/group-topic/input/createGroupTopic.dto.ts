@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { CreateTagDTO } from '../../tag/input/createTag.dto';
 import { Type } from 'class-transformer';
-import { Level } from '../../type/level.type';
+import { Level } from '../../common/type/level.type';
 
 export class CreateGroupTopicDTO {
   @IsNotEmpty()

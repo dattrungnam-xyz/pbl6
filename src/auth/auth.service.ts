@@ -15,8 +15,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ResetPassworDTO } from './input/resetPassword.dto';
 import { UpdatePasswordDTO } from './input/updatePassword.dto';
 import { MailService } from '../mail/mail.service';
-import { LoginException } from '../exception/login.exception';
-import { Role } from '../type/role.type';
+import { LoginException } from '../common/exception/login.exception';
+import { Role } from '../common/type/role.type';
 
 @Injectable()
 export class AuthService {

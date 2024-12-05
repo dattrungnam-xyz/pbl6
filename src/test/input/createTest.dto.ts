@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { CreateTagDTO } from '../../tag/input/createTag.dto';
 import { Type } from 'class-transformer';
-import { IsValidAnswer } from '../../validation/IsValidAnswer.constraint';
+import { IsValidAnswer } from '../../common/validation/IsValidAnswer.constraint';
 import { PartDataDTO } from '../../part/input/partData.dto';
 
 export class CreateTestDTO {
@@ -34,10 +34,6 @@ export class CreateTestDTO {
   @Type(() => PartDataDTO)
   partData: PartDataDTO[];
 }
-
-
-
-
 
 // example data
 // {

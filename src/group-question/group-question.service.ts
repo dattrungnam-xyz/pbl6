@@ -10,7 +10,7 @@ import { CloudinaryResponse } from '../cloudinary/cloudinary-response';
 import { QuestionMedia } from '../question-media/entity/questionMedia.entity';
 import { QuestionMediaService } from '../question-media/question-media.service';
 import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
-import { MediaType } from '../type/media.type';
+import { MediaType } from '../common/type/media.type';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()

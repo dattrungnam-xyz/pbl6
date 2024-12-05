@@ -1,11 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCommentDTO } from './input/createComment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users/entity/user.entity';
 import { Comment } from './entity/comment.entity';
 import { UpdateCommentDTO } from './input/updateComment.dto';
-import { Role } from '../type/role.type';
+import { Role } from '../common/type/role.type';
 import { Question } from '../question/entity/question.entity';
 import { Test } from '../test/entity/test.entity';
 import { GroupTopic } from '../group-topic/entity/groupTopic.entity';
@@ -64,6 +68,7 @@ export class CommentService {
       }
       newComment.parentComment = comment;
     }
+    delete createCommentDTO['rating'];
     Object.assign(newComment, createCommentDTO);
     return await this.commentRepository.save(newComment);
   }

@@ -8,7 +8,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { WordClassType } from '../../type/wordClass.type';
+import { WordClassType } from '../../common/type/wordClass.type';
 import { Topic } from '../../topic/entity/topic.entity';
 import { UserTopic } from '../../user-topic/entity/userTopic.entity';
 import { FlashCard } from '../../flash-card/entity/flashCard.entity';

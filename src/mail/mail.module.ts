@@ -3,7 +3,7 @@ import { MailService } from './mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
-import { mailerOption } from '../config/nodemailer.config';
+import { mailerOption } from '../common/config/nodemailer.config';
 
 
 @Module({

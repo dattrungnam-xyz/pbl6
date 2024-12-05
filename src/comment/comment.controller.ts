@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { CurrentUser } from '../decorator/currentUser.decorator';
+import { CurrentUser } from '../common/decorator/currentUser.decorator';
 import { User } from '../users/entity/user.entity';
 import { CreateCommentDTO } from './input/createComment.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';

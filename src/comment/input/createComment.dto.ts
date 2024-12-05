@@ -23,7 +23,6 @@ export class CreateCommentDTO {
   @IsUUID()
   idGroupTopic: string;
 
-
   @IsOptional()
   @IsUUID()
   idQuestion: string;

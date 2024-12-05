@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -12,25 +13,33 @@ import { GroupTopicService } from './group-topic.service';
 import { CreateGroupTopicDTO } from './input/createGroupTopic.dto';
 import { UpdateGroupTopicDTO } from './input/updateGroupTopic.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
-import { CurrentUser } from '../decorator/currentUser.decorator';
+import { CurrentUser } from '../common/decorator/currentUser.decorator';
 import { User } from '../users/entity/user.entity';
+import { Roles } from '../common/decorator/role.decorator';
+import { Role } from '../common/type/role.type';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('group-topic')
 export class GroupTopicController {
   constructor(private readonly groupTopicService: GroupTopicService) {}
 
   @Post()
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async createGroupTopic(@Body() createGroupTopicDTO: CreateGroupTopicDTO) {
     return await this.groupTopicService.createGroupTopic(createGroupTopicDTO);
   }
+
   @Get()
   async findGroupTopic() {
     return await this.groupTopicService.findGroupTopic();
   }
+
   @Get(':id')
   async findGroupTopicById(@Param('id') id: string) {
     return await this.groupTopicService.findGroupTopicById(id);
   }
+
   @Get(':id/user')
   @UseGuards(JwtAuthGuard)
   async findGroupTopicByIdAndUser(
@@ -39,7 +48,10 @@ export class GroupTopicController {
   ) {
     return await this.groupTopicService.findGroupTopicByIdAndUser(id, user.id);
   }
+
   @Patch(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async updateGroupTopic(
     @Param('id') id: string,
     @Body() updateGroupTopicDTO: UpdateGroupTopicDTO,
@@ -48,5 +60,12 @@ export class GroupTopicController {
       id,
       updateGroupTopicDTO,
     );
+  }
+
+  @Delete(':id')
+  @Roles(Role.MODERATOR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async deleteGroupTopic(@Param('id') id: string) {
+    return await this.groupTopicService.deleteGroupTopic(id);
   }
 }

@@ -95,4 +95,11 @@ export class GroupTopicService {
     }
     return result;
   }
+  async deleteGroupTopic(id: string) {
+    const groupTopic = await this.groupTopicRepository.findOneBy({ id });
+    if (!groupTopic) {
+      throw new NotFoundException('Group topic not found');
+    }
+    return await this.groupTopicRepository.softDelete(id);
+  }
 }

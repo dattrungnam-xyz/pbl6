@@ -13,7 +13,7 @@ import {
 import { Test } from '../../test/entity/test.entity';
 import { Topic } from '../../topic/entity/topic.entity';
 import { GroupTopic } from '../../group-topic/entity/groupTopic.entity';
-import { TagType } from '../../type/tag.type';
+import { TagType } from '../../common/type/tag.type';
 
 @Entity()
 export class Tag {

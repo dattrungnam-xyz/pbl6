@@ -11,8 +11,9 @@ import {
 } from 'typeorm';
 import { Tag } from '../../tag/entity/tag.entity';
 import { Topic } from '../../topic/entity/topic.entity';
-import { Level } from '../../type/level.type';
+import { Level } from '../../common/type/level.type';
 import { Comment } from '../../comment/entity/comment.entity';
+import { Rating } from '../../rating/entity/rating.entity';
 
 @Entity()
 export class GroupTopic {
@@ -67,6 +68,10 @@ export class GroupTopic {
     nullable: true,
   })
   comments: Comment[];
+
+  @Expose()
+  @OneToMany(() => Rating, (rating) => rating.groupTopic, { nullable: true })
+  ratings: Rating[];
 
   @CreateDateColumn()
   createdAt: Date;

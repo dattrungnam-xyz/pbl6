@@ -14,7 +14,7 @@ import { FlashCardService } from './flash-card.service';
 import { CreateFlashCardDTO } from './input/createFlashCard.dto';
 import { UpdateFlashCardDTO } from './input/updateFlashCard.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
-import { CurrentUser } from '../decorator/currentUser.decorator';
+import { CurrentUser } from '../common/decorator/currentUser.decorator';
 import { User } from '../users/entity/user.entity';
 
 @Controller('flash-card')

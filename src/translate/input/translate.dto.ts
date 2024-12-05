@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { languages } from '../../type/language.type';
+import { languages } from '../../common/type/language.type';
 
 export class TranslateDTO {
   @IsOptional()

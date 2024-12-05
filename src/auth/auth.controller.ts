@@ -16,7 +16,7 @@ import { AuthService } from './auth.service';
 import { AuthGuardLocal } from './authGuard.local';
 import { User } from '../users/entity/user.entity';
 import { MailService } from '../mail/mail.service';
-import { CurrentUser } from '../decorator/currentUser.decorator';
+import { CurrentUser } from '../common/decorator/currentUser.decorator';
 import { CreateUserDTO } from './input/createUser.dto';
 import { ForgotPassWordDTO } from './input/forgotPassword.dto';
 import { ResetPassworDTO } from './input/resetPassword.dto';

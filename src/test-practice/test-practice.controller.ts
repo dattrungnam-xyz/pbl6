@@ -11,7 +11,7 @@ import { TestPracticeService } from './test-practice.service';
 import { CreateTestPracticeDTO } from './input/createTestPratice.dto';
 import { ClassSerializerInterceptor } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
-import { CurrentUser } from '../decorator/currentUser.decorator';
+import { CurrentUser } from '../common/decorator/currentUser.decorator';
 import { User } from '../users/entity/user.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)

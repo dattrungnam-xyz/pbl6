@@ -22,7 +22,7 @@ export class TranslateService {
       from,
       autoCorrect: true,
     });
-    return { text: res.text.toLowerCase() };
+    return { text: res.text.toLowerCase(), res };
   }
 
   async textToSpeech(translateDTO: TranslateDTO) {
