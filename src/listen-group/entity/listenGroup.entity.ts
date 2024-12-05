@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { ListenLession } from '../../listen-lession/entity/listenLession.entity';
 import { Level } from '../../common/type/level.type';
+import { Paginated } from '../../pagination/paginator';
 
 @Entity()
 export class ListenGroup {
@@ -36,3 +37,5 @@ export class ListenGroup {
   @OneToMany(() => ListenLession, (listenLession) => listenLession.listenGroup)
   listenLessions: ListenLession[];
 }
+
+export class PaginatedListenGroup extends Paginated<ListenGroup>(ListenGroup) {}
