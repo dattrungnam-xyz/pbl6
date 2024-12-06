@@ -65,9 +65,9 @@ export class User {
   @Column({ nullable: true })
   passwordResetToken: String;
 
-  @Exclude({ toPlainOnly: true })
-  @Column('simple-array', { nullable: true })
-  refreshToken: string[];
+  // @Exclude({ toPlainOnly: true })
+  // @Column('simple-array', { nullable: true })
+  // refreshToken: string[];
 
   @Exclude({ toPlainOnly: true })
   @Column({ nullable: true })
