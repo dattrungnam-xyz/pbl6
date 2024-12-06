@@ -66,7 +66,7 @@ export class User {
   passwordResetToken: String;
 
   @Exclude({ toPlainOnly: true })
-  @Column({ nullable: true })
+  @Column('simple-array', { nullable: true })
   refreshToken: string[];
 
   @Exclude({ toPlainOnly: true })
