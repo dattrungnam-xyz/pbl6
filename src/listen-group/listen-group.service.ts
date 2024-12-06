@@ -46,7 +46,7 @@ export class ListenGroupService {
         search: `%${search}%`,
       });
     }
-    if (level) {
+    if (level && level !== 'all') {
       qb = qb.andWhere('listenGroup.level LIKE :level', {
         level: `%${level}%`,
       });
