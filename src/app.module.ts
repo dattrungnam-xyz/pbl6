@@ -28,7 +28,7 @@ import { TranslateModule } from './translate/translate.module';
 import { TopicHistoryModule } from './topic-history/topic-history.module';
 import { RatingModule } from './rating/rating.module';
 import { ListenGroupModule } from './listen-group/listen-group.module';
-import { ListenLessionModule } from './listen-lession/listen-lession.module';
+import { ListenLessonModule } from './listen-lesson/listen-lesson.module';
 import { ListenSentenceModule } from './listen-sentence/listen-sentence.module';
 
 @Module({
@@ -59,7 +59,7 @@ import { ListenSentenceModule } from './listen-sentence/listen-sentence.module';
     TopicHistoryModule,
     RatingModule,
     ListenGroupModule,
-    ListenLessionModule,
+    ListenLessonModule,
     ListenSentenceModule,
   ],
   controllers: [AppController],

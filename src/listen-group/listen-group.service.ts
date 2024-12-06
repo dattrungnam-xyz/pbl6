@@ -32,7 +32,7 @@ export class ListenGroupService {
   async getAllListenGroup() {
     return await this.listenGroupRepository.find({
       order: { name: 'ASC' },
-      relations: ['listenLessions'],
+      relations: ['listenLessons'],
     });
   }
 
@@ -40,7 +40,7 @@ export class ListenGroupService {
     const offset = page * limit;
     let qb = this.listenGroupRepository
       .createQueryBuilder('listenGroup')
-      .leftJoinAndSelect('listenGroup.listenLessions', 'listenLessions');
+      .leftJoinAndSelect('listenGroup.listenLessons', 'listenLessons');
     if (search) {
       qb = qb.where('listenGroup.name LIKE :search', {
         search: `%${search}%`,
@@ -66,7 +66,7 @@ export class ListenGroupService {
   async getListenGroup(id: string) {
     return await this.listenGroupRepository.findOne({
       where: { id },
-      relations: ['listenLessions'],
+      relations: ['listenLessons'],
     });
   }
   async deleteListenGroup(id: string) {

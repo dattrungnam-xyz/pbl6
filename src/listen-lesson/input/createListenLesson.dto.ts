@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { CreateListenSentenceDTO } from '../../listen-sentence/input/createListenSentence.dto';
 
-export class CreateListenLessionDTO {
+export class CreateListenLessonDTO {
   @IsNotEmpty()
   @IsString()
   name: string;
