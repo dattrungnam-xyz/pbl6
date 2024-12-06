@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
-import { ListenLessionService } from './listen-lession.service';
-import { ListenLessionController } from './listen-lession.controller';
+import { ListenLessonService } from './listen-lesson.service';
+import { ListenLessonController } from './listen-lesson.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ListenGroup } from '../listen-group/entity/listenGroup.entity';
-import { ListenLession } from './entity/listenLession.entity';
+import { ListenLesson } from './entity/listenLesson.entity';
 import { ListenSentence } from '../listen-sentence/entity/listenSentence.entity';
 import { ListenSentenceModule } from '../listen-sentence/listen-sentence.module';
 import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ListenGroup, ListenLession, ListenSentence]),
+    TypeOrmModule.forFeature([ListenGroup, ListenLesson, ListenSentence]),
     ListenSentenceModule,
     CloudinaryModule,
   ],
-  controllers: [ListenLessionController],
-  providers: [ListenLessionService],
+  controllers: [ListenLessonController],
+  providers: [ListenLessonService],
 })
-export class ListenLessionModule {}
+export class ListenLessonModule {}

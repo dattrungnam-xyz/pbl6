@@ -11,8 +11,8 @@ import { ListenGroup } from '../../listen-group/entity/listenGroup.entity';
 import { ListenSentence } from '../../listen-sentence/entity/listenSentence.entity';
 
 @Entity()
-export class ListenLession {
-  constructor(partial: Partial<ListenLession>) {
+export class ListenLesson {
+  constructor(partial: Partial<ListenLesson>) {
     Object.assign(this, partial);
   }
   @PrimaryGeneratedColumn('uuid')
@@ -30,12 +30,12 @@ export class ListenLession {
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 
-  @ManyToOne(() => ListenGroup, (listenGroup) => listenGroup.listenLessions)
+  @ManyToOne(() => ListenGroup, (listenGroup) => listenGroup.listenLessons)
   listenGroup: ListenGroup;
 
   @OneToMany(
     () => ListenSentence,
-    (listenSentence) => listenSentence.listenLession,
+    (listenSentence) => listenSentence.listenLesson,
     { cascade: true },
   )
   listenSentences: ListenSentence[];

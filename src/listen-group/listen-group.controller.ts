@@ -1,11 +1,14 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ListenGroupService } from './listen-group.service';
@@ -43,8 +46,18 @@ export class ListenGroupController {
   }
 
   @Get()
-  async getAllListenGroup() {
-    return await this.listenGroupService.getAllListenGroup();
+  async getAllListenGroup(
+    @Query('limit', new DefaultValuePipe(15), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('search') search?: string,
+    @Query('level') level?: string,
+  ) {
+    return await this.listenGroupService.findPagination(
+      limit,
+      page,
+      search,
+      level,
+    );
   }
 
   @Get(':id')

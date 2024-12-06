@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ListenGroup } from '../../listen-group/entity/listenGroup.entity';
-import { ListenLession } from '../../listen-lession/entity/listenLession.entity';
+import { ListenLesson } from '../../listen-lesson/entity/listenLesson.entity';
 
 @Entity()
 export class ListenSentence {
@@ -32,9 +32,6 @@ export class ListenSentence {
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 
-  @ManyToOne(
-    () => ListenLession,
-    (listenLession) => listenLession.listenSentences,
-  )
-  listenLession: ListenLession;
+  @ManyToOne(() => ListenLesson, (listenLesson) => listenLesson.listenSentences)
+  listenLesson: ListenLesson;
 }

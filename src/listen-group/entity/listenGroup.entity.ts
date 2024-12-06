@@ -6,8 +6,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ListenLession } from '../../listen-lession/entity/listenLession.entity';
+import { ListenLesson } from '../../listen-lesson/entity/listenLesson.entity';
 import { Level } from '../../common/type/level.type';
+import { Paginated } from '../../pagination/paginator';
 
 @Entity()
 export class ListenGroup {
@@ -33,6 +34,8 @@ export class ListenGroup {
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 
-  @OneToMany(() => ListenLession, (listenLession) => listenLession.listenGroup)
-  listenLessions: ListenLession[];
+  @OneToMany(() => ListenLesson, (listenLesson) => listenLesson.listenGroup)
+  listenLessons: ListenLesson[];
 }
+
+export class PaginatedListenGroup extends Paginated<ListenGroup>(ListenGroup) {}

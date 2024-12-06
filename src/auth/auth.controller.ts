@@ -46,7 +46,7 @@ export class AuthController {
   @Get('me')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async getMe(@Req() req: any){
+  async getMe(@Req() req: any) {
     // this.mailService.sendMailResetPassword(req.user, 'testurl');
     return req.user;
   }
@@ -108,4 +108,9 @@ export class AuthController {
     const user = await this.authService.validateGoogleToken(token);
     return user;
   }
+
+  @Post('logout')
+  async logout() {}
+  @Post('refresh')
+  async refreshToken() {}
 }
