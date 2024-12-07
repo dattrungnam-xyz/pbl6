@@ -10,7 +10,7 @@ export class GroupQuestionController {
   constructor(private readonly groupQuestionService: GroupQuestionService) {}
   @Delete(':id')
   @HttpCode(200)
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteGroupQuestion(@Param('id') id: string) {
     await this.groupQuestionService.deleteGroupQuestion(id);

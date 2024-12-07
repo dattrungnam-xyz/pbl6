@@ -24,7 +24,7 @@ export class ListenGroupController {
   constructor(private readonly listenGroupService: ListenGroupService) {}
 
   @Post()
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async createListenGroup(@Body() createListenGroupDTO: CreateListenGroupDTO) {
     return await this.listenGroupService.createListenGroup(
@@ -33,7 +33,7 @@ export class ListenGroupController {
   }
 
   @Patch(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateListenGroup(
     @Param('id') id: string,
@@ -66,7 +66,7 @@ export class ListenGroupController {
   }
 
   @Delete(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteListenGroup(@Param('id') id: string) {
     return await this.listenGroupService.deleteListenGroup(id);

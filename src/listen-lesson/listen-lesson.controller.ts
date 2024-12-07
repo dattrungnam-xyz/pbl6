@@ -20,7 +20,7 @@ export class ListenLessonController {
   constructor(private readonly listenLessonService: ListenLessonService) {}
 
   @Post('listen-group/:id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async createListenLesson(
     @Param('id') id: string,
@@ -41,7 +41,7 @@ export class ListenLessonController {
     return await this.listenLessonService.getListListenLesson();
   }
   @Patch(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateListenLesson(
     @Param('id') id: string,
@@ -54,7 +54,7 @@ export class ListenLessonController {
   }
 
   @Delete(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteListenLesson(@Param('id') id: string) {
     return await this.listenLessonService.deleteListenLesson(id);
