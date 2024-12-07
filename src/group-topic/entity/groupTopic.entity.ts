@@ -38,11 +38,11 @@ export class GroupTopic {
   level: Level;
 
   @Expose()
-  @Column()
+  @Column({ nullable: true })
   target: string;
 
   @Expose()
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @Expose()
