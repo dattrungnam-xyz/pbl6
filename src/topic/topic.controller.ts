@@ -31,7 +31,7 @@ export class TopicController {
   ) {}
 
   @Post('entire/:idGroupTopic')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async createEntireTopic(
     @Body() createEntireTopicDTO: CreateEntireTopicDTO,
@@ -41,7 +41,7 @@ export class TopicController {
   }
 
   @Post(':idGroupTopic')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async createTopic(
     @Body() createTopicDTO: CreateTopicDTO,
@@ -50,7 +50,7 @@ export class TopicController {
     return await this.topicService.createTopic(idGroupTopic, createTopicDTO);
   }
   @Post('word/:idTopic')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async createListWordTopic(
     @Body() createListWordTopicDTO: CreateListWordTopicDTO,
@@ -72,7 +72,7 @@ export class TopicController {
   }
 
   @Patch(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id') id: string,
@@ -82,7 +82,7 @@ export class TopicController {
   }
 
   @Delete(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async delete(@Param('id') id: string) {
     await this.topicService.delete(id);

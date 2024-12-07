@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { PartService } from './part.service';
 import { CreatePartDTO } from './input/createPart.dto';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
@@ -10,7 +18,7 @@ import { RolesGuard } from '../auth/roles.guard';
 export class PartController {
   constructor(private readonly partService: PartService) {}
   @Post()
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async createPart(@Body() createPartDTO: CreatePartDTO) {
     return await this.partService.createPart(createPartDTO);
@@ -22,7 +30,7 @@ export class PartController {
   }
 
   @Delete('id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deletePart(@Param('id') id: string) {
     return await this.partService.deletePart(id);

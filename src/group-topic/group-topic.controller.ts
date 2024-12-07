@@ -24,7 +24,7 @@ export class GroupTopicController {
   constructor(private readonly groupTopicService: GroupTopicService) {}
 
   @Post()
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async createGroupTopic(@Body() createGroupTopicDTO: CreateGroupTopicDTO) {
     return await this.groupTopicService.createGroupTopic(createGroupTopicDTO);
@@ -50,7 +50,7 @@ export class GroupTopicController {
   }
 
   @Patch(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateGroupTopic(
     @Param('id') id: string,
@@ -63,7 +63,7 @@ export class GroupTopicController {
   }
 
   @Delete(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteGroupTopic(@Param('id') id: string) {
     return await this.groupTopicService.deleteGroupTopic(id);

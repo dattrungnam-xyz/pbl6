@@ -18,7 +18,7 @@ export class ListenSentenceController {
   constructor(private readonly listenSentenceService: ListenSentenceService) {}
 
   @Patch(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateListenSentence(
     @Param('id') id: string,
@@ -30,7 +30,7 @@ export class ListenSentenceController {
     );
   }
   @Delete(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteListenSentence(@Param('id') id: string) {
     return await this.listenSentenceService.deleteListenSentence(id);

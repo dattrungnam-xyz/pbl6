@@ -29,7 +29,7 @@ export class QuestionMediaController {
   ) {}
 
   @Delete(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteQuestionMedia(@Param('id') id: string) {
     await this.questionMediaService.deleteQuestionMedia(id);
@@ -37,7 +37,7 @@ export class QuestionMediaController {
   }
 
   @Post()
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async createQuestionMedia(
     @Body() createQuestionMediaDTO: CreateQuestionMediaDTO,

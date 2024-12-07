@@ -17,7 +17,7 @@ import { RolesGuard } from '../auth/roles.guard';
 export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
   @Patch(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateQuestion(
     @Param('id') id: string,
@@ -26,7 +26,7 @@ export class QuestionController {
     return await this.questionService.updateQuestion(id, updateQuestionDTO);
   }
   @Delete(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteQuestion(@Param('id') id: string) {
     await this.questionService.deleteQuestion(id);

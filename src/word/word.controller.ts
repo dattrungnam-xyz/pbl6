@@ -28,7 +28,7 @@ export class WordController {
   private readonly logger = new Logger(WordController.name);
 
   @Post(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async createWordWithTopic(
     @Param('id') topicId: string,
@@ -51,7 +51,7 @@ export class WordController {
     return await this.wordService.findWordById(id);
   }
   @Patch(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateWord(
     @Param('id') id: string,
@@ -60,7 +60,7 @@ export class WordController {
     return await this.wordService.updateWord(id, updateWordDTO);
   }
   @Delete(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteWord(@Param('id') id: string) {
     return await this.wordService.deleteWord(id);

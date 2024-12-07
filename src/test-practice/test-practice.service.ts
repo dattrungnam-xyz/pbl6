@@ -23,7 +23,10 @@ export class TestPracticeService {
     private readonly userAnswerService: UserAnswerService,
     private dataSource: DataSource,
   ) {}
-  async createTestPractice(createTestPractice: CreateTestPracticeDTO) {
+  async createTestPractice(
+    id: string,
+    createTestPractice: CreateTestPracticeDTO,
+  ) {
     const test = await this.testRepository.findOne({
       where: { id: createTestPractice.testId },
       relations: ['testPractices'],
@@ -32,7 +35,7 @@ export class TestPracticeService {
       throw new NotFoundException('Test not found');
     }
     const user = await this.userRepository.findOne({
-      where: { id: createTestPractice.userId },
+      where: { id: id },
       relations: ['testPractices'],
     });
     if (!user) {

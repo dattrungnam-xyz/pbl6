@@ -22,7 +22,7 @@ export class TagController {
   constructor(private readonly tagService: TagService) {}
 
   @Post()
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async create(@Body() createTagDto: CreateTagDTO) {
     return await this.tagService.create(createTagDto);
@@ -42,14 +42,14 @@ export class TagController {
   }
 
   @Patch(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   update(@Param('id') id: string, @Body() updateTagDTO: UpdateTagDTO) {
     return this.tagService.update(+id, updateTagDTO);
   }
 
   @Delete(':id')
-  @Roles(Role.MODERATOR)
+  @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   remove(@Param('id') id: string) {
     return this.tagService.remove(+id);
