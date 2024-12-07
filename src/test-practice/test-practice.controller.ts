@@ -22,9 +22,11 @@ export class TestPracticeController {
   @Post()
   @UseGuards(JwtAuthGuard)
   async createTestPractice(
+    @CurrentUser() user: User,
     @Body() createTestPracticeDTO: CreateTestPracticeDTO,
   ) {
     return await this.testPracticeService.createTestPractice(
+      user.id,
       createTestPracticeDTO,
     );
   }
