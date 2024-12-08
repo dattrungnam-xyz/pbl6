@@ -97,9 +97,15 @@ export class ListenLessonService {
         updateListenLessonDTO.audio,
       );
     }
-
+    if (updateListenLessonDTO.listenSentences) {
+      updateListenLessonDTO.listenSentences =
+        await this.listenSentenceService.handleUpdateOrCreateSentence(
+          updateListenLessonDTO.listenSentences,
+        );
+    }
+    Object.assign(listenLesson, updateListenLessonDTO);
     return await this.listenLessonRepository.save(
-      new ListenLesson({ ...listenLesson, ...updateListenLessonDTO }),
+      new ListenLesson(listenLesson),
     );
   }
 }

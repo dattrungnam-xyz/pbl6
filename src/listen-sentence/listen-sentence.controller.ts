@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   UseGuards,
@@ -34,5 +35,10 @@ export class ListenSentenceController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async deleteListenSentence(@Param('id') id: string) {
     return await this.listenSentenceService.deleteListenSentence(id);
+  }
+
+  @Get(':idLesson')
+  async getListenSentenceByLesson(@Param('idLesson') idLesson: string) {
+    return await this.listenSentenceService.getListenSentenceByLesson(idLesson);
   }
 }
