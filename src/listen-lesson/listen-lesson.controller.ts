@@ -14,6 +14,7 @@ import { Role } from '../common/type/role.type';
 import { JwtAuthGuard } from '../auth/authGuard.jwt';
 import { RolesGuard } from '../auth/roles.guard';
 import { CreateListenLessonDTO } from './input/createListenLesson.dto';
+import { UpdateListenLessonDTO } from './input/updateListenLesson.dto';
 
 @Controller('listen-lesson')
 export class ListenLessonController {
@@ -45,11 +46,11 @@ export class ListenLessonController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async updateListenLesson(
     @Param('id') id: string,
-    @Body() createListenLessonDTO: CreateListenLessonDTO,
+    @Body() updateListenLessonDTO: UpdateListenLessonDTO,
   ) {
     return await this.listenLessonService.updateListenLesson(
       id,
-      createListenLessonDTO,
+      updateListenLessonDTO,
     );
   }
 

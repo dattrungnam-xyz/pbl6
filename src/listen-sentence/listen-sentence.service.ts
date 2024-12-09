@@ -72,4 +72,36 @@ export class ListenSentenceService {
     await this.listenSentenceRepository.softDelete({ id });
     return { message: 'Listen Sentence deleted successfully' };
   }
+  async getListenSentenceByLesson(idLesson: string) {
+    return await this.listenSentenceRepository.find({
+      where: { listenLesson: { id: idLesson } },
+      relations: ['listenLesson'],
+    });
+  }
+  async handleUpdateOrCreateSentence(listSentence: UpdateListenSentenceDTO[]) {
+    listSentence = await Promise.all(
+      listSentence.map(async (sentence) => {
+        if (sentence.audioUrl) {
+          sentence.audio = sentence.audioUrl;
+        } else if (sentence.audio) {
+          const uploadResult = await this.cloudinaryService.uploadBase64(
+            sentence.audio,
+          );
+          sentence.audio = uploadResult;
+        }
+        return sentence;
+      }),
+    );
+    const listenSentencesPromise = listSentence.map((sentence) => {
+      if (!sentence.id) {
+        return this.listenSentenceRepository.save(
+          new ListenSentence({ ...sentence }),
+        );
+      }
+      return this.listenSentenceRepository.save(
+        new ListenSentence({ ...sentence }),
+      );
+    });
+    return await Promise.all(listenSentencesPromise);
+  }
 }
