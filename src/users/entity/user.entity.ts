@@ -115,4 +115,7 @@ export class User {
     nullable: true,
   })
   refreshTokens: RefreshToken[];
+  @Expose()
+  @Column({ default: true })
+  isActive: boolean;
 }

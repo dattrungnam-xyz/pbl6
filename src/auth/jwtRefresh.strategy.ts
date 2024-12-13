@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -24,6 +28,9 @@ export class JwtRefreshStrategy extends PassportStrategy(
     const authUser = await this.userRepository.findOneBy({ id: payload.id });
     if (!authUser) {
       throw new UnauthorizedException();
+    }
+    if (!authUser.isActive) {
+      throw new ForbiddenException('Your account is not active');
     }
     return {
       id: authUser.id,
