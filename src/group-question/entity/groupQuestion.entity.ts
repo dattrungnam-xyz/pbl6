@@ -25,7 +25,7 @@ export class GroupQuestion {
 
   // maybe this field to convert image to text question
   @Expose()
-  @Column({ nullable: true })
+  @Column("longtext",{ nullable: true })
   detail: string;
 
   @Expose()

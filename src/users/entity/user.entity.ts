@@ -14,6 +14,7 @@ import { FlashCard } from '../../flash-card/entity/flashCard.entity';
 import { Comment } from '../../comment/entity/comment.entity';
 import { TopicHistory } from '../../topic-history/entity/topicHistory.entity';
 import { Rating } from '../../rating/entity/rating.entity';
+import { RefreshToken } from './refreshToken.entity';
 
 @Entity()
 export class User {
@@ -109,4 +110,9 @@ export class User {
     nullable: true,
   })
   ratings: Rating[];
+
+  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user, {
+    nullable: true,
+  })
+  refreshTokens: RefreshToken[];
 }

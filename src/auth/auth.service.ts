@@ -17,6 +17,8 @@ import { UpdatePasswordDTO } from './input/updatePassword.dto';
 import { MailService } from '../mail/mail.service';
 import { LoginException } from '../common/exception/login.exception';
 import { Role } from '../common/type/role.type';
+import { RefreshToken } from '../users/entity/refreshToken.entity';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +29,8 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly mailService: MailService,
+    @InjectRepository(RefreshToken)
+    private readonly refreshTokenRepository: Repository<RefreshToken>,
   ) {
     this.oauth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
   }
@@ -60,6 +64,47 @@ export class AuthService {
   }
   public signToken(user: User): string {
     return this.jwtService.sign({ id: user.id });
+  }
+  public async generateRefreshToken(
+    userId: string,
+    currentRefreshToken?: string,
+    currentRefreshTokenExpiresAt?: Date,
+  ) {
+    const newRefreshToken = this.jwtService.sign(
+      {
+        id: userId,
+        current: Date.now(),
+      },
+      {
+        expiresIn: '1d',
+      },
+    );
+
+    if (currentRefreshToken && currentRefreshTokenExpiresAt) {
+      if (await this.isRefreshTokenBlackListed(currentRefreshToken, userId)) {
+        throw new UnauthorizedException('Invalid refresh token.');
+      }
+      const user = await this.userRepository.findOneBy({ id: userId });
+      await this.refreshTokenRepository.save(
+        new RefreshToken({
+          token: currentRefreshToken,
+          expiresAt: currentRefreshTokenExpiresAt,
+          user: user,
+        }),
+      );
+    }
+    return newRefreshToken;
+  }
+  public async isRefreshTokenBlackListed(token: string, userId: string) {
+    return await this.refreshTokenRepository.findOne({
+      where: {
+        token: token,
+        user: {
+          id: userId,
+        },
+      },
+      relations: ['user'],
+    });
   }
   public async createUser(createUserDTO: CreateUserDTO): Promise<User> {
     createUserDTO.passwordConfirm = undefined;
@@ -155,11 +200,13 @@ export class AuthService {
       await this.userRepository.save(newUser);
       return {
         token: this.signToken(newUser),
+        refreshToken: this.generateRefreshToken(newUser.id),
         user: newUser,
       };
     }
     return {
       token: this.signToken(user),
+      refreshToken: await this.generateRefreshToken(user.id),
       user: user,
     };
   }
@@ -191,15 +238,26 @@ export class AuthService {
         await this.userRepository.save(newUser);
         return {
           token: this.signToken(newUser),
+          refreshToken: this.generateRefreshToken(newUser.id),
           user: newUser,
         };
       }
       return {
         token: this.signToken(user),
+        refreshToken: await this.generateRefreshToken(user.id),
         user: user,
       };
     } catch (error) {
       throw new Error('Invalid Google token');
     }
+  }
+  @Cron(CronExpression.EVERY_DAY_AT_6PM)
+  async clearExpiredRefreshTokens() {
+    await this.refreshTokenRepository
+      .createQueryBuilder()
+      .delete()
+      .from(RefreshToken)
+      .where('expiresAt <= :now', { now: new Date() })
+      .execute();
   }
 }

@@ -32,7 +32,7 @@ export class Question {
   questionNumber: number;
 
   @Expose()
-  @Column({
+  @Column('longtext', {
     nullable: false,
   })
   question: string;
@@ -48,7 +48,7 @@ export class Question {
   correctAnswer: string;
 
   @Expose()
-  @Column({ nullable: true })
+  @Column("longtext",{ nullable: true })
   explain: string;
 
   @Expose()

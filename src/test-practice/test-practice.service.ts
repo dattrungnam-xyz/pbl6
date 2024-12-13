@@ -218,4 +218,7 @@ export class TestPracticeService {
     });
     return { test, testPractice };
   }
+  async getTestPracticeByIdUser(id: string, userId:string) {
+    
+  }
 }

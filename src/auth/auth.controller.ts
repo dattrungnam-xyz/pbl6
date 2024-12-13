@@ -3,6 +3,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  InternalServerErrorException,
   Param,
   Patch,
   Post,
@@ -25,6 +26,7 @@ import { UpdatePasswordDTO } from './input/updatePassword.dto';
 import { GoogleOAuthGuard } from './authGuard.google';
 import { Request as RequestType } from 'express';
 import { LoginGoogleDTO } from './input/loginGoogle.dto';
+import { JwtRefreshAuthGuard } from './authGuard.jwt.refresh';
 
 @Controller('auth')
 export class AuthController {
@@ -39,6 +41,7 @@ export class AuthController {
     // let user = await this.authService.createUser(createUserDTO);
     return {
       token: this.authService.signToken(user),
+      refreshToken: await this.authService.generateRefreshToken(user.id),
       user: user,
     };
   }
@@ -111,6 +114,20 @@ export class AuthController {
 
   @Post('logout')
   async logout() {}
+
   @Post('refresh')
-  async refreshToken() {}
+  @UseGuards(JwtRefreshAuthGuard)
+  async refreshToken(@Request() req: RequestType) {
+    if (!req.user) {
+      throw new InternalServerErrorException();
+    }
+    return {
+      token: this.authService.signToken(req.user as User),
+      refreshToken: await this.authService.generateRefreshToken(
+        (req.user as User).id,
+        req.headers.authorization?.split(' ')[1],
+        (req.user as any).refreshTokenExpiresAt,
+      ),
+    };
+  }
 }
