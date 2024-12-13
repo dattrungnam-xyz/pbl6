@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TestPractice } from './entity/testPractice.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { CreateTestPracticeDTO } from './input/createTestPratice.dto';
 import { TestService } from '../test/test.service';
 import { UsersService } from '../users/users.service';
@@ -218,7 +218,101 @@ export class TestPracticeService {
     });
     return { test, testPractice };
   }
-  async getTestPracticeByIdUser(id: string, userId:string) {
-    
+  async getTestPracticeByIdUserLastSpecificDay(
+    userId: string,
+    day: number = 30,
+  ) {
+    const listTestLastSpecificDay = await this.testPracticeRepository.find({
+      where: {
+        user: { id: userId },
+        createdAt: MoreThan(new Date(Date.now() - day * 24 * 60 * 60 * 1000)),
+      },
+      order: { createdAt: 'DESC' },
+      relations: ['user', 'test', 'userAnswers', 'userAnswers.question'],
+    });
+    const testRCSet = new Set();
+    const testLCSet = new Set();
+
+    let testRCQuestionCount = 0;
+    let testRCCorrectQuestionCount = 0;
+
+    let testLCQuestionCount = 0;
+    let testLCCorrectQuestionCount = 0;
+
+    let maxRC = 0;
+    let maxLC = 0;
+
+    let RCScore = 0;
+    let LCScore = 0;
+
+    let countRC = 0;
+    let countLC = 0;
+
+    listTestLastSpecificDay.forEach((test) => {
+      let hasRC = false;
+      let hasLC = false;
+      test.userAnswers.forEach((ans) => {
+        if (ans.question.questionNumber <= 100) {
+          testLCSet.add(test.test.id);
+          testLCQuestionCount++;
+          if (ans.isCorrect) {
+            testLCCorrectQuestionCount++;
+          }
+          hasLC = true;
+        } else {
+          testRCSet.add(test.test.id);
+          testRCQuestionCount++;
+          if (ans.isCorrect) {
+            testRCCorrectQuestionCount++;
+          }
+          hasRC = true;
+        }
+      });
+      if (hasLC) {
+        countLC++;
+        LCScore += test.LCScore;
+      }
+      if (hasRC) {
+        countRC++;
+        RCScore += test.RCScore;
+      }
+      maxLC = Math.max(maxLC, test.LCScore);
+      maxRC = Math.max(maxRC, test.RCScore);
+    });
+    return {
+      testPracticeCount: listTestLastSpecificDay.length,
+      totalTest: new Set(listTestLastSpecificDay.map((test) => test.test?.id))
+        .size,
+      totalTime: listTestLastSpecificDay.reduce(
+        (acc, curr) => acc + curr.time,
+        0,
+      ),
+      totalQuestion: listTestLastSpecificDay.reduce(
+        (acc, curr) => acc + curr.totalQuestion,
+        0,
+      ),
+      totalAnswerCorrect: listTestLastSpecificDay.reduce(
+        (acc, curr) => acc + curr.numCorrect,
+        0,
+      ),
+      maxScore: listTestLastSpecificDay.reduce((acc, curr) => {
+        return Math.max(acc, curr.LCScore + curr.RCScore);
+      }, 0),
+      listen: {
+        totalTest: testLCSet.size,
+        totalQuestion: testLCQuestionCount,
+        totalAnswerCorrect: testLCCorrectQuestionCount,
+        maxScore: maxLC,
+        avgScore: countLC ? LCScore / countLC : 0,
+      },
+      read: {
+        totalTest: testRCSet.size,
+        totalQuestion: testRCQuestionCount,
+        totalAnswerCorrect: testRCCorrectQuestionCount,
+        maxScore: maxRC,
+        avgScore: countRC ? RCScore / countRC : 0,
+      },
+      // listPractice: listTestLastSpecificDay,
+    };
   }
 }
