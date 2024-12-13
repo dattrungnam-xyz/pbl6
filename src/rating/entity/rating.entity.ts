@@ -20,7 +20,7 @@ export class Rating {
   @Column()
   rating: number;
 
-  @Column()
+  @Column("longtext")
   ratingContent: string;
 
   @CreateDateColumn()

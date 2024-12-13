@@ -32,25 +32,25 @@ export class Word {
   @Column({ nullable: true })
   word: string;
 
-  @Column({ nullable: true })
+  @Column('longtext', { nullable: true })
   example: string;
 
-  @Column({ nullable: true })
+  @Column('longtext', { nullable: true })
   exampleMeaning: string;
 
   @Column({ nullable: true })
   exampleAudio: string;
 
-  @Column({ nullable: true })
+  @Column('longtext', { nullable: true })
   definition: string;
 
-  @Column({ nullable: true })
+  @Column('longtext', { nullable: true })
   translate: string;
 
   @Column({ nullable: true })
   pronunciation: string;
 
-  @Column({ nullable: true })
+  @Column('longtext', { nullable: true })
   note: string;
 
   @Column({ type: 'enum', enum: WordClassType, nullable: true })
