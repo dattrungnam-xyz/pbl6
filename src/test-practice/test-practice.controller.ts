@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -45,9 +46,21 @@ export class TestPracticeController {
   @Get()
   @UseGuards(JwtAuthGuard)
   async getListTestPracticeByUserAndTest(@CurrentUser() user: User) {
+    console.log('vai cuc');
     return await this.testPracticeService.getListTestPracticeByUser(user.id);
   }
 
+  @Get('user')
+  @UseGuards(JwtAuthGuard)
+  async getTestPracticeLastSpecificDay(
+    @CurrentUser() user: User,
+    @Query('day') day: number = 30,
+  ) {
+    return await this.testPracticeService.getTestPracticeByIdUserLastSpecificDay(
+      user.id,
+      day,
+    );
+  }
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async getTestPracticeDetail(@Param('id') id: string) {

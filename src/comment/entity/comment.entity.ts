@@ -34,7 +34,7 @@ export class Comment {
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 
-  @Column()
+  @Column('longtext')
   @Expose()
   content: string;
 

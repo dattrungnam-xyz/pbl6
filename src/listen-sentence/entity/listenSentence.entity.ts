@@ -17,7 +17,7 @@ export class ListenSentence {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column("longtext")
   sentence: string;
 
   @Column()

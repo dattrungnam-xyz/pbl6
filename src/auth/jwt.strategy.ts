@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entity/user.entity';
 import { PassportStrategy } from '@nestjs/passport';
@@ -18,10 +18,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    // console.log("jwt")
     let user = await this.userRepository.findOneBy({
       id: payload.id,
     });
+    if (!user.isActive) {
+      throw new ForbiddenException('Your account is not active');
+    }
     return user;
   }
 }

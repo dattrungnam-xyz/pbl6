@@ -9,10 +9,12 @@ import { MailModule } from '../mail/mail.module';
 import { User } from '../users/entity/user.entity';
 import { UserDoesNotExistConstraint } from '../common/validation/UserDoesNotExist.constraint';
 import { GoogleStrategy } from './google.strategy';
+import { RefreshToken } from '../users/entity/refreshToken.entity';
+import { JwtRefreshStrategy } from './jwtRefresh.strategy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, RefreshToken]),
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: process.env.JWT_SECRET,
@@ -28,6 +30,7 @@ import { GoogleStrategy } from './google.strategy';
     AuthService,
     LocalStrategy,
     JwtStrategy,
+    JwtRefreshStrategy,
     GoogleStrategy,
     UserDoesNotExistConstraint,
   ],

@@ -30,7 +30,7 @@ import { RatingModule } from './rating/rating.module';
 import { ListenGroupModule } from './listen-group/listen-group.module';
 import { ListenLessonModule } from './listen-lesson/listen-lesson.module';
 import { ListenSentenceModule } from './listen-sentence/listen-sentence.module';
-
+import { ScheduleModule } from '@nestjs/schedule';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -61,6 +61,7 @@ import { ListenSentenceModule } from './listen-sentence/listen-sentence.module';
     ListenGroupModule,
     ListenLessonModule,
     ListenSentenceModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
