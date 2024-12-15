@@ -253,14 +253,14 @@ export class TestPracticeService {
       let hasLC = false;
       test.userAnswers.forEach((ans) => {
         if (ans.question.questionNumber <= 100) {
-          testLCSet.add(test.test.id);
+          testLCSet.add(test.test?.id);
           testLCQuestionCount++;
           if (ans.isCorrect) {
             testLCCorrectQuestionCount++;
           }
           hasLC = true;
         } else {
-          testRCSet.add(test.test.id);
+          testRCSet.add(test.test?.id);
           testRCQuestionCount++;
           if (ans.isCorrect) {
             testRCCorrectQuestionCount++;
