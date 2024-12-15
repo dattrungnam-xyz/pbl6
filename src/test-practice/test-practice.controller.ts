@@ -54,13 +54,18 @@ export class TestPracticeController {
   @UseGuards(JwtAuthGuard)
   async getTestPracticeLastSpecificDay(
     @CurrentUser() user: User,
-    @Query('day') day: number = 30,
+    @Query('day') day: number,
   ) {
+    if (isNaN(day) || day === undefined) {
+      day = 30;
+    }
+    console.log(day);
     return await this.testPracticeService.getTestPracticeByIdUserLastSpecificDay(
       user.id,
       day,
     );
   }
+  
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async getTestPracticeDetail(@Param('id') id: string) {
