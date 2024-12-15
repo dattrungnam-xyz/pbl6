@@ -46,7 +46,6 @@ export class TestPracticeController {
   @Get()
   @UseGuards(JwtAuthGuard)
   async getListTestPracticeByUserAndTest(@CurrentUser() user: User) {
-    console.log('vai cuc');
     return await this.testPracticeService.getListTestPracticeByUser(user.id);
   }
 
@@ -59,7 +58,6 @@ export class TestPracticeController {
     if (isNaN(day) || day === undefined) {
       day = 30;
     }
-    console.log(day);
     return await this.testPracticeService.getTestPracticeByIdUserLastSpecificDay(
       user.id,
       day,
