@@ -66,7 +66,7 @@ export class ListenGroupService {
   async getListenGroup(id: string) {
     return await this.listenGroupRepository.findOne({
       where: { id },
-      relations: ['listenLessons', "listenLessons.listenSentences"],
+      relations: ['listenLessons', 'listenLessons.listenSentences'],
     });
   }
   async deleteListenGroup(id: string) {

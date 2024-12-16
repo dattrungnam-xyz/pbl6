@@ -23,10 +23,13 @@ export class GroupQuestion {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // maybe this field to convert image to text question
   @Expose()
   @Column("longtext",{ nullable: true })
   detail: string;
+
+  @Expose()
+  @Column("longtext",{ nullable: true })
+  transcript: string;
 
   @Expose()
   @Column('simple-array', { nullable: true })
