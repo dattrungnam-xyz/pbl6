@@ -42,6 +42,10 @@ export class GroupQuestionDataDTO {
   @IsOptional()
   @IsString()
   detail: string;
+  
+  @IsOptional()
+  @IsString()
+  transcript: string;
 }
 
 class ImageInput {

@@ -39,6 +39,9 @@ export class GroupQuestionService {
         if (groupQuestion.detail) {
           newGroupQuestion.detail = groupQuestion.detail;
         }
+        if (groupQuestion.transcript) {
+          newGroupQuestion.transcript = groupQuestion.transcript;
+        }
         let listQuestionMedia = [];
         if (groupQuestion.audio || groupQuestion.audioUrl) {
           let audioUrl: string;
