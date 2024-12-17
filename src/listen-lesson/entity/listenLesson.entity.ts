@@ -21,9 +21,6 @@ export class ListenLesson {
   @Column()
   name: string;
 
-  @Column()
-  audio: string;
-
   @CreateDateColumn()
   createdAt: Date;
 
