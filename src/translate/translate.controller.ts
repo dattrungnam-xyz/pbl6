@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { TranslateService } from './translate.service';
 import { TranslateDTO } from './input/translate.dto';
 import { TextToSpeechDTO } from './input/text2Speech.dto';
@@ -19,5 +19,10 @@ export class TranslateController {
   @Post('text2speech')
   async speak2(@Body() textToSpeech: TextToSpeechDTO) {
     return await this.translateService.textToSpeech2(textToSpeech);
+  }
+
+  @Get('voice')
+  async getVoices() {
+    return this.translateService.getListVoice();
   }
 }

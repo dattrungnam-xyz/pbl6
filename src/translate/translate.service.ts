@@ -13,6 +13,7 @@ import { TranslateDTO } from './input/translate.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { TextToSpeechDTO } from './input/text2Speech.dto';
 import { fetchAudio } from '../utils/fetchAudio';
+import { listVoice } from '../utils/listVoiceId';
 
 @Injectable()
 export class TranslateService {
@@ -39,5 +40,8 @@ export class TranslateService {
     const newBase64data = 'data:audio/mpeg;base64,' + res.audio_data;
     const url = await this.cloudinaryService.uploadBase64(newBase64data);
     return { url };
+  }
+  async getListVoice() {
+    return listVoice;
   }
 }
