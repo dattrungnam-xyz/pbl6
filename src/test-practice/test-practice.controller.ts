@@ -18,7 +18,7 @@ import { User } from '../users/entity/user.entity';
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('test-practice')
 export class TestPracticeController {
-  constructor(private readonly testPracticeService: TestPracticeService) {}
+  constructor(private readonly testPracticeService: TestPracticeService) { }
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -63,7 +63,15 @@ export class TestPracticeController {
       day,
     );
   }
-  
+
+  @Get('user/lastPractice')
+  @UseGuards(JwtAuthGuard)
+  async getTestPracticeLast(
+    @CurrentUser() user: User,
+  ) {
+    return await this.testPracticeService.getTestPracticeLast(user.id)
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async getTestPracticeDetail(@Param('id') id: string) {

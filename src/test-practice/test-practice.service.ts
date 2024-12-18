@@ -315,4 +315,31 @@ export class TestPracticeService {
       // listPractice: listTestLastSpecificDay,
     };
   }
+
+  async getTestPracticeLast(id: string) {
+    const testPractice = await this.testPracticeRepository.find({
+      where: { user: { id } },
+      order: { createdAt: 'DESC' },
+      relations: ['test'],
+    });
+    if (!testPractice) {
+      return {
+        lastPractice: [],
+      };
+    }
+    const lastPractice = [];
+    for (let i = 0; i < testPractice.length; i++) {
+      if (i < 4) {
+        let practiceDetail: any = testPractice[i];
+        practiceDetail.listPart =
+          await this.userAnswerService.getListPartOfUserAnswer(
+            practiceDetail.id,
+          );
+        lastPractice.push(practiceDetail);
+      }
+    }
+    return {
+      lastPractice: lastPractice,
+    };
+  }
 }
