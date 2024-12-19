@@ -14,10 +14,11 @@ import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { TextToSpeechDTO } from './input/text2Speech.dto';
 import { fetchAudio } from '../utils/fetchAudio';
 import { listVoice } from '../utils/listVoiceId';
+import { TranslateListDTO } from './input/listTranslate.dto';
 
 @Injectable()
 export class TranslateService {
-  constructor(private readonly cloudinaryService: CloudinaryService) {}
+  constructor(private readonly cloudinaryService: CloudinaryService) { }
   async getTranslations(translateDTO: TranslateDTO) {
     const { text = '', from = 'en', to = 'vi' } = translateDTO;
     const res = await translate(text, {
@@ -43,5 +44,16 @@ export class TranslateService {
   }
   async getListVoice() {
     return listVoice;
+  }
+  async getTranslationsList(listText: TranslateListDTO) {
+    const listPromise = listText.listText.map((text) => {
+      return translate(text, {
+        to: listText.to,
+        from: listText.from,
+        autoCorrect: true,
+      });
+    })
+    const res = await Promise.all(listPromise);
+    return res
   }
 }

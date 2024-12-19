@@ -35,6 +35,11 @@ export class GroupTopicController {
     return await this.groupTopicService.findGroupTopic();
   }
 
+  @Get('top8')
+  async findTop8GroupTopic() {
+    return await this.groupTopicService.findTop8GroupTopic();
+  }
+
   @Get(':id')
   async findGroupTopicById(@Param('id') id: string) {
     return await this.groupTopicService.findGroupTopicById(id);

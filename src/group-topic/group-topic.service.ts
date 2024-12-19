@@ -78,6 +78,20 @@ export class GroupTopicService {
       relations: ['tags', 'topics', 'topics.listWord'],
     });
   }
+
+  async findTop8GroupTopic()
+  {
+    return await this.groupTopicRepository
+      .createQueryBuilder('groupTopic')
+      .leftJoin('groupTopic.topics', 'topic')
+      .leftJoin('topic.topicHistories', 'topicHistory')
+      .leftJoin('topicHistory.user', 'user')
+      .select(['groupTopic', 'COUNT(DISTINCT user.id) AS userCount'])
+      .groupBy('groupTopic.id')
+      .orderBy('userCount', 'DESC')
+      .limit(8)
+      .getRawMany();
+  }
   async findGroupTopicByIdAndUser(id: string, idUser: string) {
     let result = await this.groupTopicRepository.findOne({
       where: { id },
