@@ -10,6 +10,10 @@ export class CreateTopicDTO {
   })
   thumbnail: string;
 
+  @IsOptional()
+  @IsString()
+  thumbnailUrl: string;
+  
   @IsNotEmpty()
   @IsString()
   name: string;

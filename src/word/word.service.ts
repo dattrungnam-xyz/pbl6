@@ -10,7 +10,6 @@ import { CreateWordDTO } from './input/createWord.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UpdateWordDTO } from './input/updateWord.dto';
 import { Topic } from '../topic/entity/topic.entity';
-import { FlashCardService } from '../flash-card/flash-card.service';
 
 @Injectable()
 export class WordService {
@@ -19,7 +18,6 @@ export class WordService {
     @InjectRepository(Topic)
     private readonly topicRepository: Repository<Topic>,
     private readonly cloudinaryService: CloudinaryService,
-    private readonly flashCardService: FlashCardService,
   ) {}
   async createListWord(listWord: CreateWordDTO[]) {
     const newListWord = listWord.map(async (word) => {
@@ -73,66 +71,6 @@ export class WordService {
     return await this.wordRepository.softDelete(id);
   }
 
-  async createWordFlashCard(
-    idFlashCard: string,
-    createWordDTO: CreateWordDTO,
-    userId: string,
-  ) {
-    const flashCard = await this.flashCardService.findFlashCardById(
-      idFlashCard,
-    );
-    if (!flashCard) {
-      throw new NotFoundException('Flash card not found');
-    }
-    if (flashCard.user.id !== userId) {
-      throw new ForbiddenException(
-        'You are not authorized to create a word for this flashcard',
-      );
-    }
-
-    createWordDTO = (await this.handleImageAudio(
-      createWordDTO,
-    )) as CreateWordDTO;
-    const newWord = new Word({ ...createWordDTO });
-    newWord.flashCard = flashCard;
-    return await this.wordRepository.save(newWord);
-  }
-
-  async deleteWordFlashCard(idWord: string, userId: string) {
-    const word = await this.wordRepository.findOne({
-      where: { id: idWord },
-      relations: ['flashCard', 'flashCard.user'],
-    });
-    if (!word) throw new NotFoundException('Word not found');
-    if (word.flashCard.user.id !== userId) {
-      throw new ForbiddenException(
-        'You are not authorized to delete this word',
-      );
-    }
-    return await this.wordRepository.softDelete(idWord);
-  }
-
-  async updateWordFlashCard(
-    idWord: string,
-    updateWordDTO: UpdateWordDTO,
-    userId: string,
-  ) {
-    let word = await this.wordRepository.findOne({
-      where: { id: idWord },
-      relations: ['flashCard', 'flashCard.user'],
-    });
-    if (!word) {
-      throw new NotFoundException('Word not found');
-    }
-    if (word.flashCard.user.id !== userId) {
-      throw new ForbiddenException(
-        'You are not authorized to update this word',
-      );
-    }
-    updateWordDTO = (await this.handleImageAudio(
-      updateWordDTO,
-    )) as UpdateWordDTO;
-  }
   async handleImageAudio(obj: CreateWordDTO | UpdateWordDTO) {
     if (obj.audioUrl) {
       obj.audio = obj.audioUrl;

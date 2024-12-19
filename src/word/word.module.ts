@@ -5,10 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Word } from './entity/word.entity';
 import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 import { Topic } from '../topic/entity/topic.entity';
-import { FlashCardModule } from '../flash-card/flash-card.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Word, Topic]), CloudinaryModule, FlashCardModule],
+  imports: [TypeOrmModule.forFeature([Word, Topic]), CloudinaryModule],
   controllers: [WordController],
   providers: [WordService],
   exports: [WordService],

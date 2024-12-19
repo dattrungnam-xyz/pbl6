@@ -11,7 +11,6 @@ import {
 import { WordClassType } from '../../common/type/wordClass.type';
 import { Topic } from '../../topic/entity/topic.entity';
 import { UserTopic } from '../../user-topic/entity/userTopic.entity';
-import { FlashCard } from '../../flash-card/entity/flashCard.entity';
 import { TopicHistory } from '../../topic-history/entity/topicHistory.entity';
 
 @Entity()
@@ -63,9 +62,6 @@ export class Word {
 
   @ManyToMany(() => UserTopic, (userTopic) => userTopic.words)
   userTopic: UserTopic[];
-
-  @ManyToOne(() => FlashCard, (flashCard) => flashCard.words)
-  flashCard: FlashCard;
 
   @CreateDateColumn()
   createdAt: Date;
