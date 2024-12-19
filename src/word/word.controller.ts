@@ -27,6 +27,16 @@ export class WordController {
   constructor(private readonly wordService: WordService) {}
   private readonly logger = new Logger(WordController.name);
 
+  @Post('user-topic/:id')
+  @Roles(Role.MODERATOR, Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async createWordWithUserTopic(
+    @Param('id') userTopicId: string,
+    @Body() createWordDTO: CreateWordDTO,
+  ) {
+    return await this.wordService.createWordWithUserTopic(createWordDTO, userTopicId);
+  }
+
   @Post(':id')
   @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)

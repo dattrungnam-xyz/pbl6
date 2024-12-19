@@ -10,6 +10,8 @@ import { CreateWordDTO } from './input/createWord.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UpdateWordDTO } from './input/updateWord.dto';
 import { Topic } from '../topic/entity/topic.entity';
+import { UserTopic } from '../user-topic/entity/userTopic.entity';
+import { TranslateService } from '../translate/translate.service';
 
 @Injectable()
 export class WordService {
@@ -17,7 +19,10 @@ export class WordService {
     @InjectRepository(Word) private readonly wordRepository: Repository<Word>,
     @InjectRepository(Topic)
     private readonly topicRepository: Repository<Topic>,
+    @InjectRepository(UserTopic)
+    private readonly userTopicRepository: Repository<UserTopic>,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly translateService: TranslateService,
   ) {}
   async createListWord(listWord: CreateWordDTO[]) {
     const newListWord = listWord.map(async (word) => {
@@ -37,6 +42,25 @@ export class WordService {
       createWordDTO,
     )) as CreateWordDTO;
     const newWord = new Word({ ...createWordDTO });
+
+    if (!createWordDTO.exampleMeaning) {
+      newWord.exampleMeaning = (
+        await this.translateService.getTranslations({
+          from: 'en',
+          to: 'vi',
+          text: createWordDTO.example,
+        })
+      ).text;
+    }
+    if (!createWordDTO.exampleAudio && !createWordDTO.exampleAudioUrl) {
+      newWord.exampleAudio = (
+        await this.translateService.textToSpeech({
+          text: createWordDTO.example,
+          to: 'vi',
+          from: 'en',
+        })
+      ).url;
+    }
     if (id) {
       const topic = await this.topicRepository.findOneBy({ id });
       if (!topic) throw new NotFoundException('Topic not found');
@@ -44,6 +68,19 @@ export class WordService {
     }
     return await this.wordRepository.save(newWord);
   }
+
+  async createWordWithUserTopic(createWordDTO: CreateWordDTO, id: string) {
+    const userTopic = await this.userTopicRepository.findOneBy({
+      id,
+    });
+    if (!userTopic) throw new NotFoundException('User topic not found');
+    createWordDTO = (await this.handleImageAudio(
+      createWordDTO,
+    )) as CreateWordDTO;
+    const newWord = new Word({ ...createWordDTO, userTopic: [userTopic] });
+    return await this.wordRepository.save(newWord);
+  }
+
   async updateWord(id: string, updateWordDTO: UpdateWordDTO) {
     let word = await this.wordRepository.findOneBy({ id });
     if (!word) {
