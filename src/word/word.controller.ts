@@ -66,40 +66,40 @@ export class WordController {
     return await this.wordService.deleteWord(id);
   }
 
-  @Post('flash-card/:idFlashCard')
-  @UseGuards(JwtAuthGuard)
-  async createWordFlashCard(
-    @CurrentUser() user: User,
-    @Body() createWordDTO: CreateWordDTO,
-    @Param('idFlashCard') idFlashCard: string,
-  ) {
-    return await this.wordService.createWordFlashCard(
-      idFlashCard,
-      createWordDTO,
-      user.id,
-    );
-  }
+  // @Post('flash-card/:idFlashCard')
+  // @UseGuards(JwtAuthGuard)
+  // async createWordFlashCard(
+  //   @CurrentUser() user: User,
+  //   @Body() createWordDTO: CreateWordDTO,
+  //   @Param('idFlashCard') idFlashCard: string,
+  // ) {
+  //   return await this.wordService.createWordFlashCard(
+  //     idFlashCard,
+  //     createWordDTO,
+  //     user.id,
+  //   );
+  // }
 
-  @Delete('flash-card/:idWord')
-  @UseGuards(JwtAuthGuard)
-  async deleteWordFlashCard(
-    @CurrentUser() user: User,
-    @Param('idWord') idWord: string,
-  ) {
-    return await this.wordService.deleteWordFlashCard(idWord, user.id);
-  }
+  // @Delete('flash-card/:idWord')
+  // @UseGuards(JwtAuthGuard)
+  // async deleteWordFlashCard(
+  //   @CurrentUser() user: User,
+  //   @Param('idWord') idWord: string,
+  // ) {
+  //   return await this.wordService.deleteWordFlashCard(idWord, user.id);
+  // }
 
-  @Patch('flash-card/:idWord')
-  @UseGuards(JwtAuthGuard)
-  async updateWordFlashCard(
-    @CurrentUser() user: User,
-    @Param('idWord') idWord: string,
-    @Body() updateWordDTO: UpdateWordDTO,
-  ) {
-    return await this.wordService.updateWordFlashCard(
-      idWord,
-      updateWordDTO,
-      user.id,
-    );
-  }
+  // @Patch('flash-card/:idWord')
+  // @UseGuards(JwtAuthGuard)
+  // async updateWordFlashCard(
+  //   @CurrentUser() user: User,
+  //   @Param('idWord') idWord: string,
+  //   @Body() updateWordDTO: UpdateWordDTO,
+  // ) {
+  //   return await this.wordService.updateWordFlashCard(
+  //     idWord,
+  //     updateWordDTO,
+  //     user.id,
+  //   );
+  // }
 }

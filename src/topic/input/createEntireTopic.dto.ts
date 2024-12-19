@@ -10,7 +10,6 @@ import {
 import { CreateTagDTO } from '../../tag/input/createTag.dto';
 import { CreateWordDTO } from '../../word/input/createWord.dto';
 
-
 export class CreateEntireTopicDTO {
   @IsOptional()
   @Matches(/^data:image\/(png|jpg|jpeg|gif);base64,[A-Za-z0-9+/]+={0,2}$/, {
@@ -18,6 +17,10 @@ export class CreateEntireTopicDTO {
       'Avatar must be a valid Base64 encoded image (PNG, JPG, JPEG, GIF)',
   })
   thumbnail: string;
+
+  @IsOptional()
+  @IsString()
+  thumbnailUrl: string;
 
   @IsNotEmpty()
   @IsString()

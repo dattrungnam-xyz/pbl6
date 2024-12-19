@@ -10,7 +10,6 @@ import {
 import { Role } from '../../common/type/role.type';
 import { UserTopic } from '../../user-topic/entity/userTopic.entity';
 import { TestPractice } from '../../test-practice/entity/testPractice.entity';
-import { FlashCard } from '../../flash-card/entity/flashCard.entity';
 import { Comment } from '../../comment/entity/comment.entity';
 import { TopicHistory } from '../../topic-history/entity/topicHistory.entity';
 import { Rating } from '../../rating/entity/rating.entity';
@@ -88,10 +87,6 @@ export class User {
   @Expose()
   @OneToMany(() => UserTopic, (userTopic) => userTopic.user)
   userTopic: UserTopic[];
-
-  @Expose()
-  @OneToMany(() => FlashCard, (flashCard) => flashCard.user)
-  flashCard: FlashCard[];
 
   @Expose()
   @OneToMany(() => TestPractice, (testPractice) => testPractice.user)

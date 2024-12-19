@@ -34,7 +34,9 @@ export class TopicService {
       throw new NotFoundException('Group topic not found.');
     }
     let thumbnailUrl: string;
-    if (createTopicDTO.thumbnail) {
+    if (createTopicDTO.thumbnailUrl) {
+      thumbnailUrl = createTopicDTO.thumbnailUrl;
+    } else if (createTopicDTO.thumbnail) {
       const topicThumbnail = await this.cloudinaryService.uploadImageBase64(
         createTopicDTO.thumbnail,
       );
@@ -61,7 +63,9 @@ export class TopicService {
       throw new NotFoundException('Group topic not found.');
     }
     let thumbnailUrl: string;
-    if (createEntireTopicDTO.thumbnail) {
+    if (createEntireTopicDTO.thumbnailUrl) {
+      thumbnailUrl = createEntireTopicDTO.thumbnailUrl;
+    } else if (createEntireTopicDTO.thumbnail) {
       const topicThumbnail = await this.cloudinaryService.uploadImageBase64(
         createEntireTopicDTO.thumbnail,
       );
@@ -107,7 +111,9 @@ export class TopicService {
     if (!topic) {
       throw new NotFoundException('Topic not found');
     }
-    if (updateTopicDTO.thumbnail) {
+    if (updateTopicDTO.thumbnailUrl) {
+      updateTopicDTO.thumbnail = updateTopicDTO.thumbnailUrl;
+    } else if (updateTopicDTO.thumbnail) {
       const topicThumbnail = await this.cloudinaryService.uploadImageBase64(
         updateTopicDTO.thumbnail,
       );

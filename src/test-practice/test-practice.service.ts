@@ -83,8 +83,6 @@ export class TestPracticeService {
               }
             }
           }
-          testPractice.LCScore = getLCScore(LCCount);
-          testPractice.RCScore = getRCScore(RCCount);
           RCCount++;
         }
       }
