@@ -8,4 +8,5 @@ export enum WordClassType {
   PREPOSITIONS = 'prepositions',
   CONJUNCTIONS = 'conjunctions',
   INTERJECTIONS = 'interjections',
+  DETERMINER = 'determiner',
 }
