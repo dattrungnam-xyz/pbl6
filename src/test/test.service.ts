@@ -197,4 +197,29 @@ export class TestService {
     );
     return { test: result, testPractice };
   }
+
+  async getTopTest() {
+    const query = this.testRepository
+      .createQueryBuilder('test')
+      .leftJoinAndSelect('test.testPractices', 'testPractice')
+      .leftJoinAndSelect('testPractice.user', 'user')
+      .leftJoinAndSelect('test.comments', 'comments')
+      .select('test.id', 'testId')
+      .addSelect('test.name', 'testName')
+      .addSelect('COUNT(DISTINCT user.id)', 'userCount')
+      .addSelect('COUNT(comments.id)', 'commentCount')
+      .groupBy('test.id')
+      .orderBy('userCount', 'DESC')
+      .limit(8)
+      .getRawMany();
+    const topTests = await query;
+    return topTests.map((test) => ({
+      ...test,
+      userCount: parseInt(test.userCount, 10),
+      commentCount: parseInt(test.commentCount, 10),
+      time: '120',
+      partCount: '7',
+      totalQuestion: '200',
+    }));
+  }
 }
