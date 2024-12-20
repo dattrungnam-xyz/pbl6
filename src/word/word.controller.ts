@@ -28,8 +28,7 @@ export class WordController {
   private readonly logger = new Logger(WordController.name);
 
   @Post('user-topic/:id')
-  @Roles(Role.MODERATOR, Role.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   async createWordWithUserTopic(
     @Param('id') userTopicId: string,
     @Body() createWordDTO: CreateWordDTO,
