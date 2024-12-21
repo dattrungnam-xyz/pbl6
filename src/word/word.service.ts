@@ -56,8 +56,8 @@ export class WordService {
       newWord.exampleAudio = (
         await this.translateService.textToSpeech({
           text: createWordDTO.example,
-          to: 'vi',
-          from: 'en',
+          to: 'en',
+          from: 'vi',
         })
       ).url;
     }
