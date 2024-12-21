@@ -64,12 +64,35 @@ export class GroupTopicService {
   }
 
   async findGroupTopic() {
-    return await this.groupTopicRepository
-      .createQueryBuilder('groupTopic')
-      .leftJoinAndSelect('groupTopic.topics', 'topic')
-      .loadRelationCountAndMap('groupTopic.topicsCount', 'groupTopic.topics')
-      .orderBy('groupTopic.createdAt', 'DESC')
-      .getMany();
+    // return await this.groupTopicRepository
+    //   .createQueryBuilder('groupTopic')
+    //   .leftJoinAndSelect('groupTopic.topics', 'topic')
+    //   .loadRelationCountAndMap('groupTopic.topicsCount', 'groupTopic.topics')
+    //   .orderBy('groupTopic.createdAt', 'DESC')
+    //   .getMany();
+    const res = await this.groupTopicRepository.find({
+      relations: [
+        'topics',
+        'topics.topicHistories',
+        'topics.topicHistories.user',
+      ],
+      order: { createdAt: 'DESC' },
+    });
+    return res.map((grTopic) => {
+      const setUser = new Set();
+      grTopic.topics.forEach((topic) => {
+        topic.topicHistories.forEach((topicHistory) => {
+          setUser.add(topicHistory.user.id);
+        });
+      });
+
+      return {
+        ...grTopic,
+        topicCount: grTopic.topics.length,
+        userCount: setUser.size,
+        topics: undefined,
+      };
+    });
   }
 
   async findGroupTopicById(id: string) {
@@ -79,8 +102,7 @@ export class GroupTopicService {
     });
   }
 
-  async findTop8GroupTopic()
-  {
+  async findTop8GroupTopic() {
     return await this.groupTopicRepository
       .createQueryBuilder('groupTopic')
       .leftJoin('groupTopic.topics', 'topic')

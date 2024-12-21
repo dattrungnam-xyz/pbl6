@@ -57,7 +57,10 @@ export class TestController {
   ) {
     return await this.testService.updateTest(id, updateTestDTO);
   }
-
+  @Get('top-test')
+  async getTopTest() {
+    return await this.testService.getTopTest();
+  }
   @Get(':id')
   async getTestDetail(@Param('id') id: string) {
     return await this.testService.findOneById(id);

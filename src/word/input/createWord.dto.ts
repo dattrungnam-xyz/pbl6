@@ -30,19 +30,19 @@ export class CreateWordDTO {
   @IsOptional()
   audioUrl: string;
   
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   translate: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   pronunciation: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsEnum(WordClassType)
   wordClass: WordClassType;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   word: string;
 
@@ -68,7 +68,7 @@ export class CreateWordDTO {
   @IsOptional()
   exampleAudioUrl: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   definition: string;
 }
