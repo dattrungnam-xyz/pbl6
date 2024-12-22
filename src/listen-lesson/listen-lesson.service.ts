@@ -53,11 +53,30 @@ export class ListenLessonService {
   }
 
   async getListenLesson(id: string) {
-    const result = await this.listenLessonRepository.findOne({
+    const result: any = await this.listenLessonRepository.findOne({
       where: { id },
       relations: ['listenSentences', 'listenGroup'],
     });
     result?.listenSentences.sort((a, b) => a.index - b.index);
+    const listenGroup = await this.listenGroupRepository.findOne({
+      where: { id: result?.listenGroup.id },
+      relations: ['listenLessons'],
+      order: { createdAt: 'DESC' },
+    });
+    for (let i = 0; i < listenGroup.listenLessons.length; i++) {
+      if (listenGroup.listenLessons[i].id === id) {
+        if (i === 0) {
+          result.prev = null;
+        } else {
+          result.prev = listenGroup.listenLessons[i - 1].id;
+        }
+        if (i === listenGroup.listenLessons.length - 1) {
+          result.next = null;
+        } else {
+          result.next = listenGroup.listenLessons[i + 1].id;
+        }
+      }
+    }
     return result;
   }
 

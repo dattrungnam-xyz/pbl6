@@ -18,7 +18,7 @@ import { TranslateListDTO } from './input/listTranslate.dto';
 
 @Injectable()
 export class TranslateService {
-  constructor(private readonly cloudinaryService: CloudinaryService) { }
+  constructor(private readonly cloudinaryService: CloudinaryService) {}
   async getTranslations(translateDTO: TranslateDTO) {
     const { text = '', from = 'en', to = 'vi' } = translateDTO;
     const res = await translate(text, {
@@ -52,8 +52,8 @@ export class TranslateService {
         from: listText.from,
         autoCorrect: true,
       });
-    })
+    });
     const res = await Promise.all(listPromise);
-    return res
+    return res;
   }
 }
