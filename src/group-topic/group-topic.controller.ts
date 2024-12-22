@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -31,8 +33,18 @@ export class GroupTopicController {
   }
 
   @Get()
-  async findGroupTopic() {
-    return await this.groupTopicService.findGroupTopic();
+  async findGroupTopic(
+    @Query('limit', new DefaultValuePipe(15), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('search') search?: string,
+    @Query('level') level?: string,
+  ) {
+    return await this.groupTopicService.findGroupTopic(
+      limit,
+      page,
+      search,
+      level,
+    );
   }
 
   @Get('top8')
