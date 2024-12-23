@@ -68,7 +68,6 @@ export class CommentService {
       }
       newComment.parentComment = comment;
     }
-    delete createCommentDTO['rating'];
     Object.assign(newComment, createCommentDTO);
     return await this.commentRepository.save(newComment);
   }
@@ -107,14 +106,14 @@ export class CommentService {
     }
     return await this.commentRepository.softDelete(idComment);
   }
-  async loadSubComment(comment: Comment) {
+  async loadSubComments(comment: Comment) {
     let subComments = await this.commentRepository.find({
+      relations: ['user', 'subComment', 'parentComment'],
       where: { parentComment: { id: comment.id } },
-      relations: ['user', 'subComment'],
     });
     if (subComments.length > 0) {
       let promise = subComments.map((sub) => {
-        return this.loadSubComment(sub);
+        return this.loadSubComments(sub);
       });
       let sub = await Promise.all(promise);
       comment.subComment = sub;
@@ -126,9 +125,8 @@ export class CommentService {
       relations: ['user', 'subComment', entity],
       where: { [entity]: { id } },
     });
-
     let commentsPromise = comments.map((comment) => {
-      return this.loadSubComment(comment);
+      return this.loadSubComments(comment);
     });
     comments = await Promise.all(commentsPromise);
     return comments;

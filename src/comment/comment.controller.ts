@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -7,6 +8,7 @@ import {
   Patch,
   Post,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CurrentUser } from '../common/decorator/currentUser.decorator';
@@ -21,6 +23,7 @@ export class CommentController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   async CreateCommentDTO(
     @CurrentUser() user: User,
     @Body() createCommentDTO: CreateCommentDTO,
@@ -30,6 +33,7 @@ export class CommentController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   async updateComment(
     @Param('id') id: string,
     @Body() updateCommentDTO: UpdateCommentDTO,
@@ -49,14 +53,17 @@ export class CommentController {
   }
 
   @Get('test/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
   async getTestComment(@Param('id') id: string) {
     return await this.commentService.getComment(id, 'test');
   }
   @Get('group-topic/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
   async getGroupTopicComment(@Param('id') id: string) {
     return await this.commentService.getComment(id, 'groupTopic');
   }
   @Get('question/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
   async getQuestionComment(@Param('id') id: string) {
     return await this.commentService.getComment(id, 'question');
   }
