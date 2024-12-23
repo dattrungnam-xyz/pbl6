@@ -14,6 +14,7 @@ import { Topic } from '../../topic/entity/topic.entity';
 import { Level } from '../../common/type/level.type';
 import { Comment } from '../../comment/entity/comment.entity';
 import { Rating } from '../../rating/entity/rating.entity';
+import { Paginated } from '../../pagination/paginator';
 
 @Entity()
 export class GroupTopic {
@@ -79,3 +80,5 @@ export class GroupTopic {
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 }
+
+export class PaginatedGroupTopic extends Paginated<GroupTopic>(GroupTopic) {}

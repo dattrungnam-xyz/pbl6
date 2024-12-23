@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { GroupTopic } from './entity/groupTopic.entity';
+import { GroupTopic, PaginatedGroupTopic } from './entity/groupTopic.entity';
 import { Repository } from 'typeorm';
 import { CreateGroupTopicDTO } from './input/createGroupTopic.dto';
 import { TagService } from '../tag/tag.service';
@@ -9,6 +9,7 @@ import { UpdateGroupTopicDTO } from './input/updateGroupTopic.dto';
 import { NotFoundError } from 'rxjs';
 import { TopicHistory } from '../topic-history/entity/topicHistory.entity';
 import { Topic } from '../topic/entity/topic.entity';
+import { paginate } from '../pagination/paginator';
 
 @Injectable()
 export class GroupTopicService {
@@ -63,22 +64,51 @@ export class GroupTopicService {
     return await this.groupTopicRepository.save(groupTopic);
   }
 
-  async findGroupTopic() {
+  async findGroupTopic(limit = 15, page = 0, search?: string, level?: string) {
     // return await this.groupTopicRepository
     //   .createQueryBuilder('groupTopic')
     //   .leftJoinAndSelect('groupTopic.topics', 'topic')
     //   .loadRelationCountAndMap('groupTopic.topicsCount', 'groupTopic.topics')
     //   .orderBy('groupTopic.createdAt', 'DESC')
     //   .getMany();
-    const res = await this.groupTopicRepository.find({
-      relations: [
-        'topics',
-        'topics.topicHistories',
-        'topics.topicHistories.user',
-      ],
-      order: { createdAt: 'DESC' },
-    });
-    return res.map((grTopic) => {
+    // const res = await this.groupTopicRepository.find({
+    //   relations: [
+    //     'topics',
+    //     'topics.topicHistories',
+    //     'topics.topicHistories.user',
+    //   ],
+    //   order: { createdAt: 'DESC' },
+    // });
+    const offset = page * limit;
+    let qb = this.groupTopicRepository
+      .createQueryBuilder('groupTopic')
+      .leftJoinAndSelect('groupTopic.topics', 'topic')
+      .leftJoinAndSelect('topic.topicHistories', 'topicHistory')
+      .leftJoinAndSelect('topicHistory.user', 'user')
+      .loadRelationCountAndMap('groupTopic.topicsCount', 'groupTopic.topics');
+    if (search) {
+      qb = qb.where('groupTopic.name LIKE :search', {
+        search: `%${search}%`,
+      });
+    }
+    if (level && level !== 'all') {
+      qb = qb.andWhere('groupTopic.level LIKE :level', {
+        level: `%${level}%`,
+      });
+    }
+    qb = qb.orderBy('groupTopic.createdAt', 'ASC');
+    const res = paginate<GroupTopic, PaginatedGroupTopic>(
+      qb,
+      PaginatedGroupTopic,
+      {
+        limit,
+        page,
+        total: true,
+      },
+    );
+
+    const result = await res;
+    result.data = result.data.map((grTopic) => {
       const setUser = new Set();
       grTopic.topics.forEach((topic) => {
         topic.topicHistories.forEach((topicHistory) => {
@@ -88,11 +118,11 @@ export class GroupTopicService {
 
       return {
         ...grTopic,
-        topicCount: grTopic.topics.length,
         userCount: setUser.size,
         topics: undefined,
       };
     });
+    return result;
   }
 
   async findGroupTopicById(id: string) {

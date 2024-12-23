@@ -27,7 +27,7 @@ export class Topic {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   thumbnail: string;
 
   @Expose()
