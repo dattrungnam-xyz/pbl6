@@ -12,6 +12,8 @@ import { UpdateWordDTO } from './input/updateWord.dto';
 import { Topic } from '../topic/entity/topic.entity';
 import { UserTopic } from '../user-topic/entity/userTopic.entity';
 import { TranslateService } from '../translate/translate.service';
+import { User } from '../users/entity/user.entity';
+import { Role } from '../common/type/role.type';
 
 @Injectable()
 export class WordService {
@@ -81,10 +83,21 @@ export class WordService {
     return await this.wordRepository.save(newWord);
   }
 
-  async updateWord(id: string, updateWordDTO: UpdateWordDTO) {
-    let word = await this.wordRepository.findOneBy({ id });
+  async updateWord(id: string, updateWordDTO: UpdateWordDTO, user: User) {
+    let word = await this.wordRepository.findOne({
+      where: { id },
+      relations: ['topic', 'userTopic', 'userTopic.user'],
+    });
     if (!word) {
       throw new NotFoundException('Word not found');
+    }
+    if (
+      !user.roles.includes(Role.ADMIN) &&
+      !user.roles.includes(Role.MODERATOR)
+    ) {
+      if (word.topic) {
+        throw new ForbiddenException('You are not allowed to update this word');
+      }
     }
     if (updateWordDTO.idTopic) {
       const topic = await this.topicRepository.findOneBy({
