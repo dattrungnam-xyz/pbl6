@@ -33,7 +33,10 @@ export class WordController {
     @Param('id') userTopicId: string,
     @Body() createWordDTO: CreateWordDTO,
   ) {
-    return await this.wordService.createWordWithUserTopic(createWordDTO, userTopicId);
+    return await this.wordService.createWordWithUserTopic(
+      createWordDTO,
+      userTopicId,
+    );
   }
 
   @Post(':id')
@@ -60,13 +63,13 @@ export class WordController {
     return await this.wordService.findWordById(id);
   }
   @Patch(':id')
-  @Roles(Role.MODERATOR, Role.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   async updateWord(
     @Param('id') id: string,
     @Body() updateWordDTO: UpdateWordDTO,
+    @CurrentUser() user: User,
   ) {
-    return await this.wordService.updateWord(id, updateWordDTO);
+    return await this.wordService.updateWord(id, updateWordDTO, user);
   }
   @Delete(':id')
   @Roles(Role.MODERATOR, Role.ADMIN)
