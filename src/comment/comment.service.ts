@@ -110,6 +110,7 @@ export class CommentService {
     let subComments = await this.commentRepository.find({
       relations: ['user', 'subComment', 'parentComment'],
       where: { parentComment: { id: comment.id } },
+      order: { createdAt: 'DESC' },
     });
     if (subComments.length > 0) {
       let promise = subComments.map((sub) => {
@@ -124,6 +125,7 @@ export class CommentService {
     let comments = await this.commentRepository.find({
       relations: ['user', 'subComment', entity],
       where: { [entity]: { id } },
+      order: { createdAt: 'DESC' },
     });
     let commentsPromise = comments.map((comment) => {
       return this.loadSubComments(comment);
