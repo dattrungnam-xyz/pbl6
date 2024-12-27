@@ -207,7 +207,7 @@ export class TestService {
       .select('test.id', 'testId')
       .addSelect('test.name', 'testName')
       .addSelect('COUNT(DISTINCT user.id)', 'userCount')
-      .addSelect('COUNT(comments.id)', 'commentCount')
+      .addSelect('COUNT(DISTINCT comments.id)', 'commentCount')
       .groupBy('test.id')
       .orderBy('userCount', 'DESC')
       .limit(8)
