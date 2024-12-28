@@ -152,6 +152,7 @@ export class TestService {
       .leftJoinAndSelect('test.groupQuestions', 'groupQuestions')
       .leftJoinAndSelect('groupQuestions.questions', 'questions')
       .leftJoinAndSelect('groupQuestions.questionMedia', 'questionMedia')
+      .loadRelationCountAndMap('test.commentCount', 'test.comments')
       .orderBy('test.createdAt', 'DESC');
 
     return paginate<Test, PaginatedTest>(qb, PaginatedTest, {
@@ -207,7 +208,7 @@ export class TestService {
       .select('test.id', 'testId')
       .addSelect('test.name', 'testName')
       .addSelect('COUNT(DISTINCT user.id)', 'userCount')
-      .addSelect('COUNT(comments.id)', 'commentCount')
+      .addSelect('COUNT(DISTINCT comments.id)', 'commentCount')
       .groupBy('test.id')
       .orderBy('userCount', 'DESC')
       .limit(8)
