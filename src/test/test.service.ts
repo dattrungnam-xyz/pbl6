@@ -65,6 +65,14 @@ export class TestService {
     if (!test) {
       throw new NotFoundException('Test not found');
     }
+    if (updateTestDTO.tag) {
+      let tag = await this.tagService.findOne(updateTestDTO.tag);
+      if (!tag) {
+        throw new NotFoundException('Tag not found');
+      }
+      test.tags = [tag];
+      updateTestDTO.tag = undefined;
+    }
     return await this.testRepository.save(
       new Test({ ...test, ...updateTestDTO }),
     );

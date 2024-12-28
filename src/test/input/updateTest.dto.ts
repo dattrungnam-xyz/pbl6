@@ -14,10 +14,13 @@ export class UpdateTestDTO {
   @IsOptional()
   @IsString()
   name: string;
-  
+
   @IsOptional()
   @IsNumber()
   @Min(0)
   @Max(120)
   time: number;
+  @IsOptional()
+  @IsUUID()
+  tag: string;
 }
