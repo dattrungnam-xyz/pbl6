@@ -32,7 +32,7 @@ export class GroupQuestion {
   transcript: string;
 
   @Expose()
-  @Column('simple-array', { nullable: true })
+  @Column('longtext', { nullable: true })
   describeAnswer: string;
 
   @Expose()

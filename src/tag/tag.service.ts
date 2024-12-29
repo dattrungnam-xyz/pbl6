@@ -47,8 +47,8 @@ export class TagService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tag`;
+  async findOne(id: string) {
+    return await this.tagRepository.findOneBy({ id });
   }
 
   update(id: number, updateTagDto: UpdateTagDTO) {

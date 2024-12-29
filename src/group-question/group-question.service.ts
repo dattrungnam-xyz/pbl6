@@ -12,6 +12,7 @@ import { QuestionMediaService } from '../question-media/question-media.service';
 import { CloudinaryOutput } from '../cloudinary/cloudinary.output';
 import { MediaType } from '../common/type/media.type';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { UpdateGroupQuestionDTO } from './input/updateGroupQuestion.dto';
 
 @Injectable()
 export class GroupQuestionService {
@@ -101,5 +102,77 @@ export class GroupQuestionService {
       throw new NotFoundException('Group question not found');
     }
     return await this.groupQuestionRepository.softDelete(id);
+  }
+  async updateGroupQuestion(
+    id: string,
+    updateGroupQuestionDTO: UpdateGroupQuestionDTO,
+  ) {
+    const groupQuestion = await this.groupQuestionRepository.findOne({
+      where: { id },
+      relations: ['questions', 'questionMedia'],
+    });
+    if (!groupQuestion) {
+      throw new NotFoundException('Group question not found');
+    }
+    const listKey = ['detail', 'transcript', 'describeAnswer'];
+    for (let key of listKey) {
+      if (updateGroupQuestionDTO[key]) {
+        groupQuestion[key] = updateGroupQuestionDTO[key];
+      }
+    }
+    if (updateGroupQuestionDTO.audioUrl) {
+      for (let i = 0; i < groupQuestion.questionMedia.length; i++) {
+        if (groupQuestion.questionMedia[i].type === MediaType.AUDIO) {
+          groupQuestion.questionMedia[i].url = updateGroupQuestionDTO.audioUrl;
+          break;
+        }
+      }
+    }
+    if (updateGroupQuestionDTO.image) {
+      for (let i = 0; i < updateGroupQuestionDTO.image.length; i++) {
+        if (!updateGroupQuestionDTO.image[i].id) {
+          const newQuestionMedia = new QuestionMedia({
+            type: MediaType.IMAGE,
+            url: updateGroupQuestionDTO.image[i].fileUrl,
+            index: updateGroupQuestionDTO.image[i].index,
+          });
+          groupQuestion.questionMedia.push(newQuestionMedia);
+        } else {
+          for (let j = 0; j < groupQuestion.questionMedia.length; j++) {
+            if (
+              groupQuestion.questionMedia[j].id ===
+              updateGroupQuestionDTO.image[i].id
+            ) {
+              groupQuestion.questionMedia[j].url =
+                updateGroupQuestionDTO.image[i].fileUrl;
+              groupQuestion.questionMedia[j].index =
+                updateGroupQuestionDTO.image[i].index;
+              break;
+            }
+          }
+        }
+      }
+    }
+    for (let i = 0; i < groupQuestion.questions.length; i++) {
+      for (let j = 0; j < updateGroupQuestionDTO.questionData.length; j++) {
+        if (
+          groupQuestion.questions[i].id ===
+          updateGroupQuestionDTO.questionData[j].id
+        ) {
+          groupQuestion.questions[i].question =
+            updateGroupQuestionDTO.questionData[j].question;
+          groupQuestion.questions[i].answer =
+            updateGroupQuestionDTO.questionData[j].answer;
+          groupQuestion.questions[i].correctAnswer =
+            updateGroupQuestionDTO.questionData[j].correctAnswer;
+          groupQuestion.questions[i].explain =
+            updateGroupQuestionDTO.questionData[j].explain;
+          groupQuestion.questions[i].questionNumber =
+            updateGroupQuestionDTO.questionData[j].questionNumber;
+          break;
+        }
+      }
+    }
+    return await this.groupQuestionRepository.save(groupQuestion);
   }
 }
