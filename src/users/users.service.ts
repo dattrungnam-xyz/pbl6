@@ -10,6 +10,8 @@ import { UpdateProfileDTO } from './input/updateProfile.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import * as bcrypt from 'bcrypt';
 import { UpdatePasswordDTO } from './input/updatePassword.dto';
+import { Role } from '../common/type/role.type';
+import { UpdateRoleDTO } from './input/updateRole.dto';
 
 @Injectable()
 export class UsersService {
@@ -92,6 +94,14 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
     user.password = await this.hashPassword(updatePasswordDTO.password);
+    return await this.userRepository.save(user);
+  }
+  async updateRole(id: string, updateRoleDTO: UpdateRoleDTO) {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    user.roles = updateRoleDTO.roles;
     return await this.userRepository.save(user);
   }
 }

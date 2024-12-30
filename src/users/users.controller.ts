@@ -21,6 +21,7 @@ import { Roles } from '../common/decorator/role.decorator';
 import { Role } from '../common/type/role.type';
 import { RolesGuard } from '../auth/roles.guard';
 import { UpdatePasswordDTO } from './input/updatePassword.dto';
+import { UpdateRoleDTO } from './input/updateRole.dto';
 
 @Controller('users')
 export class UsersController {
@@ -99,7 +100,7 @@ export class UsersController {
   ) {
     return await this.usersService.updateUserInfor(id, updateProfileDTO);
   }
-  
+
   @Patch('updatePassword/:id')
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -109,5 +110,15 @@ export class UsersController {
     @Param('id') id: string,
   ) {
     return await this.usersService.updateUserPassword(id, updatePasswordDTO);
+  }
+
+  @Patch('roles/:id')
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async updateRole(
+    @Param('id') id: string,
+    @Body() updateRoleDTO: UpdateRoleDTO,
+  ) {
+    return await this.usersService.updateRole(id, updateRoleDTO);
   }
 }
