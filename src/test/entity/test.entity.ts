@@ -67,7 +67,7 @@ export class Test {
   })
   comments: Comment[];
 
-  userCount: number;
+  taken: number;
   commentCount: number;
   partCound: number;
 }

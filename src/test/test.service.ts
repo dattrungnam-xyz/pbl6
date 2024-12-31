@@ -153,18 +153,19 @@ export class TestService {
     let qb = this.testRepository
       .createQueryBuilder('test')
       .leftJoinAndSelect('test.tags', 'tags');
-    if (tag_id) {
-      qb = qb.andWhere('tags.id = :tag_id', { tag_id });
-    }
+
     if (search) {
       qb = qb.where('test.name LIKE :search', {
         search: `%${search}%`,
       });
     }
+    if (tag_id) {
+      qb = qb.andWhere('tags.id = :tag_id', { tag_id });
+    }
     qb = qb
       .loadRelationCountAndMap('test.commentCount', 'test.comments')
       .orderBy('test.createdAt', 'DESC');
-
+    console.log(qb.getSql());
     const res = await paginate<Test, PaginatedTest>(qb, PaginatedTest, {
       limit,
       page,
@@ -172,13 +173,14 @@ export class TestService {
     });
     res.data = await Promise.all(
       res.data.map(async (test) => {
-        test.userCount = await this.testRepository
+        test.taken = await this.testRepository
           .createQueryBuilder('test')
           .leftJoin('test.testPractices', 'testPractice')
-          .where('testPractice.testId = test.id')
-          .select('COUNT(DISTINCT testPractice.userId)', 'userCount')
+          .leftJoin('testPractice.user', 'user')
+          .where('test.id = :id', { id: test.id })
+          .select('COUNT(DISTINCT user.id)', 'taken')
           .getRawOne()
-          .then((result) => +result.userCount);
+          .then((result) => result.taken);
         return test;
       }),
     );
@@ -219,6 +221,17 @@ export class TestService {
         return it;
       }),
     );
+    result.taken = await this.testRepository
+      .createQueryBuilder('test')
+      .leftJoin('test.testPractices', 'testPractice')
+      .leftJoin('testPractice.user', 'user')
+      .where('test.id = :id', { id: idTest })
+      .select('COUNT(DISTINCT user.id)', 'taken')
+      .getRawOne()
+      .then((result) => result.taken);
+    result.commentCount = await this.testRepository
+      .findOne({ where: { id: idTest }, relations: ['comments'] })
+      .then((result) => result.comments.length);
     return { test: result, testPractice };
   }
 

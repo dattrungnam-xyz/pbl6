@@ -46,7 +46,8 @@ export class TestController {
     @Query('tag_id') tag_id: string,
     @Query('search') search?: string,
   ) {
-    return await this.testService.findPagination(limit, page, tag_id,search);
+    console.log(tag_id, search);
+    return await this.testService.findPagination(limit, page, tag_id, search);
   }
 
   @Patch(':id')
