@@ -72,17 +72,6 @@ export class TestPracticeService {
         if (+question.questionNumber <= 100) {
           LCCount++;
         } else {
-          let RCCount = 0;
-          for (const answer of listUserAnswer) {
-            if (answer.isCorrect) {
-              const question = answer.question;
-              if (+question.questionNumber <= 100) {
-                LCCount++;
-              } else {
-                RCCount++;
-              }
-            }
-          }
           RCCount++;
         }
       }
