@@ -148,13 +148,18 @@ export class TestService {
     return result;
   }
 
-  async findPagination(limit = 15, page = 0, tag_id?: string) {
+  async findPagination(limit = 15, page = 0, tag_id?: string, search?: string) {
     const offset = page * limit;
     let qb = this.testRepository
       .createQueryBuilder('test')
       .leftJoinAndSelect('test.tags', 'tags');
     if (tag_id) {
       qb = qb.andWhere('tags.id = :tag_id', { tag_id });
+    }
+    if (search) {
+      qb = qb.where('test.name LIKE :search', {
+        search: `%${search}%`,
+      });
     }
     qb = qb
       .leftJoinAndSelect('test.groupQuestions', 'groupQuestions')

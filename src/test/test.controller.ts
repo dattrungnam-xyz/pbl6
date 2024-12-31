@@ -44,8 +44,9 @@ export class TestController {
     @Query('limit', new DefaultValuePipe(15), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('tag_id') tag_id: string,
+    @Query('search') search?: string,
   ) {
-    return await this.testService.findPagination(limit, page, tag_id);
+    return await this.testService.findPagination(limit, page, tag_id,search);
   }
 
   @Patch(':id')
