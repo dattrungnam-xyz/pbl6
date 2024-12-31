@@ -162,17 +162,27 @@ export class TestService {
       });
     }
     qb = qb
-      .leftJoinAndSelect('test.groupQuestions', 'groupQuestions')
-      .leftJoinAndSelect('groupQuestions.questions', 'questions')
-      .leftJoinAndSelect('groupQuestions.questionMedia', 'questionMedia')
       .loadRelationCountAndMap('test.commentCount', 'test.comments')
       .orderBy('test.createdAt', 'DESC');
 
-    return paginate<Test, PaginatedTest>(qb, PaginatedTest, {
+    const res = await paginate<Test, PaginatedTest>(qb, PaginatedTest, {
       limit,
       page,
       total: true,
     });
+    res.data = await Promise.all(
+      res.data.map(async (test) => {
+        test.userCount = await this.testRepository
+          .createQueryBuilder('test')
+          .leftJoin('test.testPractices', 'testPractice')
+          .where('testPractice.testId = test.id')
+          .select('COUNT(DISTINCT testPractice.userId)', 'userCount')
+          .getRawOne()
+          .then((result) => +result.userCount);
+        return test;
+      }),
+    );
+    return res;
   }
   async getTestHistory(idTest: string, idUser: string) {
     let result = await this.testRepository.findOne({
