@@ -108,7 +108,7 @@ export class AuthController {
   async googleLogin(@Body() googleLoginDto: LoginGoogleDTO) {
     const { token } = googleLoginDto;
 
-    const user = await this.authService.validateGoogleToken(token);
+    const user = await this.authService.validateAccessToken(token);
     return user;
   }
 

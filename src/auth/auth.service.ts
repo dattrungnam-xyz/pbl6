@@ -19,6 +19,7 @@ import { LoginException } from '../common/exception/login.exception';
 import { Role } from '../common/type/role.type';
 import { RefreshToken } from '../users/entity/refreshToken.entity';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -211,45 +212,85 @@ export class AuthService {
     };
   }
 
-  async validateGoogleToken(token: string) {
-    try {
-      const ticket = await this.oauth2Client.verifyIdToken({
-        idToken: token,
-        audience: process.env.GOOGLE_CLIENT_ID,
-      });
-      const payload = ticket.getPayload();
-      const avatar = payload?.picture;
-      const googleId = payload?.sub;
-      const email = payload?.email;
-      const name = payload?.name;
-      const user = await this.userRepository.findOneBy({
+  // async validateGoogleToken(token: string) {
+  //   try {
+  //     const ticket = await this.oauth2Client.verifyIdToken({
+  //       idToken: token,
+  //       audience: process.env.GOOGLE_CLIENT_ID,
+  //     });
+  //     const payload = ticket.getPayload();
+  //     const avatar = payload?.picture;
+  //     const googleId = payload?.sub;
+  //     const email = payload?.email;
+  //     const name = payload?.name;
+  //     const user = await this.userRepository.findOneBy({
+  //       email,
+  //     });
+  //     if (!user) {
+  //       const date = new Date();
+  //       date.setMonth(date.getMonth() + 3);
+  //       const newUser = new User({
+  //         avatar,
+  //         email,
+  //         testDate: date,
+  //         name,
+  //         roles: ['user'] as Role[],
+  //       });
+  //       await this.userRepository.save(newUser);
+  //       return {
+  //         token: this.signToken(newUser),
+  //         refreshToken: this.generateRefreshToken(newUser.id),
+  //         user: newUser,
+  //       };
+  //     }
+  //     return {
+  //       token: this.signToken(user),
+  //       refreshToken: await this.generateRefreshToken(user.id),
+  //       user: user,
+  //     };
+  //   } catch (error) {
+  //     throw new Error('Invalid Google token');
+  //   }
+  // }
+
+  async validateAccessToken(token: string) {
+    const response = await axios.get(
+      'https://www.googleapis.com/oauth2/v3/userinfo',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    const avatar = response.data?.picture;
+    const googleId = response.data?.sub;
+    const email = response.data?.email;
+    const name = response.data?.family_name + ' ' + response.data?.given_name;
+    const user = await this.userRepository.findOneBy({
+      email,
+    });
+    if (!user) {
+      const date = new Date();
+      date.setMonth(date.getMonth() + 3);
+      const newUser = new User({
+        avatar,
         email,
+        testDate: date,
+        name,
+        roles: ['user'] as Role[],
       });
-      if (!user) {
-        const date = new Date();
-        date.setMonth(date.getMonth() + 3);
-        const newUser = new User({
-          avatar,
-          email,
-          testDate: date,
-          name,
-          roles: ['user'] as Role[],
-        });
-        await this.userRepository.save(newUser);
-        return {
-          token: this.signToken(newUser),
-          refreshToken: this.generateRefreshToken(newUser.id),
-          user: newUser,
-        };
-      }
+      await this.userRepository.save(newUser);
       return {
-        token: this.signToken(user),
-        refreshToken: await this.generateRefreshToken(user.id),
-        user: user,
+        token: this.signToken(newUser),
+        refreshToken: this.generateRefreshToken(newUser.id),
+        user: newUser,
       };
-    } catch (error) {
-      throw new Error('Invalid Google token');
     }
+    return {
+      token: this.signToken(user),
+      refreshToken: await this.generateRefreshToken(user.id),
+      user: user,
+    };
   }
   @Cron(CronExpression.EVERY_DAY_AT_6PM)
   async clearExpiredRefreshTokens() {
