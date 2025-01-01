@@ -148,26 +148,43 @@ export class TestService {
     return result;
   }
 
-  async findPagination(limit = 15, page = 0, tag_id?: string) {
+  async findPagination(limit = 15, page = 0, tag_id?: string, search?: string) {
     const offset = page * limit;
     let qb = this.testRepository
       .createQueryBuilder('test')
       .leftJoinAndSelect('test.tags', 'tags');
+
+    if (search) {
+      qb = qb.where('test.name LIKE :search', {
+        search: `%${search}%`,
+      });
+    }
     if (tag_id) {
       qb = qb.andWhere('tags.id = :tag_id', { tag_id });
     }
     qb = qb
-      .leftJoinAndSelect('test.groupQuestions', 'groupQuestions')
-      .leftJoinAndSelect('groupQuestions.questions', 'questions')
-      .leftJoinAndSelect('groupQuestions.questionMedia', 'questionMedia')
       .loadRelationCountAndMap('test.commentCount', 'test.comments')
       .orderBy('test.createdAt', 'DESC');
-
-    return paginate<Test, PaginatedTest>(qb, PaginatedTest, {
+    console.log(qb.getSql());
+    const res = await paginate<Test, PaginatedTest>(qb, PaginatedTest, {
       limit,
       page,
       total: true,
     });
+    res.data = await Promise.all(
+      res.data.map(async (test) => {
+        test.taken = await this.testRepository
+          .createQueryBuilder('test')
+          .leftJoin('test.testPractices', 'testPractice')
+          .leftJoin('testPractice.user', 'user')
+          .where('test.id = :id', { id: test.id })
+          .select('COUNT(DISTINCT user.id)', 'taken')
+          .getRawOne()
+          .then((result) => result.taken);
+        return test;
+      }),
+    );
+    return res;
   }
   async getTestHistory(idTest: string, idUser: string) {
     let result = await this.testRepository.findOne({
@@ -204,6 +221,17 @@ export class TestService {
         return it;
       }),
     );
+    result.taken = await this.testRepository
+      .createQueryBuilder('test')
+      .leftJoin('test.testPractices', 'testPractice')
+      .leftJoin('testPractice.user', 'user')
+      .where('test.id = :id', { id: idTest })
+      .select('COUNT(DISTINCT user.id)', 'taken')
+      .getRawOne()
+      .then((result) => result.taken);
+    result.commentCount = await this.testRepository
+      .findOne({ where: { id: idTest }, relations: ['comments'] })
+      .then((result) => result.comments.length);
     return { test: result, testPractice };
   }
 

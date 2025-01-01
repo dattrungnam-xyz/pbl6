@@ -66,6 +66,10 @@ export class Test {
     nullable: true,
   })
   comments: Comment[];
+
+  taken: number;
+  commentCount: number;
+  partCound: number;
 }
 
 export class PaginatedTest extends Paginated<Test>(Test) {}
